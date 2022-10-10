@@ -1,0 +1,55 @@
+version: "3.9"
+
+
+services:
+
+	postgres:
+		image: postgres:latest
+		env_file: ./env/postgres.env
+		networks:
+			- transcendance_nw
+
+	pgadmin:
+		image: dpage/pgadmin4:latest
+		env_file: ./env/pgadmin.env
+		depends_on:
+			- postgres
+		networks:
+			- transcendance_nw
+
+	back:
+		build: ./back
+		env_file: ./env/back.env
+		depends_on:
+			- postgres
+		networks:
+			- transcendance_nw
+
+	front:
+		build: ./front
+		env_file: ./env/front.env
+		depends_on:
+			- back
+		networks:
+			- transcendance_nw
+
+networks:
+
+	transcendence_nw:
+
+
+volumes:
+
+	front:
+		driver: local
+		driver_opts:
+			type: none
+			device: /home/volumes/front
+			o: bind
+	
+	back:
+		driver: local
+		driver_opts:
+			type: none
+			device: /home/volumes/back
+			o: bind
