@@ -1,3 +1,7 @@
 .Header {
+	width: 100vw;
+	height: 10vh;
 	background-color: red;
+	display: flex;
+	justify-content: space-around;
 }
