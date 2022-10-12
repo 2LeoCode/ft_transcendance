@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header';
 import Pong from './Pong';
 import Chat from './Chat';
+import User from './User';
 import '../styles/App.css';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       </header>
       <Pong />
       <Chat />
+      <User />
     </div>
   );
 }

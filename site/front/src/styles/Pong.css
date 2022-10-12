@@ -3,4 +3,7 @@
 	height: 50vh;
 	background-color: grey;
 	justify-content: center;
+	margin: auto;
+	margin-top: 50px;
+	margin-bottom: 50px;
 }
