@@ -1,7 +1,35 @@
 .User {
 	width: 70vw;
-	height: 300px;
+	height: auto;
 	background-color: white;
 	margin: auto;
 	margin-bottom: 50px;
+	display: grid;
+	grid-template-columns: 33% 34% 33%;
+	grid-template-rows: 33% 34% 33%;
+	grid-template-areas:
+	'header header header'
+	'left center right'
+	'footer footer footer';
+	grid-auto-rows: auto;
+}
+
+h3 {
+	grid-area: header;
+}
+
+.avatar {
+	grid-area: left;
+}
+
+.stats {
+	grid-area: center;
+}
+
+.match_history {
+	grid-area: right;
+}
+
+.auth {
+	grid-area: footer;
 }
