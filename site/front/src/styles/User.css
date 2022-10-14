@@ -33,3 +33,14 @@ h3 {
 .auth {
 	grid-area: footer;
 }
+
+.avatar_label {
+	cursor: pointer;
+}
+.avatar_label:hover {
+	color: grey;
+}
+
+.avatar_button {
+	display: none;
+}
