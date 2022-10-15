@@ -11,8 +11,8 @@ declare var Blob: {
 function User() {
   const [image, setImage] = useState(new Blob());
   const [uploaded, setUploaded] = useState(false);
-  const matches_won :number = 0;
-  const matches_lost :number = 0;
+  const matches_won: number = 0;
+  const matches_lost: number = 0;
 
   return (
     <div className="User">
@@ -24,7 +24,9 @@ function User() {
         {uploaded && (
           <img src={URL.createObjectURL(image)} alt="Avatar" width="80%" />
         )}
-        <label htmlFor="avatar" className="avatar_label">Change avatar</label>
+        <label htmlFor="avatar" className="avatar_label">
+          Change avatar
+        </label>
         <input
           id="avatar"
           className="avatar_button"
