@@ -7,7 +7,7 @@ import Log from "./Log";
 import "../styles/Home.css";
 
 function Home() {
-    const [isLog, setIsLog] = useState(false);
+  const [isLog, setIsLog] = useState(true); //debug
   return (
     <div className="Home">
       {!isLog && <Log log={setIsLog} />}

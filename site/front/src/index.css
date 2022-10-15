@@ -19,6 +19,11 @@ body {
   background-color: rgb(0, 0, 0);
 }
 
+::selection {
+  color: black;
+  background-color: white;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

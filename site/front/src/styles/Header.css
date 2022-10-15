@@ -1,8 +1,13 @@
 .Header {
 	width: 100vw;
 	height: 10vh;
-	background-color: rgb(0, 1, 53);
+	background-color: rgb(0, 0, 0);
 	display: grid;
-	grid-template-columns: 20vw 20vw 20vw 20vw 20vw;
+	grid-template-columns: 33vw 34vw 33vw;
 	grid-template-rows: 10vh;
+	color: rgb(163, 0, 0);
+}
+
+.Header h1 {
+	font-size: 48px;
 }
