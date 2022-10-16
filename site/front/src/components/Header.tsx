@@ -34,8 +34,20 @@ function Header(props: any) {
       >
         Chat
       </button>
-      <div className="menu">
-        <ul></ul>
+      <div className="dropdown">
+        <button className="dropbtn">Menu</button>
+        <div className="dropdown-content">
+          <button>Link 1</button>
+          <button>Link 2</button>
+          <button
+            type="button"
+            onClick={() => {
+              props.log(false);
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

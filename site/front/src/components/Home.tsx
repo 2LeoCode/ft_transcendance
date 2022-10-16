@@ -8,7 +8,7 @@ import "../styles/Home.css";
 
 function Home() {
   const [isLog, setIsLog] = useState(true); //debug
-  const [isChat, setIsChat] = useState(false);
+  const [isChat, setIsChat] = useState(true);
   const [isStat, setIsStat] = useState(false);
   return (
     <div className="Home">
@@ -16,7 +16,7 @@ function Home() {
       {isLog && (
         <div>
           <header className="Header">
-            <Header chat={setIsChat} stat={setIsStat} />
+            <Header log={setIsLog} chat={setIsChat} stat={setIsStat} />
           </header>
           {!isChat && !isStat && <Pong />}
           {isChat && <Chat />}
