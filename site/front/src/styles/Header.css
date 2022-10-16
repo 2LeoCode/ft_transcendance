@@ -3,11 +3,21 @@
 	height: 10vh;
 	background-color: rgb(0, 0, 0);
 	display: grid;
-	grid-template-columns: 33vw 34vw 33vw;
+	grid-template-columns: 16vw 17vw 34vw 17vw 16vw;
 	grid-template-rows: 10vh;
 	color: rgb(163, 0, 0);
 }
 
 .Header h1 {
 	font-size: 48px;
+}
+
+.Header button {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
 }

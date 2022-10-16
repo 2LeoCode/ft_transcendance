@@ -1,6 +1,6 @@
 .User {
 	width: 70vw;
-	height: auto;
+	height: 50vh;
 	background-color: white;
 	margin: auto;
 	margin-bottom: 50px;
@@ -12,6 +12,7 @@
 	'left center right'
 	'footer footer footer';
 	grid-auto-rows: auto;
+	margin-top: 50px;
 }
 
 h3 {

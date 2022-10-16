@@ -8,17 +8,19 @@ import "../styles/Home.css";
 
 function Home() {
   const [isLog, setIsLog] = useState(true); //debug
+  const [isChat, setIsChat] = useState(false);
+  const [isStat, setIsStat] = useState(false);
   return (
     <div className="Home">
       {!isLog && <Log log={setIsLog} />}
       {isLog && (
         <div>
           <header className="Header">
-            <Header />
+            <Header chat={setIsChat} stat={setIsStat} />
           </header>
-          <Pong />
-          <Chat />
-          <User />
+          {!isChat && !isStat && <Pong />}
+          {isChat && <Chat />}
+          {isStat && <User />}
         </div>
       )}
     </div>
