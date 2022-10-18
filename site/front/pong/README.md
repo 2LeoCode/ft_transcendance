@@ -14,4 +14,4 @@ to start:
 the when the .js file has been created 
 you can open the index.html file in a browser and start the game
 
-ps: url for me-> "file:///home/user42/Bureau/ft_transcendance/site/front/src/components/pong/index.html"
+ps: url for me-> "file:///home/user42/Bureau/pong/index.html"

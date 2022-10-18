@@ -7,8 +7,8 @@ enum KeyBindings{
 }
 
 class Game{
-    private gameCanvas: any;
-    private gameContext: any;
+    private gameCanvas;
+    private gameContext;
     public static keysPressed: boolean[] = [];
     public static playerScore: number = 0;
     public static computerScore: number = 0;
@@ -92,7 +92,7 @@ class Entity{
         this.x = x;
         this.y = y;
     }
-    draw(context: any){
+    draw(context){
         context.fillStyle = "#fff";
         context.fillRect(this.x,this.y,this.width,this.height);
     }
@@ -106,7 +106,7 @@ class Paddle extends Entity{
         super(w,h,x,y);
     }
     
-    update(canvas: any){
+    update(canvas){
      if( Game.keysPressed[KeyBindings.W] ){
         this.yVel = -1;
         if(this.y <= 20){
@@ -134,7 +134,7 @@ class Paddle2 extends Entity{
         super(w,h,x,y);
     }
     
-    update(canvas: any){
+    update(canvas){
      if( Game.keysPressed[KeyBindings.UP] ){
         this.yVel = -1;
         if(this.y <= 20){
@@ -205,7 +205,7 @@ class Ball extends Entity{
     }
     
     //update(player:Paddle,computer:ComputerPaddle,canvas){
-	update(player:Paddle,player2:Paddle2,canvas: any){
+	update(player:Paddle,player2:Paddle2,canvas){
        
         //check top canvas bounds
         if(this.y <= 10){
@@ -257,5 +257,3 @@ class Ball extends Entity{
 
 var game = new Game();
 requestAnimationFrame(game.gameLoop);
-
-export {};
