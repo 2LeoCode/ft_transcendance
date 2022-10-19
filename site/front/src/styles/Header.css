@@ -1,8 +1,0 @@
-.Header {
-	width: 100vw;
-	height: 10vh;
-	background-color: rgb(0, 1, 53);
-	display: grid;
-	grid-template-columns: 20vw 20vw 20vw 20vw 20vw;
-	grid-template-rows: 10vh;
-}
