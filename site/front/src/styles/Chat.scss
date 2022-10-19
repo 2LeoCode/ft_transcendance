@@ -1,8 +1,34 @@
 .Chat {
-	width: 70vw;
+	width: 90vw;
 	height: 75vh;
 	background-color: rgb(247, 247, 247);
 	margin: auto;
 	margin-top: 50px;
 	box-shadow: 0px 0px 10px 10px white;
+	display: grid;
+	grid-template-columns: 25% 50% 25%;
+	grid-template-rows: 95% 5%;
+	grid-template-areas:
+	'left main right'
+	'left write right';
+	font-family: sans-serif;
+}
+
+.left-pannel {
+	grid-area: left;
+	border-right: solid 2px black;
+}
+
+.right-pannel {
+	grid-area: right;
+	border-left: solid 2px black;
+}
+
+.main {
+	grid-area: main;
+	border-bottom: solid 2px black;
+}
+
+.write_msg {
+	grid-area: write;
 }
