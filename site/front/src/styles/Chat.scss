@@ -21,29 +21,41 @@
 	padding: 0;
 }
 
+.left-pannel, .right-pannel {
+	overflow-y: auto;
+	background-color: rgb(185, 185, 185);
+}
+
 .left-pannel {
 	grid-area: left;
-	background-color: rgb(185, 185, 185);
 }
 
 .right-pannel {
 	grid-area: right;
-	background-color: rgb(185, 185, 185);
 }
 
 .main {
 	grid-area: main;
+	overflow-wrap: anywhere;
+	overflow-y: auto;
 }
 
-.main li
-{
+.main li {
 	margin: 10px;
 	padding: 15px 15px 20px 20px;
 	border-radius: 20px;
 }
 
+.main li.own_message {
+	margin-left: 50px;
+}
+
+.main li.other_message {
+	margin-right: 50px;
+}
+
+
 .own_message {
-	padding-left: 70%;
 	clear: both;
 	float: right;
 	background-color: rgb(255, 0, 0);
@@ -69,3 +81,4 @@
 	margin-left: 5px;
 	height: 35px;
 }
+

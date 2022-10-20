@@ -1,9 +1,14 @@
+HOME :
+- do routes instead of state
+
 CHAT :
-- ADD scrolling
-- onChange write msg add {...}
+- onChange other write msg add {...} (optionnal)
 
 PONG : 
 - waiting page
 
 USER:
 - max width
+
+HEADER :
+- standardize

@@ -18,17 +18,17 @@ function Pong() {
     setWitdh(vw_to_px(70));
     setHeight(vh_to_px(50));
   }, [window.innerWidth, window.innerHeight])
-  // const script = document.createElement("script");
-  //  useEffect(() => {
+  const script = document.createElement("script");
+   useEffect(() => {
 
-  //   script.src = "./game.js";
-  //   script.async = true;
-  //   document.body.appendChild(script);
+    script.src = "./game.js";
+    script.async = true;
+    document.body.appendChild(script);
 
-  //   return () => {
-  //     document.body.removeChild(script);
-  //   };
-  // }, []);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
   return (
     <div className="Pong">
       <canvas id="pong" width={width} height={height}></canvas>

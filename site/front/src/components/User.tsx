@@ -39,15 +39,13 @@ function User() {
         />
       </div>
       <div className="stats">
-        <p>{matches_won} win</p>
-        <p>{matches_lost} lose</p>
+        <p className="win">{matches_won} win</p>
+        <p className="lose">{matches_lost} lose</p>
       </div>
       <div className="match_history">
-        <p>History</p>
+        <h4>History</h4>
+        <p>No match history yet</p>
       </div>
-      {/* <div className="auth">
-        <p>Authentification</p>
-      </div> */}
     </div>
   );
 }
