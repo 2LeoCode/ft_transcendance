@@ -48,8 +48,8 @@ var Game = /** @class */ (function () {
             this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
         }
         //draw scores
-        this.gameContext.fillText(Game.playerScore, 280, 50);
-        this.gameContext.fillText(Game.computerScore, 390, 50);
+        this.gameContext.fillText(Game.playerScore, this.gameCanvas.width / 4, this.gameCanvas.height / 10);
+        this.gameContext.fillText(Game.player2Score, this.gameCanvas.width / 4 * 3, this.gameCanvas.height / 10);
     };
     Game.prototype.update = function () {
         this.player1.update(this.gameCanvas);
@@ -67,14 +67,68 @@ var Game = /** @class */ (function () {
         //this.computerPlayer.draw(this.gameContext);
         this.ball.draw(this.gameContext);
     };
+    Game.prototype.stopGame1 = function () {
+        // ending page with player1 wins.
+        //clear whole canva
+        this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+        //draw court outline
+        this.gameContext.strokeStyle = "#fff";
+        this.gameContext.lineWidth = 5;
+        this.gameContext.strokeRect(10, 10, this.gameCanvas.width - 20, this.gameCanvas.height - 20);
+        //draw center lines
+        for (var i = 0; i + 30 < this.gameCanvas.height; i += 30) {
+            this.gameContext.fillStyle = "#fff";
+            this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
+        }
+        //clear center line for the text
+        this.gameContext.clearRect(this.gameCanvas.width / 2 - 20, this.gameCanvas.height / 2 - 20, 40, 40);
+        //draw scores
+        this.gameContext.fillText(Game.playerScore, this.gameCanvas.width / 4, this.gameCanvas.height / 10);
+        this.gameContext.fillText(Game.player2Score, this.gameCanvas.width / 4 * 3, this.gameCanvas.height / 10);
+        this.player1.draw(this.gameContext);
+        this.player2.draw(this.gameContext);
+        //get the ufc font for the scores and ending page
+        // this.gameContext.font = 'ufc';
+        this.gameContext.textAlign = 'center';
+        this.gameContext.fillText("player one wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
+    };
+    Game.prototype.stopGame2 = function () {
+        // ending page with player2 wins.
+        //clear whole canva
+        this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+        //draw court outline
+        this.gameContext.strokeStyle = "#fff";
+        this.gameContext.lineWidth = 5;
+        this.gameContext.strokeRect(10, 10, this.gameCanvas.width - 20, this.gameCanvas.height - 20);
+        //draw center lines
+        for (var i = 0; i + 30 < this.gameCanvas.height; i += 30) {
+            this.gameContext.fillStyle = "#fff";
+            this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
+        }
+        //clear center line for the text
+        this.gameContext.clearRect(this.gameCanvas.width / 2 - 20, this.gameCanvas.height / 2 - 20, 40, 40);
+        //draw scores
+        this.gameContext.fillText(Game.playerScore, this.gameCanvas.width / 4, this.gameCanvas.height / 10);
+        this.gameContext.fillText(Game.player2Score, this.gameCanvas.width / 4 * 3, this.gameCanvas.height / 10);
+        this.gameContext.textAlign = 'center';
+        this.gameContext.fillText("player two wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
+    };
     Game.prototype.gameLoop = function () {
+        if (Game.playerScore == 7) {
+            game.stopGame1();
+            return;
+        }
+        if (Game.player2Score == 7) {
+            game.stopGame2();
+            return;
+        }
         game.update();
         game.draw();
         requestAnimationFrame(game.gameLoop);
     };
     Game.keysPressed = [];
     Game.playerScore = 0;
-    Game.computerScore = 0;
+    Game.player2Score = 0;
     return Game;
 }());
 var Entity = /** @class */ (function () {
@@ -208,7 +262,7 @@ var Ball = /** @class */ (function (_super) {
         //check left canvas bounds
         if (this.x <= 0) {
             this.x = canvas.width / 2 - this.width / 2;
-            Game.computerScore += 1;
+            Game.player2Score += 1;
         }
         //check right canvas bounds
         if (this.x + this.width >= canvas.width) {

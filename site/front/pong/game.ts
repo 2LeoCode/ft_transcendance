@@ -11,7 +11,8 @@ class Game{
     private gameContext;
     public static keysPressed: boolean[] = [];
     public static playerScore: number = 0;
-    public static computerScore: number = 0;
+    public static player2Score: number = 0;
+    // public static computerScore: number = 0;
     private player1: Paddle;
 	private player2: Paddle2;
 	//private computerPlayer: ComputerPaddle;
@@ -52,7 +53,7 @@ class Game{
         
         //draw scores
         this.gameContext.fillText(Game.playerScore, 280, 50);
-        this.gameContext.fillText(Game.computerScore, 390, 50);
+        this.gameContext.fillText(Game.player2Score, 390, 50);
         
     }
     update(){
@@ -71,8 +72,63 @@ class Game{
 		this.player2.draw(this.gameContext);
 		//this.computerPlayer.draw(this.gameContext);
         this.ball.draw(this.gameContext);
-    }
+	}
+	stopGame1(){
+		// ending page with player1 wins.
+
+		//clear whole canva
+		this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+        
+        //draw court outline
+        this.gameContext.strokeStyle = "#fff";
+        this.gameContext.lineWidth = 5;
+		this.gameContext.strokeRect(10, 10, this.gameCanvas.width - 20, this.gameCanvas.height - 20);
+
+        //draw center lines
+        for (var i = 0; i + 30 < this.gameCanvas.height; i += 30) {
+            this.gameContext.fillStyle = "#fff";
+            this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
+		}
+		
+		this.gameContext.clearRect(this.gameCanvas.width / 2 - 20, this.gameCanvas.height / 2 - 20, 40, 40);
+		
+		//get the ufc font for the scores and ending page
+        // this.gameContext.font = 'ufc';
+        this.gameContext.textAlign = 'center';
+        this.gameContext.fillText("player one wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
+	}
+	stopGame2(){
+		// ending page with player2 wins.
+
+		//clear whole canva
+		this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+        
+        //draw court outline
+        this.gameContext.strokeStyle = "#fff";
+        this.gameContext.lineWidth = 5;
+		this.gameContext.strokeRect(10,10,this.gameCanvas.width - 20 ,this.gameCanvas.height - 20);
+
+        //draw center lines
+        for (var i = 0; i + 30 < this.gameCanvas.height; i += 30) {
+            this.gameContext.fillStyle = "#fff";
+            this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
+		}
+		
+		//clear center line for text at ending page
+		this.gameContext.clearRect(this.gameCanvas.width / 2 - 20, this.gameCanvas.height / 2 - 20, 40, 40);
+		
+        this.gameContext.textAlign = 'center';
+        this.gameContext.fillText("player two wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
+	}
     gameLoop(){
+		if (Game.playerScore == 7){
+			game.stopGame1();
+			return ;
+		}
+		if (Game.player2Score == 7){
+			game.stopGame2();
+			return ;
+		}
         game.update();
         game.draw();
         requestAnimationFrame(game.gameLoop);
@@ -220,7 +276,7 @@ class Ball extends Entity{
         //check left canvas bounds
         if(this.x <= 0){  
             this.x = canvas.width / 2 - this.width / 2;
-            Game.computerScore += 1;
+            Game.player2Score += 1;
         }
         
         //check right canvas bounds
@@ -257,4 +313,3 @@ class Ball extends Entity{
 
 var game = new Game();
 requestAnimationFrame(game.gameLoop);
-// game.gameLoop
