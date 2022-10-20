@@ -27,9 +27,14 @@
 	font-size: 34px;
 	border: none;
 	cursor: pointer;
-  }
+}
+  
+.chat {
+	font-size: 34px;
+} 
   
 .dropdown {
+	margin-top: 28px;
 	position: relative;
 	display: block;
   }
@@ -39,7 +44,7 @@
 	position: absolute;
 	padding-left: 5vw;
 	text-align: center;
-	background-color: none;
+	background-color: black;
 	z-index: 1;
 	margin: auto;
 	text-align: center;

@@ -32,7 +32,7 @@ function Header(props: any) {
           props.stat(false);
         }}
       >
-        Chat
+        <p className="chat">Chat</p>
       </button>
       <div className="dropdown">
         <button className="dropbtn">Menu</button>
