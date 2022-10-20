@@ -13,6 +13,7 @@
 	'footer footer footer';
 	grid-auto-rows: auto;
 	margin-top: 50px;
+	font-family: sans-serif;
 }
 
 h3 {
@@ -31,9 +32,6 @@ h3 {
 	grid-area: right;
 }
 
-.auth {
-	grid-area: footer;
-}
 
 .avatar_label {
 	cursor: pointer;

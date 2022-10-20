@@ -257,3 +257,4 @@ class Ball extends Entity{
 
 var game = new Game();
 requestAnimationFrame(game.gameLoop);
+// game.gameLoop

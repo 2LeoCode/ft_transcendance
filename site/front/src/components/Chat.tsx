@@ -13,13 +13,25 @@ function Chat() {
         </ul>
         <h3>Admins</h3>
         <ul>
-          <li>Admin 1</li>
+          <li>
+            <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+            Admin 1
+          </li>
         </ul>
         <h3>Members</h3>
         <ul>
-          <li>Member 1</li>
-          <li>Member 2</li>
-          <li>Member 3</li>
+          <li>
+            <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+            Member 1
+          </li>
+          <li>
+            <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+            Member 2
+          </li>
+          <li>
+            <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+            Member 3
+          </li>
         </ul>
         <h4 className="create_channel">Create Channel</h4>
       </div>
@@ -38,9 +50,18 @@ function Chat() {
       <div className="right-pannel">
         <h3>Friends</h3>
         <ul>
-          <li>Friend 1</li>
-          <li>Friend 2</li>
-          <li>Friend 3</li>
+          <li>
+            <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+            Friend 1
+          </li>
+          <li>
+            <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+            Friend 2
+          </li>
+          <li>
+            <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+            Friend 3
+          </li>
         </ul>
       </div>
     </div>

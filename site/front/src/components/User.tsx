@@ -23,7 +23,7 @@ function User() {
         )}
         {uploaded && (
           <img src={URL.createObjectURL(image)} alt="Avatar" width="80%" />
-        )}
+        )}<br />
         <label htmlFor="avatar" className="avatar_label">
           Change avatar
         </label>
@@ -45,9 +45,9 @@ function User() {
       <div className="match_history">
         <p>History</p>
       </div>
-      <div className="auth">
+      {/* <div className="auth">
         <p>Authentification</p>
-      </div>
+      </div> */}
     </div>
   );
 }
