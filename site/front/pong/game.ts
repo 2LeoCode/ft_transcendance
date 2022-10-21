@@ -205,8 +205,6 @@ class Paddle2 extends Entity{
      }
      
      this.y += this.yVel * this.speed;
-     this.x = canvas.width;
-     
     }
 }
 
