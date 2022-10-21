@@ -12,8 +12,8 @@ function vh_to_px(vh: number)
 }
 
 function Pong() {
-  const [width, setWitdh] = useState<number | any>();
-  const [height, setHeight] = useState<number | any>();
+  const [width, setWitdh] = useState<number | any>(vw_to_px(70));
+  const [height, setHeight] = useState<number | any>(vh_to_px(50));
   setInterval(() => setWitdh(vw_to_px(70)), 100);
   setInterval(() => setHeight(vh_to_px(50)), 100);
   // useEffect(() => {

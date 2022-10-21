@@ -48,8 +48,8 @@ var Game = /** @class */ (function () {
             this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
         }
         //draw scores
-        this.gameContext.fillText(Game.playerScore, this.gameCanvas.width / 4 - 10, 50);
-        this.gameContext.fillText(Game.player2Score, (3 * this.gameCanvas.width) / 4 + 10, 50);
+        this.gameContext.fillText(Game.playerScore, 280, 50);
+        this.gameContext.fillText(Game.player2Score, 390, 50);
     };
     Game.prototype.update = function () {
         this.player1.update(this.gameCanvas);
@@ -188,6 +188,7 @@ var Paddle2 = /** @class */ (function (_super) {
             this.yVel = 0;
         }
         this.y += this.yVel * this.speed;
+        this.x = canvas.width;
     };
     return Paddle2;
 }(Entity));
