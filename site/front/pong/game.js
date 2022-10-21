@@ -190,6 +190,7 @@ var Paddle2 = /** @class */ (function (_super) {
             this.yVel = 0;
         }
         this.y += this.yVel * this.speed;
+        this.x = canvas.width;
     };
     return Paddle2;
 }(Entity));

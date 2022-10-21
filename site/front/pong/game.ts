@@ -76,7 +76,7 @@ class Game{
         this.ball.draw(this.gameContext);
 	}
 	stopGame1(){
-		// ending page with player1 wins.
+        // ending page with player1 wins.
 
 		//clear whole canva
 		this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
@@ -179,8 +179,7 @@ class Paddle extends Entity{
          this.yVel = 0;
      }
      
-     this.y += this.yVel * this.speed;
-     
+     this.y += this.yVel * this.speed;     
     }
 }
 
@@ -208,7 +207,6 @@ class Paddle2 extends Entity{
      }
      
      this.y += this.yVel * this.speed;
-     
     }
 }
 
