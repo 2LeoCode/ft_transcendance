@@ -48,10 +48,12 @@ var Game = /** @class */ (function () {
             this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
         }
         //draw scores
-        this.gameContext.fillText(Game.playerScore, this.gameCanvas.width / 4, this.gameCanvas.height / 10);
-        this.gameContext.fillText(Game.player2Score, this.gameCanvas.width / 4 * 3, this.gameCanvas.height / 10);
+        this.gameContext.fillText(Game.playerScore, 280, 50);
+        this.gameContext.fillText(Game.player2Score, 390, 50);
     };
     Game.prototype.update = function () {
+        this.gameCanvas = document.getElementById("pong");
+        this.gameContext = this.gameCanvas.getContext("2d");
         this.player1.update(this.gameCanvas);
         this.player2.update(this.gameCanvas);
         //this.computerPlayer.update(this.ball,this.gameCanvas);
@@ -80,13 +82,7 @@ var Game = /** @class */ (function () {
             this.gameContext.fillStyle = "#fff";
             this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
         }
-        //clear center line for the text
         this.gameContext.clearRect(this.gameCanvas.width / 2 - 20, this.gameCanvas.height / 2 - 20, 40, 40);
-        //draw scores
-        this.gameContext.fillText(Game.playerScore, this.gameCanvas.width / 4, this.gameCanvas.height / 10);
-        this.gameContext.fillText(Game.player2Score, this.gameCanvas.width / 4 * 3, this.gameCanvas.height / 10);
-        this.player1.draw(this.gameContext);
-        this.player2.draw(this.gameContext);
         //get the ufc font for the scores and ending page
         // this.gameContext.font = 'ufc';
         this.gameContext.textAlign = 'center';
@@ -105,11 +101,8 @@ var Game = /** @class */ (function () {
             this.gameContext.fillStyle = "#fff";
             this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
         }
-        //clear center line for the text
+        //clear center line for text at ending page
         this.gameContext.clearRect(this.gameCanvas.width / 2 - 20, this.gameCanvas.height / 2 - 20, 40, 40);
-        //draw scores
-        this.gameContext.fillText(Game.playerScore, this.gameCanvas.width / 4, this.gameCanvas.height / 10);
-        this.gameContext.fillText(Game.player2Score, this.gameCanvas.width / 4 * 3, this.gameCanvas.height / 10);
         this.gameContext.textAlign = 'center';
         this.gameContext.fillText("player two wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
     };

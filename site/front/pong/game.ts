@@ -57,6 +57,8 @@ class Game{
         
     }
     update(){
+        this.gameCanvas = document.getElementById("pong");
+        this.gameContext = this.gameCanvas.getContext("2d");
         this.player1.update(this.gameCanvas);
         this.player2.update(this.gameCanvas);
         //this.computerPlayer.update(this.ball,this.gameCanvas);
