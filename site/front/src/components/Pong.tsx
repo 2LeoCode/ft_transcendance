@@ -14,13 +14,14 @@ function vh_to_px(vh: number)
 function Pong() {
   const [width, setWitdh] = useState<number | any>();
   const [height, setHeight] = useState<number | any>();
+  setInterval(() => setWitdh(vw_to_px(70)), 100);
+  setInterval(() => setHeight(vh_to_px(50)), 100);
+  // useEffect(() => {
+    // setWitdh(vw_to_px(70));
+    // setHeight(vh_to_px(50));
+  // }, [window.innerWidth, window.innerHeight])
   useEffect(() => {
-    setWitdh(vw_to_px(70));
-    setHeight(vh_to_px(50));
-  }, [window.innerWidth, window.innerHeight])
-  const script = document.createElement("script");
-   useEffect(() => {
-
+    const script = document.createElement("script");
     script.src = "./game.js";
     script.async = true;
     document.body.appendChild(script);

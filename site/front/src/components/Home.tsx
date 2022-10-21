@@ -8,7 +8,7 @@ import "../styles/Home.css";
 
 function Home() {
   const [isLog, setIsLog] = useState(true); //debug
-  const [isChat, setIsChat] = useState(true); //debug
+  const [isChat, setIsChat] = useState(false); //debug
   const [isStat, setIsStat] = useState(false);
   return (
     <div className="Home">

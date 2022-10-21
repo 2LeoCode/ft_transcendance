@@ -74,7 +74,7 @@ class Game{
         this.ball.draw(this.gameContext);
 	}
 	stopGame1(){
-		// ending page with player1 wins.
+        // ending page with player1 wins.
 
 		//clear whole canva
 		this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
