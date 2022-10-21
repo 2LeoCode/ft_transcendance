@@ -7,6 +7,7 @@ enum KeyBindings{
 }
 
 class Game{
+
     private gameCanvas;
     private gameContext;
     public static keysPressed: boolean[] = [];
@@ -30,10 +31,13 @@ class Game{
             Game.keysPressed[e.which] = false;
         });
         
-        var paddleWidth:number = 20, paddleHeight:number = 60, ballSize:number = 10, wallOffset:number = 20;
-        
-        this.player1 = new Paddle(paddleWidth,paddleHeight,wallOffset,this.gameCanvas.height / 2 - paddleHeight / 2); 
-		this.player2 = new Paddle2(paddleWidth,paddleHeight,this.gameCanvas.width - (wallOffset + paddleWidth) ,this.gameCanvas.height / 2 - paddleHeight / 2); 
+        var paddleWidth:number = 5, paddleHeight:number = 20, ballSize:number = 2, wallOffset:number = 5;
+		
+		this.player1 = new Paddle(paddleWidth, paddleHeight, wallOffset, 100 / 2 - paddleHeight / 2); 
+		this.player2 = new Paddle2(paddleWidth, paddleHeight, 200 - (wallOffset + paddleWidth) , 100 / 2 - paddleHeight / 2); 
+
+        // this.player1 = new Paddle(paddleWidth,paddleHeight,wallOffset,this.gameCanvas.height / 2 - paddleHeight / 2); 
+		// this.player2 = new Paddle2(paddleWidth,paddleHeight,this.gameCanvas.width - (wallOffset + paddleWidth) ,this.gameCanvas.height / 2 - paddleHeight / 2); 
 		//this.computerPlayer = new ComputerPaddle(paddleWidth,paddleHeight,this.gameCanvas.width - (wallOffset + paddleWidth) ,this.gameCanvas.height / 2 - paddleHeight / 2);
         this.ball = new Ball(ballSize,ballSize,this.gameCanvas.width / 2 - ballSize / 2, this.gameCanvas.height / 2 - ballSize / 2);    
         
@@ -52,13 +56,13 @@ class Game{
         }
         
         //draw scores
-        this.gameContext.fillText(Game.playerScore, 280, 50);
-        this.gameContext.fillText(Game.player2Score, 390, 50);
+        this.gameContext.textAlign = 'center';
+        this.gameContext.font = "30px Orbitron";
+        this.gameContext.fillText(Game.playerScore, this.gameCanvas.width / 4, this.gameCanvas.height / 6);
+        this.gameContext.fillText(Game.player2Score, this.gameCanvas.width / 4 * 3, this.gameCanvas.height / 6);
         
     }
     update(){
-        this.gameCanvas = document.getElementById("pong");
-        this.gameContext = this.gameCanvas.getContext("2d");
         this.player1.update(this.gameCanvas);
         this.player2.update(this.gameCanvas);
         //this.computerPlayer.update(this.ball,this.gameCanvas);
@@ -70,67 +74,45 @@ class Game{
         this.gameContext.fillRect(0,0,this.gameCanvas.width,this.gameCanvas.height);
               
         this.drawBoardDetails();
-        this.player1.draw(this.gameContext);
-		this.player2.draw(this.gameContext);
+        this.player1.draw(this.gameContext, this.gameCanvas);
+		this.player2.draw(this.gameContext, this.gameCanvas);
 		//this.computerPlayer.draw(this.gameContext);
-        this.ball.draw(this.gameContext);
+        this.ball.draw(this.gameContext, this.gameCanvas);
 	}
-	stopGame1(){
-        // ending page with player1 wins.
+	stopGame(){
+		// ending page with player1 wins.
 
 		//clear whole canva
 		this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
-        
-        //draw court outline
-        this.gameContext.strokeStyle = "#fff";
-        this.gameContext.lineWidth = 5;
+		
+		//draw court outline
+		this.gameContext.strokeStyle = "#fff";
+		this.gameContext.lineWidth = 5;
 		this.gameContext.strokeRect(10, 10, this.gameCanvas.width - 20, this.gameCanvas.height - 20);
 
-        //draw center lines
-        for (var i = 0; i + 30 < this.gameCanvas.height; i += 30) {
-            this.gameContext.fillStyle = "#fff";
-            this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
+		//draw center lines
+		for (var i = 0; i + 30 < this.gameCanvas.height; i += 30) {
+			this.gameContext.fillStyle = "#fff";
+			this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
 		}
 		
 		this.gameContext.clearRect(this.gameCanvas.width / 2 - 20, this.gameCanvas.height / 2 - 20, 40, 40);
 		
 		//get the ufc font for the scores and ending page
         // this.gameContext.font = 'ufc';
-        this.gameContext.textAlign = 'center';
-        this.gameContext.fillText("player one wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
-	}
-	stopGame2(){
-		// ending page with player2 wins.
-
-		//clear whole canva
-		this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
-        
-        //draw court outline
-        this.gameContext.strokeStyle = "#fff";
-        this.gameContext.lineWidth = 5;
-		this.gameContext.strokeRect(10,10,this.gameCanvas.width - 20 ,this.gameCanvas.height - 20);
-
-        //draw center lines
-        for (var i = 0; i + 30 < this.gameCanvas.height; i += 30) {
-            this.gameContext.fillStyle = "#fff";
-            this.gameContext.fillRect(this.gameCanvas.width / 2 - 10, i + 10, 15, 20);
-		}
-		
-		//clear center line for text at ending page
-		this.gameContext.clearRect(this.gameCanvas.width / 2 - 20, this.gameCanvas.height / 2 - 20, 40, 40);
-		
-        this.gameContext.textAlign = 'center';
-        this.gameContext.fillText("player two wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
+		this.gameContext.textAlign = 'center';
+		if (Game.playerScore == 7)
+		this.gameContext.fillText("player one wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
+		if (Game.player2Score == 7)
+		this.gameContext.fillText("player two wins!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 10);
 	}
     gameLoop(){
-		if (Game.playerScore == 7){
-			game.stopGame1();
+
+		if (Game.playerScore == 7 || Game.player2Score == 7){
+			game.stopGame();
 			return ;
 		}
-		if (Game.player2Score == 7){
-			game.stopGame2();
-			return ;
-		}
+		
         game.update();
         game.draw();
         requestAnimationFrame(game.gameLoop);
@@ -144,35 +126,36 @@ class Entity{
     y:number;
     xVel:number = 0;
     yVel:number = 0;
-    constructor(w:number,h:number,x:number,y:number){       
+    constructor(w:number, h:number, x:number, y:number){       
         this.width = w;
         this.height = h;
         this.x = x;
         this.y = y;
     }
-    draw(context){
+    draw(context, canvas){
+
         context.fillStyle = "#fff";
-        context.fillRect(this.x,this.y,this.width,this.height);
+        context.fillRect(this.x / 200 * canvas.width, this.y / 100 * canvas.height, this.width / 200 * canvas.width, this.height / 100 * canvas.height);
     }
 }
 
 class Paddle extends Entity{
     
-    private speed:number = 10;
+    private speed:number = 1;
     
-    constructor(w:number,h:number,x:number,y:number){
-        super(w,h,x,y);
+    constructor(w:number, h:number, x:number, y:number){
+        super(w, h, x, y);
     }
     
     update(canvas){
      if( Game.keysPressed[KeyBindings.W] ){
         this.yVel = -1;
-        if(this.y <= 20){
+        if(this.y <= 5){
             this.yVel = 0
         }
      }else if(Game.keysPressed[KeyBindings.S]){
          this.yVel = 1;
-         if(this.y + this.height >= canvas.height - 20){
+         if(this.y + this.height >= 100 - 5){
              this.yVel = 0;
          }
      }else{
@@ -185,7 +168,7 @@ class Paddle extends Entity{
 
 class Paddle2 extends Entity{
     
-    private speed:number = 10;
+    private speed:number = 1;
     
     constructor(w:number,h:number,x:number,y:number){
         super(w,h,x,y);
@@ -194,12 +177,12 @@ class Paddle2 extends Entity{
     update(canvas){
      if( Game.keysPressed[KeyBindings.UP] ){
         this.yVel = -1;
-        if(this.y <= 20){
+        if(this.y <= 5){
             this.yVel = 0
         }
      }else if(Game.keysPressed[KeyBindings.DOWN]){
          this.yVel = 1;
-         if(this.y + this.height >= canvas.height - 20){
+         if(this.y + this.height >= 100 - 5){
              this.yVel = 0;
          }
      }else{
@@ -247,7 +230,7 @@ class Paddle2 extends Entity{
 
 class Ball extends Entity{
     
-    private speed:number = 4;
+    private speed:number = 0.5;
     
     constructor(w:number,h:number,x:number,y:number){
         super(w,h,x,y);
@@ -264,24 +247,24 @@ class Ball extends Entity{
 	update(player:Paddle,player2:Paddle2,canvas){
        
         //check top canvas bounds
-        if(this.y <= 10){
+        if(this.y <= 5){
             this.yVel = 1;
         }
         
         //check bottom canvas bounds
-        if(this.y + this.height >= canvas.height - 10){
+        if(this.y + this.height >= 100 - 5){
             this.yVel = -1;
         }
         
         //check left canvas bounds
         if(this.x <= 0){  
-            this.x = canvas.width / 2 - this.width / 2;
+            this.x = 200 / 2 - this.width / 2;
             Game.player2Score += 1;
         }
         
         //check right canvas bounds
-        if(this.x + this.width >= canvas.width){
-            this.x = canvas.width / 2 - this.width / 2;
+        if(this.x + this.width >= 200){
+            this.x = 200 / 2 - this.width / 2;
             Game.playerScore += 1;
         }
         

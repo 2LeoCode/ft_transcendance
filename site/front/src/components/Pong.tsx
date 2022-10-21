@@ -22,7 +22,7 @@ function Pong() {
   // }, [window.innerWidth, window.innerHeight])
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "./game.js";
+    script.src = "game.js";
     script.async = true;
     document.body.appendChild(script);
 
