@@ -1,6 +1,3 @@
-HOME :
-- do routes instead of state
-
 CHAT :
 - onChange other write msg add {...} (optionnal)
 

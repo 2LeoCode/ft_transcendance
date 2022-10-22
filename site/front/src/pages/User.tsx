@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Header from "../components/Header";
 // import axios from 'axios';
 import "../styles/User.css";
 
@@ -15,6 +16,8 @@ function User() {
   const matches_lost: number = 0;
 
   return (
+    <div>
+      <Header />
     <div className="User">
       <h3>Username</h3>
       <div className="avatar">
@@ -46,6 +49,7 @@ function User() {
         <h4>History</h4>
         <p>No match history yet</p>
       </div>
+    </div>
     </div>
   );
 }

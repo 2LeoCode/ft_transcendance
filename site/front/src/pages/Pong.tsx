@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
+import Header from "../components/Header";
 import "../styles/Pong.css";
 
-function vw_to_px(vw: number)
-{
-  return (window.innerWidth * vw) / 100
+function vw_to_px(vw: number) {
+  return (window.innerWidth * vw) / 100;
 }
 
-function vh_to_px(vh: number)
-{
-  return (window.innerHeight * vh) / 100
+function vh_to_px(vh: number) {
+  return (window.innerHeight * vh) / 100;
 }
 
 function Pong() {
@@ -17,8 +16,8 @@ function Pong() {
   setInterval(() => setWitdh(vw_to_px(70)), 100);
   setInterval(() => setHeight(vh_to_px(50)), 100);
   // useEffect(() => {
-    // setWitdh(vw_to_px(70));
-    // setHeight(vh_to_px(50));
+  // setWitdh(vw_to_px(70));
+  // setHeight(vh_to_px(50));
   // }, [window.innerWidth, window.innerHeight])
   useEffect(() => {
     const script = document.createElement("script");
@@ -31,8 +30,11 @@ function Pong() {
     };
   }, []);
   return (
-    <div className="Pong">
-      <canvas id="pong" width={width} height={height}></canvas>
+    <div>
+      <Header />
+      <div className="Pong">
+        <canvas id="pong" width={width} height={height}></canvas>
+      </div>
     </div>
   );
 }
