@@ -1,6 +1,8 @@
 .User {
 	width: 70vw;
 	height: 50vw;
+	max-width: 1000px;
+	max-height: 725px;
 	background-color: white;
 	margin: auto;
 	margin-bottom: 50px;
@@ -16,8 +18,7 @@
 	align-items: center;
 }
 
-.avatar, .stats, .match_history
-{
+.avatar, .stats, .match_history {
 	padding-bottom: 20%;
 }
 

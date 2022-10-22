@@ -6,3 +6,11 @@
 	margin: auto;
 	margin-top: 50px;
 }
+
+.play_button {
+	width: 25vw;
+    height: 10vw;
+    font-size: 5vw;
+    font-family: 'ufc italic';
+	margin-top: calc(50% - 10vw);
+}
