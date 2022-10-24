@@ -29,10 +29,11 @@ services:
     environment:
       POSTGRES_USER: transcendeur
       POSTGRES_PASSWORD: bigData
+      POSTGRES_DB: postgres
     networks:
       - backend
     volumes:
-      - data:/var/lib/postgresql/data
+      - ./data:/var/lib/postgresql/data
 
   databaseadmin:                                 #THE DATABASE 'ADMIN GRAPHICAL INTERFACE'
     image: dpage/pgadmin4:latest
