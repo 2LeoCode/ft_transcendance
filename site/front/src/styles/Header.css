@@ -29,7 +29,7 @@
 	cursor: pointer;
 }
   
-.chat {
+.chat, .watch {
 	font-size: 34px;
 } 
   
@@ -41,13 +41,11 @@
   
 .dropdown-content {
 	display: none;
+	margin-left: 5vw;
 	position: absolute;
-	padding-left: 5vw;
 	text-align: center;
 	background-color: black;
 	z-index: 1;
-	margin: auto;
-	text-align: center;
   }
   
 .dropdown-content button {

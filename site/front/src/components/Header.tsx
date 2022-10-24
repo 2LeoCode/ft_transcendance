@@ -9,7 +9,9 @@ function Header() {
         <img height="50%" src="./default-avatar.webp" alt="avatar" />
         <p>name</p>
       </NavLink>
-      <p></p>
+      <NavLink to="/watch">
+        <p className="watch">Watch</p>
+      </NavLink>
       <NavLink to="/pong">
         <h1>FIGHT PONG</h1>
       </NavLink>
