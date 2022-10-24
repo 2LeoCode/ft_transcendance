@@ -1,8 +1,8 @@
+import { Channel } from '../channel/channel.entity';
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance, UpdateDateColumn } from 'typeorm';
 import { User } from '../user/user.entity';
 
 @Entity()
-@TableInheritance({ column: {type: 'varchar', name: 'type'} })
 export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -16,6 +16,15 @@ export class Message {
   @UpdateDateColumn()
   updateDate: Date;
 
-  @ManyToOne(() => User, (usr) => usr.messages)
+  @ManyToOne(() => User, (usr) => usr.messagesOut)
   sender: User;
+
+	@Column()
+	receiverType: 'user' | 'channel';
+
+	@ManyToOne(() => Channel, (cha) => cha.messages)
+	channelReceiver: Channel;
+
+	@ManyToOne(() => User, (usr) => usr.messagesIn)
+	userReceiver: User;
 };

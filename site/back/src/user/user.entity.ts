@@ -25,20 +25,23 @@ export class User {
   @Column({default: 0})
   highestScore: number;
 
-  @Column({default: []})
+  @Column("int", {array: true, default: []})
   scoreHistory: number[];
 
   @Column({default: true})
   active: boolean;
 
-  @Column({default: []})
+  @Column("json", {array: true, default: []})
   friends: User[];
 
   @OneToMany(() => Channel, (cha) => cha.owner)
   ownedChannels: Channel[];
 
+	@OneToMany(() => Message, (msg) => msg.userReceiver)
+	messagesIn: Message[];
+
   @OneToMany(() => Message, (msg) => msg.sender)
-  messages: Message[];
+  messagesOut: Message[];
 
   @ManyToMany(() => Channel, (cha) => cha.users)
   channels: Channel[];

@@ -21,13 +21,14 @@ export class UserController {
   async post(
     @Body() dto: {
       nick: string,
-			email: string,
+      email: string,
       firstName: string,
       lastName: string,
       password: string
     }
   ): Promise<InsertResult>
   { return this.userService.insert(dto); }
+// '{"nick":"joe","mail":"bourbz","firstName":"joe","lastName":"Bourbz","password":"lapin123"}'
 
   @Delete()
   async delete(@Query('id') id: string): Promise<User[]>

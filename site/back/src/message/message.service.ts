@@ -15,20 +15,39 @@ export class MessageService {
     id?: string,
     createDate?: Date,
     updateDate?: Date,
-    senderId?: string
+    senderId?: string,
+		receiverType?: 'user' | 'channel',
+		receiverId?: string,
   }): Promise<Message[]> {
+    if (opts.receiverType === undefined)
+      return this.messageRepository.findBy({
+        createDate: opts.createDate,
+        updateDate: opts.updateDate,
+        sender: { id: opts.senderId }
+      });
+    if (opts.receiverType === 'user')
+      return this.messageRepository.findBy({
+        createDate: opts.createDate,
+        updateDate: opts.updateDate,
+        sender: { id: opts.senderId },
+        receiverType: opts.receiverType,
+        userReceiver: { id: opts.receiverId }
+      });
     return this.messageRepository.findBy({
       createDate: opts.createDate,
       updateDate: opts.updateDate,
-      sender: { id: opts.senderId }
+      sender: { id: opts.senderId },
+      receiverType: opts.receiverType,
+      channelReceiver: { id: opts.receiverId }
     });
   }
 
   async insert(opts: {
     content: string,
-    date: Date,
     sender: User,
-    receiver: User | Channel
+    receiverType: 'user' | 'channel',
+		channelReceiver: Channel,
+		userReceiver: User
   }): Promise<InsertResult>
   { return this.messageRepository.insert(opts); }
 
