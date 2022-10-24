@@ -16,6 +16,7 @@
 	margin-top: 50px;
 	font-family: sans-serif;
 	align-items: center;
+	border-radius: 10%;
 }
 
 .avatar, .stats, .match_history {

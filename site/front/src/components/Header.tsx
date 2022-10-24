@@ -21,7 +21,7 @@ function Header() {
       <div className="dropdown">
         <button className="dropbtn">Menu</button>
         <div className="dropdown-content">
-          <button>Link 1</button>
+          <button>Settings</button>
           <button>Link 2</button>
           <NavLink to="/">
             <button type="button">Logout</button>
