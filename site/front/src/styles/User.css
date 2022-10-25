@@ -1,0 +1,65 @@
+.User {
+	width: 70vw;
+	height: 50vw;
+	max-width: 1000px;
+	max-height: 725px;
+	background-color: white;
+	margin: auto;
+	margin-bottom: 50px;
+	display: grid;
+	grid-template-columns: 33% 34% 33%;
+	grid-template-rows: 10% 90%;
+	grid-template-areas:
+	'header header header'
+	'left center right';
+	grid-auto-rows: auto;
+	margin-top: 50px;
+	font-family: sans-serif;
+	align-items: center;
+	border-radius: 10%;
+}
+
+.avatar, .stats, .match_history {
+	padding-bottom: 20%;
+}
+
+h3 {
+	grid-area: header;
+	font-size: 32px;
+}
+
+.avatar {
+	grid-area: left;
+}
+
+.stats {
+	grid-area: center;
+}
+
+.match_history {
+	grid-area: right;
+}
+
+
+.avatar_label {
+	cursor: pointer;
+}
+.avatar_label:hover {
+	color: grey;
+}
+
+.avatar_button {
+	display: none;
+}
+
+.win, .lose {
+	font-size: 20px;
+}
+
+.win {
+	color: green;
+}
+
+.lose {
+	color: red;
+}

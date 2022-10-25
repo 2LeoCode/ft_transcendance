@@ -1,0 +1,25 @@
+.Log h1 {
+    margin-top: calc(50vh - 15vw - 50px);
+    font-size: 15vw;
+    font-family: 'ufc italic';
+    color: rgb(163, 0, 0);
+}
+
+.Log button {
+    width: 20vw;
+    height: 7vw;
+    font-size: 3vw;
+    font-family: 'ufc italic';
+}
+
+@media screen and (min-width: 1000px) {
+    .Log h1 {
+        margin-top: calc(50vh - 200px);
+        font-size: 150px;
+    }
+    .Log button {
+        width: 200px;
+        height: 70px;
+        font-size: 30px;
+    }
+}
