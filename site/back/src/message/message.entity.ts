@@ -1,5 +1,5 @@
 import { Channel } from '../channel/channel.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../user/user.entity';
 
 @Entity()
@@ -20,7 +20,7 @@ export class Message {
   sender: User;
 
 	@Column()
-	receiverType: 'user' | 'channel';
+	messageType: 'private' | 'channel';
 
 	@ManyToOne(() => Channel, (cha) => cha.messages)
 	channelReceiver: Channel;

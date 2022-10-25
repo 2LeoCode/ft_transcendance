@@ -9,33 +9,32 @@ import { MessageService } from './message.service';
 export class MessageController {
   constructor(private messageService: MessageService) {}
 
-  // Not sure
   @Get()
   async get(
     @Query('id') id?: string,
     @Query('createDate') createDate?: Date,
     @Query('updateDate') updateDate?: Date,
     @Query('senderId') senderId?: string,
-    @Query('receiverType') receiverType?: 'user' | 'channel',
+    @Query('messageType') messageType?: 'private' | 'channel',
     @Query('receiverId') receiverId?: string
   ): Promise<Message[]>
-  { return this.messageService.find({id, createDate, updateDate, senderId, receiverType, receiverId}); }
+  { return this.messageService.find({id, createDate, updateDate, senderId, messageType: messageType, receiverId}); }
 
   @Post()
   async post(
     @Body() dto: {
       content: string,
       sender: User,
-      receiverType: 'user' | 'channel',
+      messageType: 'private' | 'channel',
       receiver: User | Channel
     }
   ): Promise<InsertResult>
   {
-    if (dto.receiverType == 'user') {
+    if (dto.messageType == 'private') {
       return this.messageService.insert({
         content: dto.content,
         sender: dto.sender,
-        receiverType: 'user',
+        messageType: 'private',
         channelReceiver: null,
         userReceiver: dto.receiver as User
       });
@@ -43,7 +42,7 @@ export class MessageController {
     return this.messageService.insert({
       content: dto.content,
       sender: dto.sender,
-      receiverType: 'channel',
+      messageType: 'channel',
       channelReceiver: dto.receiver as Channel,
       userReceiver: null
     });

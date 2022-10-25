@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common';
+import { Message } from 'src/message/message.entity';
 import { InsertResult, UpdateResult } from 'typeorm';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -16,7 +17,7 @@ export class UserController {
 	  @Query('active') active?: boolean
   ): Promise<User[]>
   { return this.userService.find({id, nick, mail, active}); }
-  
+
   @Post()
   async post(
     @Body() dto: {
@@ -28,7 +29,6 @@ export class UserController {
     }
   ): Promise<InsertResult>
   { return this.userService.insert(dto); }
-// '{"nick":"joe","mail":"bourbz","firstName":"joe","lastName":"Bourbz","password":"lapin123"}'
 
   @Delete()
   async delete(@Query('id') id: string): Promise<User[]>
