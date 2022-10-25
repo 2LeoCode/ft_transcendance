@@ -16,11 +16,11 @@ export class Message {
   @UpdateDateColumn()
   updateDate: Date;
 
-  @ManyToOne(() => User, (usr) => usr.messagesOut)
+  @ManyToOne(() => User, (usr) => usr.messagesOut, {nullable: false})
   sender: User;
 
 	@Column()
-	messageType: 'private' | 'channel';
+	type: 'private' | 'channel';
 
 	@ManyToOne(() => Channel, (cha) => cha.messages)
 	channelReceiver: Channel;
