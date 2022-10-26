@@ -18,21 +18,22 @@ services:
     depends_on:
       - database
     restart: unless-stopped
-  
+
   database:                                      #THE POSTGRESQL DATABASE
     image: postgres:latest
     restart: unless-stopped
     ports:
       - 5432:5432
-    env_file:
-      - ./env/postgres.env
+  #  env_file:
+  #    - ./env/postgres.env
     environment:
       POSTGRES_USER: transcendeur
       POSTGRES_PASSWORD: bigData
+      POSTGRES_DB: transcendb
     networks:
       - backend
     volumes:
-      - data:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
 
   databaseadmin:                                 #THE DATABASE 'ADMIN GRAPHICAL INTERFACE'
     image: dpage/pgadmin4:latest
@@ -50,6 +51,8 @@ services:
       - ./docker/pgadmin_servers.json:/pgadmin4/servers.json
     depends_on:
       - database
+    logging:
+      driver: none
 
   # frontend:                                       #THE FRONTEND SIDE OF OUR APP ITSELF :
   #   build:
@@ -68,7 +71,9 @@ services:
     
 
 volumes:
-  data:
+  postgres:
+  back:
 
 networks:
   backend:
+    driver: bridge
