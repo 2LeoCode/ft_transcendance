@@ -252,9 +252,8 @@ var Ball = /** @class */ (function (_super) {
     __extends(Ball, _super);
     function Ball(w, h, x, y) {
         var _this = _super.call(this, w, h, x, y) || this;
-        _this.speed = 0.5;
+        _this.speed = 1;
         var randomDirection = Math.floor(Math.random() * 2) + 1;
-        _this.speed = 0.5;
         if (randomDirection % 2) {
             _this.xVel = 1;
         }
@@ -266,7 +265,6 @@ var Ball = /** @class */ (function (_super) {
     }
     //update(player:Paddle,computer:ComputerPaddle,canvas){
     Ball.prototype.update = function (player, player2) {
-        this.speed = 0.5;
         //check top canvas bounds
         if (this.y <= 5) {
             this.yVel = 1;
