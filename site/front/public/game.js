@@ -245,7 +245,6 @@ var Paddle2 = /** @class */ (function (_super) {
        }
        
         this.y += this.yVel * this.speed;
-
     }
     
 }*/

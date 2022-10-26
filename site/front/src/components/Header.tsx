@@ -1,52 +1,31 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import "../styles/Header.css";
 
-function Header(props: any) {
+function Header() {
   return (
     <div className="Header">
-      <button
-        className="infos_user"
-        type="button"
-        onClick={() => {
-          props.chat(false);
-          props.stat(true);
-        }}
-      >
+      <NavLink to="/user" className="infos_user">
         <img height="50%" src="./default-avatar.webp" alt="avatar" />
         <p>name</p>
-      </button>
-      <p></p>
-      <button
-        type="button"
-        onClick={() => {
-          props.chat(false);
-          props.stat(false);
-        }}
-      >
+      </NavLink>
+      <NavLink to="/watch">
+        <p className="watch">Watch</p>
+      </NavLink>
+      <NavLink to="/pong">
         <h1>FIGHT PONG</h1>
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          props.chat(true);
-          props.stat(false);
-        }}
-      >
+      </NavLink>
+      <NavLink to="/chat">
         <p className="chat">Chat</p>
-      </button>
+      </NavLink>
       <div className="dropdown">
         <button className="dropbtn">Menu</button>
         <div className="dropdown-content">
-          <button>Link 1</button>
+          <button>Settings</button>
           <button>Link 2</button>
-          <button
-            type="button"
-            onClick={() => {
-              props.log(false);
-            }}
-          >
-            Logout
-          </button>
+          <NavLink to="/">
+            <button type="button">Logout</button>
+          </NavLink>
         </div>
       </div>
     </div>

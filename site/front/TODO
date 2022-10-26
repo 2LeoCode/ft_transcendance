@@ -1,14 +1,5 @@
-HOME :
-- do routes instead of state
-
 CHAT :
 - onChange other write msg add {...} (optionnal)
 
 PONG : 
 - waiting page
-
-USER:
-- max width
-
-HEADER :
-- standardize
