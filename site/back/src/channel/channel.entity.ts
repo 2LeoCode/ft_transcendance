@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+  ManyToOne,
+} from 'typeorm';
 import { User } from '../user/user.entity';
 import { Message } from 'src/message/message.entity';
 
@@ -13,7 +21,7 @@ export class Channel {
   @Column()
   password: string;
 
-  @Column({default: false})
+  @Column({ default: false })
   isPrivate: boolean;
 
   @ManyToOne(() => User, (usr) => usr.ownedChannels)
@@ -25,4 +33,4 @@ export class Channel {
 
   @OneToMany(() => Message, (msg) => msg.channelReceiver)
   messages: Message[];
-};
+}

@@ -1,5 +1,12 @@
 import { Channel } from '../channel/channel.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from '../user/user.entity';
 
 @Entity()
@@ -16,15 +23,15 @@ export class Message {
   @UpdateDateColumn()
   updateDate: Date;
 
-  @ManyToOne(() => User, (usr) => usr.messagesOut, {nullable: false})
+  @ManyToOne(() => User, (usr) => usr.messagesOut, { nullable: false })
   sender: User;
 
-	@Column()
-	type: 'private' | 'channel';
+  @Column()
+  type: 'private' | 'channel';
 
-	@ManyToOne(() => Channel, (cha) => cha.messages)
-	channelReceiver: Channel;
+  @ManyToOne(() => Channel, (cha) => cha.messages)
+  channelReceiver: Channel;
 
-	@ManyToOne(() => User, (usr) => usr.messagesIn)
-	userReceiver: User;
-};
+  @ManyToOne(() => User, (usr) => usr.messagesIn)
+  userReceiver: User;
+}
