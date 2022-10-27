@@ -57,9 +57,14 @@ export class ChannelController {
       name?: string;
       password?: string;
       isPrivate?: boolean;
-      users?: User[];
+      userIds?: string[];
     },
   ): Promise<UpdateResult> {
-    return this.channelService.update(id, dto);
+    return this.channelService.update(id, {
+      name: dto.name,
+      password: dto.password,
+      isPrivate: dto.isPrivate,
+      users: dto.userIds.map((_id) => ({id: _id} as User))
+    });
   }
 }

@@ -53,7 +53,7 @@ export namespace ChannelCom {
     name?: string,
     password?: string,
     isPrivate?: string,
-    users?: User[]
+    userIds?: string[]
   }) {
     const url = `http://localhost:3000/channel?id=${id}`;
     opts.password = await hash(opts.password, 10);
