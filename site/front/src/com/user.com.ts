@@ -1,6 +1,7 @@
 import { Channel } from './channel.com';
 import { Message } from './message.com';
 import { hash }from 'bcrypt';
+import { Checker } from '../checker/checker';
 
 const fetch = (url: RequestInfo, init?: RequestInit) =>
   import('node-fetch').then(({ default: fetch }) => fetch(url, init));
@@ -44,6 +45,8 @@ export namespace UserCom {
     lastName: string,
     password: string
   }) {
+    if (!Checker.nickname(opts.nick))
+      throw Error('Bad nickname');
     const url = 'http://localhost:3000/user';
     opts.password = await hash(opts.password, 10);
     const response = await fetch(url, {
@@ -71,6 +74,8 @@ export namespace UserCom {
     active?: boolean,
     friends?: User[]
   }) {
+    if (opts.nick !== undefined && !Checker.nickname(opts.nick))
+      throw Error('Bad nickname');
     const url = `http://localhost:3000/user?id=${id}`;
     opts.password &&= await hash(opts.password, 10);
     const response = await fetch(url, {
