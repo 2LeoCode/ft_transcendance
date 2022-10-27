@@ -72,7 +72,7 @@ export namespace UserCom {
     highestScore?: number,
     scoreHistory?: number[],
     active?: boolean,
-    friends?: User[]
+    friendIds?: string[]
   }) {
     if (opts.nick !== undefined && !Checker.nickname(opts.nick))
       throw Error('Bad nickname');

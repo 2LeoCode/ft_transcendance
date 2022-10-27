@@ -15,7 +15,6 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  // Not sure
   @Get()
   async get(
     @Query('id') id?: string,
@@ -31,7 +30,7 @@ export class UserController {
     @Body()
     dto: {
       nick: string;
-      email: string;
+      mail: string;
       firstName: string;
       lastName: string;
       password: string;
@@ -58,10 +57,20 @@ export class UserController {
       highestScore?: number;
       scoreHistory?: number[];
       active?: boolean;
-      friends?: User[];
+      friendIds?: string[];
     },
   ): Promise<UpdateResult> {
     console.log(dto);
-    return this.userService.update(id, dto);
+    return this.userService.update(id, {
+      nick: dto.nick,
+      mail: dto.mail,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      password: dto.password,
+      highestScore: dto.highestScore,
+      scoreHistory: dto.scoreHistory,
+      active: dto.active,
+      friends: dto.friendIds.map((_id) => ({id: _id} as User))
+    });
   }
 }

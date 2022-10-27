@@ -20,7 +20,7 @@ export class UserService {
 
   async insert(opts: {
     nick: string;
-    email: string;
+    mail: string;
     firstName: string;
     lastName: string;
     password: string;
@@ -36,7 +36,7 @@ export class UserService {
     id: string,
     opts: {
       nick?: string;
-      email?: string;
+      mail?: string;
       firstName?: string;
       lastName?: string;
       password?: string;
