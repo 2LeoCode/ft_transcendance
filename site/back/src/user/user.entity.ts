@@ -1,17 +1,23 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToMany,
+} from 'typeorm';
 import { Channel } from '../channel/channel.entity';
 import { Message } from '../message/message.entity';
 
 @Entity()
 export class User {
-	@PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   nick: string;
 
-	@Column()
-	mail: string;
+  @Column()
+  mail: string;
 
   @Column()
   firstName: string;
@@ -22,27 +28,27 @@ export class User {
   @Column()
   password: string;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   highestScore: number;
 
-  @Column("int", {array: true, default: []})
+  @Column('int', { array: true, default: [] })
   scoreHistory: number[];
 
-  @Column({default: true})
+  @Column({ default: true })
   active: boolean;
 
-  @Column("json", {array: true, default: []})
+  @Column('json', { array: true, default: [] })
   friends: User[];
 
   @OneToMany(() => Channel, (cha) => cha.owner)
   ownedChannels: Channel[];
 
-	@OneToMany(() => Message, (msg) => msg.userReceiver)
-	messagesIn: Message[];
+  @OneToMany(() => Message, (msg) => msg.userReceiver)
+  messagesIn: Message[];
 
   @OneToMany(() => Message, (msg) => msg.sender)
   messagesOut: Message[];
 
   @ManyToMany(() => Channel, (cha) => cha.users)
   channels: Channel[];
-};
+}

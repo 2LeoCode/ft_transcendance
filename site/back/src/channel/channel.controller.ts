@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Query, Body, Delete, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  Body,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { Channel } from './channel.entity';
 import { User } from 'src/user/user.entity';
@@ -13,36 +21,45 @@ export class ChannelController {
     @Query('id') id?: string,
     @Query('name') name?: string,
     @Query('isPrivate') isPrivate?: boolean,
-    @Query('ownerId') ownerId?: string
-  ): Promise<Channel[]>
-  { return this.channelService.find({id, name, isPrivate, ownerId}); }
+    @Query('ownerId') ownerId?: string,
+  ): Promise<Channel[]> {
+    return this.channelService.find({ id, name, isPrivate, ownerId });
+  }
 
-	@Post()
-	async post(
-		@Body() dto: {
-			name: string,
-			password: string,
-			isPrivate?: boolean,
-			owner: User
-		}
-	): Promise<InsertResult>
-	{ return this.channelService.insert(dto); }
+  @Post()
+  async post(
+    @Body()
+    dto: {
+      name: string;
+      password: string;
+      isPrivate?: boolean;
+      ownerId: string;
+    },
+  ): Promise<InsertResult> {
+    return this.channelService.insert({
+      name: dto.name,
+      password: dto.password,
+      isPrivate: dto.isPrivate,
+      owner: { id: dto.ownerId } as User,
+    });
+  }
 
-	@Delete()
-	async delete(
-		@Query('id') id: string
-	): Promise<Channel[]>
-	{ return this.channelService.remove(id); }
+  @Delete()
+  async delete(@Query('id') id: string): Promise<Channel[]> {
+    return this.channelService.remove(id);
+  }
 
-	@Patch()
-	async patch(
-		@Query('id') id: string,
-		@Body() dto: {
-			name?: string,
-			password?: string,
-			isPrivate?: boolean,
-			users?: User[]
-		}
-	): Promise<UpdateResult>
-	{ return this.channelService.update(id, dto); }
+  @Patch()
+  async patch(
+    @Query('id') id: string,
+    @Body()
+    dto: {
+      name?: string;
+      password?: string;
+      isPrivate?: boolean;
+      users?: User[];
+    },
+  ): Promise<UpdateResult> {
+    return this.channelService.update(id, dto);
+  }
 }
