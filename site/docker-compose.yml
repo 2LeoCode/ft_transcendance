@@ -10,7 +10,7 @@ services:
     env_file:
       - ./env/back.env
     ports:
-      - 3000:3000
+      - 2000:2000
     volumes:
       - ./back:/app
     networks:
