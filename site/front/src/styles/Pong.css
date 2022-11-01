@@ -1,0 +1,21 @@
+.Pong {
+	width: 70vw;
+	height: 50vh;
+	background-color: black;
+	justify-content: center;
+	margin: auto;
+	margin-top: 50px;
+}
+
+.play_button {
+	width: 25vw;
+    height: 10vw;
+    font-size: 5vw;
+    font-family: 'ufc italic';
+	margin-top: 30vh;
+}
+
+.play_button:hover {
+	color: rgb(163, 0, 0);
+	cursor: pointer;
+}
