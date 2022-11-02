@@ -8,9 +8,11 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { InsertResult, UpdateResult } from 'typeorm';
 import { Channel } from '../channel/channel.entity';
 import { User } from '../user/user.entity';
+import { CreateMessageDto, UpdateMessageDto } from './message.dto';
 import { Message } from './message.entity';
 import { MessageService } from './message.service';
 
@@ -19,6 +21,36 @@ export class MessageController {
   constructor(private messageService: MessageService) {}
 
   @Get()
+  @ApiQuery({
+    type: String,
+    name: 'id',
+    required: false
+  })
+  @ApiQuery({
+    type: Date,
+    name: 'createDate',
+    required: false
+  })
+  @ApiQuery({
+    type: Date,
+    name: 'updateDate',
+    required: false
+  })
+  @ApiQuery({
+    type: String,
+    name: 'senderId',
+    required: false
+  })
+  @ApiQuery({
+    type: String,
+    name: 'type',
+    required: false
+  })
+  @ApiQuery({
+    type: String,
+    name: 'receiverId',
+    required: false
+  })
   async get(
     @Query('id') id?: string,
     @Query('createDate') createDate?: Date,
@@ -44,12 +76,7 @@ export class MessageController {
   @Post()
   async post(
     @Body()
-    dto: {
-      content: string;
-      senderId: string;
-      type: 'private' | 'channel';
-      receiverId: string;
-    },
+    dto: CreateMessageDto
   ): Promise<InsertResult> {
     if (dto.receiverId === undefined) {
       console.error(
@@ -76,17 +103,25 @@ export class MessageController {
   }
 
   @Delete()
+  @ApiQuery({
+    type: String,
+    name: 'id',
+    required: true
+  })
   async delete(@Query('id') id: string): Promise<Message[]> {
     return this.messageService.remove(id);
   }
 
   @Patch()
+  @ApiQuery({
+    type: String,
+    name: 'id',
+    required: true
+  })
   async patch(
     @Query('id') id: string,
     @Body()
-    dto: {
-      content?: string;
-    },
+    dto: UpdateMessageDto
   ): Promise<UpdateResult> {
     return this.messageService.update(id, dto);
   }

@@ -37,8 +37,8 @@ export class User {
   @Column({ default: true })
   active: boolean;
 
-  @Column('json', { array: true, default: [] })
-  friends: User[];
+  @Column('json', { default: [] })
+  friendIds: string[];
 
   @OneToMany(() => Channel, (cha) => cha.owner)
   ownedChannels: Channel[];

@@ -6,7 +6,7 @@ services:
     build:
       context: ./back 
       #dockerfile: ./back/Dockerfile
-      #target: dev #for multi stage
+      target: dev #for multi stage
     env_file:
       - ./env/back.env
     ports:
