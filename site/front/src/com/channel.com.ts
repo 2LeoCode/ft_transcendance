@@ -22,7 +22,7 @@ export namespace ChannelCom {
   }) {
     let url = 'http://localhost:3000/channel?';
     for (const key in opts)
-      url += `${key}=${opts[key]}&`;
+      url += `${key}=${opts[key as keyof typeof opts]}&`;
     const response = await fetch(url, {method: 'GET'});
     return response.json();
   }
@@ -56,7 +56,8 @@ export namespace ChannelCom {
     userIds?: string[]
   }) {
     const url = `http://localhost:3000/channel?id=${id}`;
-    opts.password = await hash(opts.password, 10);
+    if (opts.password !== undefined)
+      opts.password = await hash(opts.password, 10);
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {'Content-Type': 'application/json'},

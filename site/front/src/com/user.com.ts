@@ -2,9 +2,7 @@ import { Channel } from './channel.com';
 import { Message } from './message.com';
 import { hash }from 'bcrypt';
 import { Checker } from '../checker/checker';
-
-const fetch = (url: RequestInfo, init?: RequestInit) =>
-  import('node-fetch').then(({ default: fetch }) => fetch(url, init));
+import fetch from 'node-fetch';
 
 export interface User {
   id: string;
@@ -33,7 +31,7 @@ export namespace UserCom {
   }) {
     let url = 'http://localhost:3000/user?';
     for (const key in opts)
-      url += `${key}=${opts[key]}&`;
+      url += `${key}=${opts[key as keyof typeof opts]}&`;
     const response = await fetch(url, {method: 'GET'});
     return response.json();
   }

@@ -24,7 +24,7 @@ export namespace MessageCom {
   }) {
     let url = 'http://localhost:3000/message?';
     for (const key in opts)
-      url += `${key}=${opts[key]}&`;
+      url += `${key}=${opts[key as keyof typeof opts]}&`;
     const response = await fetch(url, {method: 'GET'});
     return response.json();
   }
