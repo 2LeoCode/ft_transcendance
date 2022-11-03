@@ -288,7 +288,7 @@ class Paddle2 extends Entity{
 
 class Ball extends Entity{
     
-    private speed:number = 1;
+    private speed:number = 1.5;
     
     constructor(w:number,h:number,x:number,y:number){
         super(w,h,x,y);

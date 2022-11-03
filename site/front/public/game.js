@@ -270,7 +270,7 @@ var Ball = /** @class */ (function (_super) {
     __extends(Ball, _super);
     function Ball(w, h, x, y) {
         var _this = _super.call(this, w, h, x, y) || this;
-        _this.speed = 1;
+        _this.speed = 1.5;
         var randomDirection = Math.floor(Math.random() * 2) + 1;
         if (randomDirection % 2) {
             _this.xVel = 1;
