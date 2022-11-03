@@ -39,7 +39,7 @@ AppModule = __decorate([
             }),
             user_module_1.UserModule,
             message_module_1.MessageModule,
-            channel_module_1.ChannelModule,
+            channel_module_1.ChannelModule
         ],
         controllers: [],
         providers: [],

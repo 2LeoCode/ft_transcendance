@@ -40,6 +40,7 @@ export class UserService {
       firstName?: string;
       lastName?: string;
       password?: string;
+      avatarPath?: string;
       highestScore?: number;
       scoreHistory?: number[];
       active?: boolean;

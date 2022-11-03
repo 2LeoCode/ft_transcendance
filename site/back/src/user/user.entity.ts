@@ -25,6 +25,9 @@ export class User {
   @Column()
   lastName: string;
 
+  @Column({nullable: true})
+  avatarPath: string;
+
   @Column()
   password: string;
 

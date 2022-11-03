@@ -6,8 +6,11 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiQuery } from '@nestjs/swagger';
 import { InsertResult, UpdateResult } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -75,5 +78,32 @@ export class UserController {
     @Body() dto: UpdateUserDto
   ): Promise<UpdateResult> {
     return this.userService.update(id, dto);
+  }
+
+  @Patch('avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiQuery({
+    type: String,
+    name: 'id',
+    required: true
+  })
+  @ApiConsumes('image/*')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  async patchAvatar(
+    @Query('id') id: string,
+    @UploadedFile() file: Express.Multer.File
+  ): Promise<UpdateResult> {
+    console.log(file);
+    return this.userService.update(id, { avatarPath: file.path });
   }
 }
