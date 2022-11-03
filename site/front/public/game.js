@@ -104,23 +104,36 @@ var Game = /** @class */ (function () {
         this.ball.draw(this.gameContext, this.gameWidth, this.gameHeight, this.gameX, this.gameY);
     };
     Game.prototype.stopGame = function () {
-        // ending page with player1 wins.
+        // ending page.
+        if (this.gameCanvas.width > this.gameCanvas.height * 2) {
+            this.gameWidth = this.gameCanvas.height * 2;
+            this.gameHeight = this.gameCanvas.height;
+            this.gameX = this.gameCanvas.width / 2 - this.gameWidth / 2;
+            this.gameY = this.gameCanvas.height / 2 - this.gameHeight / 2;
+        }
+        if (this.gameCanvas.height * 2 > this.gameCanvas.width) {
+            this.gameHeight = this.gameCanvas.width / 2;
+            this.gameWidth = this.gameCanvas.width;
+            this.gameX = this.gameCanvas.width / 2 - this.gameWidth / 2;
+            this.gameY = this.gameCanvas.height / 2 - this.gameHeight / 2;
+        }
         //clear whole canva
         this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
-        //draw court outline
-        this.gameContext.strokeStyle = "#fff";
-        this.gameContext.lineWidth = 5;
-        this.gameContext.strokeRect(this.gameX, this.gameY, this.gameWidth - 5, this.gameHeight - 5);
-        //draw center lines
-        for (var i = this.gameY; i + 20 < this.gameY + this.gameHeight; i += 20) {
-            this.gameContext.fillStyle = "#fff";
-            this.gameContext.fillRect(this.gameX + this.gameWidth / 2 - 10, i + 10, 15, 10);
-        }
-        //draw scores
-        this.gameContext.textAlign = 'center';
-        this.gameContext.font = "30px Orbitron";
-        this.gameContext.fillText(Game.playerScore, this.gameX + this.gameWidth / 4, this.gameY + this.gameHeight / 6);
-        this.gameContext.fillText(Game.player2Score, this.gameX + this.gameWidth / 4 * 3, this.gameY + this.gameHeight / 6);
+        // //draw court outline
+        // this.gameContext.strokeStyle = "#fff";
+        // this.gameContext.lineWidth = 5;
+        // this.gameContext.strokeRect(this.gameX, this.gameY, this.gameWidth - 5 , this.gameHeight - 5);
+        // //draw center lines
+        // for (var i = this.gameY; i + 20 < this.gameY + this.gameHeight; i += 20) {
+        //     this.gameContext.fillStyle = "#fff";
+        //     this.gameContext.fillRect(this.gameX + this.gameWidth / 2 - 10, i + 10, 15, 10);
+        // }
+        // //draw scores
+        // this.gameContext.textAlign = 'center';
+        // this.gameContext.font = "30px Orbitron";
+        // this.gameContext.fillText(Game.playerScore, this.gameX + this.gameWidth / 4, this.gameY + this.gameHeight / 6);
+        // this.gameContext.fillText(Game.player2Score, this.gameX + this.gameWidth / 4 * 3, this.gameY + this.gameHeight / 6);
+        this.drawBoardDetails();
         this.gameContext.clearRect(this.gameX + this.gameWidth / 2 - 20, this.gameY + this.gameHeight / 2 - 20, 40, 40);
         //get the ufc font for the scores and ending page
         // this.gameContext.font = 'ufc';
@@ -135,10 +148,11 @@ var Game = /** @class */ (function () {
             game.draw();
         if (Game.playerScore == 7 || Game.player2Score == 7) {
             game.stopGame();
-            return;
         }
-        game.update();
-        game.draw();
+        else {
+            game.update();
+            game.draw();
+        }
         requestAnimationFrame(game.gameLoop);
     };
     Game.keysPressed = [];
