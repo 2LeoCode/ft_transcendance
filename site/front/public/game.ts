@@ -19,6 +19,11 @@ class Game{
     // public static computerScore: number = 0;
     private player1: Paddle;
 	private player2: Paddle2;
+	//timing variables:
+	private now: number = 0;
+	private then: number = 0;
+	private elapsed: number = 0;
+	private fps: number = 10; // number of millisecond between each update.
 	//private computerPlayer: ComputerPaddle;
     private ball: Ball;
     constructor(){
@@ -45,7 +50,9 @@ class Game{
         
         window.addEventListener("keyup",function(e){
             Game.keysPressed[e.which] = false;
-        });
+		});
+		
+		this.then = this.getCurrentTime();
         
         var paddleWidth:number = 3, paddleHeight:number = 10, ballSize:number = 2, wallOffset:number = 5;
 		
@@ -57,7 +64,11 @@ class Game{
 		//this.computerPlayer = new ComputerPaddle(paddleWidth,paddleHeight,this.gameWidth - (wallOffset + paddleWidth) ,this.gameHeight / 2 - paddleHeight / 2);
         this.ball = new Ball(ballSize, ballSize, 200 / 2 - ballSize / 2, 100 / 2 - ballSize / 2);    
         
-    }
+	}
+	getCurrentTime = (): number => {
+		const date = new Date();
+		return date.getTime();
+	}
     drawBoardDetails(){
         
         //draw court outline
@@ -79,7 +90,16 @@ class Game{
         
     }
     update(){
-		
+		// fps managment
+		this.now = this.getCurrentTime();
+		this.elapsed = this.now - this.then;
+
+		if (this.elapsed < this.fps){
+			return ;
+		}
+		else
+			this.then = this.now;
+
 		if (this.gameCanvas.width > this.gameCanvas.height * 2){
 			this.gameWidth = this.gameCanvas.height * 2;
 			this.gameHeight = this.gameCanvas.height;
@@ -102,7 +122,7 @@ class Game{
 			//this.computerPlayer.update(this.ball);
 			// this.ball.update(this.player1,this.computerPlayer);
 			this.ball.update(this.player1,this.player2);
-		}
+	}
     draw(){
         this.gameContext.fillStyle = "#000";
         this.gameContext.fillRect(0,0,this.gameWidth,this.gameHeight);
@@ -153,7 +173,7 @@ class Game{
 			game.update();
 			game.draw();
 		}
-		
+
         requestAnimationFrame(game.gameLoop);
     }
 }

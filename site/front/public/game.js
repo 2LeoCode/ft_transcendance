@@ -26,6 +26,15 @@ var Game = /** @class */ (function () {
         this.gameHeight = 0;
         this.gameX = 0;
         this.gameY = 0;
+        //timing variables:
+        this.now = 0;
+        this.then = 0;
+        this.elapsed = 0;
+        this.fps = 10; // number of millisecond between each update.
+        this.getCurrentTime = function () {
+            var date = new Date();
+            return date.getTime();
+        };
         this.gameCanvas = document.getElementById("pong");
         this.gameContext = this.gameCanvas.getContext("2d");
         this.gameContext.font = "30px Orbitron";
@@ -47,6 +56,7 @@ var Game = /** @class */ (function () {
         window.addEventListener("keyup", function (e) {
             Game.keysPressed[e.which] = false;
         });
+        this.then = this.getCurrentTime();
         var paddleWidth = 3, paddleHeight = 10, ballSize = 2, wallOffset = 5;
         this.player1 = new Paddle(paddleWidth, paddleHeight, wallOffset, 100 / 2 - paddleHeight / 2);
         this.player2 = new Paddle2(paddleWidth, paddleHeight, 200 - (wallOffset + paddleWidth), 100 / 2 - paddleHeight / 2);
@@ -72,6 +82,14 @@ var Game = /** @class */ (function () {
         this.gameContext.fillText(Game.player2Score, this.gameX + this.gameWidth / 4 * 3, this.gameY + this.gameHeight / 6);
     };
     Game.prototype.update = function () {
+        // fps managment
+        this.now = this.getCurrentTime();
+        this.elapsed = this.now - this.then;
+        if (this.elapsed < this.fps) {
+            return;
+        }
+        else
+            this.then = this.now;
         if (this.gameCanvas.width > this.gameCanvas.height * 2) {
             this.gameWidth = this.gameCanvas.height * 2;
             this.gameHeight = this.gameCanvas.height;
@@ -117,22 +135,8 @@ var Game = /** @class */ (function () {
             this.gameX = this.gameCanvas.width / 2 - this.gameWidth / 2;
             this.gameY = this.gameCanvas.height / 2 - this.gameHeight / 2;
         }
-        //clear whole canva
+        //clear whole canva + draw ending page
         this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
-        // //draw court outline
-        // this.gameContext.strokeStyle = "#fff";
-        // this.gameContext.lineWidth = 5;
-        // this.gameContext.strokeRect(this.gameX, this.gameY, this.gameWidth - 5 , this.gameHeight - 5);
-        // //draw center lines
-        // for (var i = this.gameY; i + 20 < this.gameY + this.gameHeight; i += 20) {
-        //     this.gameContext.fillStyle = "#fff";
-        //     this.gameContext.fillRect(this.gameX + this.gameWidth / 2 - 10, i + 10, 15, 10);
-        // }
-        // //draw scores
-        // this.gameContext.textAlign = 'center';
-        // this.gameContext.font = "30px Orbitron";
-        // this.gameContext.fillText(Game.playerScore, this.gameX + this.gameWidth / 4, this.gameY + this.gameHeight / 6);
-        // this.gameContext.fillText(Game.player2Score, this.gameX + this.gameWidth / 4 * 3, this.gameY + this.gameHeight / 6);
         this.drawBoardDetails();
         this.gameContext.clearRect(this.gameX + this.gameWidth / 2 - 20, this.gameY + this.gameHeight / 2 - 20, 40, 40);
         //get the ufc font for the scores and ending page
