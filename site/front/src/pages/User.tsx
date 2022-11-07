@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
-<<<<<<< HEAD
-import fetch from 'node-fetch';
-=======
-import { getUser } from "../com/user.com";
->>>>>>> lsuardi
 // import axios from 'axios';
 import "../styles/User.css";
-import {UserCom} from "../com/user.com"
 
 declare var Blob: {
   prototype: Blob;
@@ -22,14 +16,6 @@ function User() {
   const matches_won: number = 0;
   const matches_lost: number = 0;
 
-<<<<<<< HEAD
-  UserCom.get({nick: 'joe42'})
-  .then(res => {setUsername(res[0].nick);});
-
-=======
-  getUser({nick: 'joe43'})
-    .then(res => console.log(res));
->>>>>>> lsuardi
   return (
     <div>
       <Header />
