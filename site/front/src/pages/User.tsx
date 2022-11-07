@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
-import { UserCom } from "../com/user.com";
+import { getUser } from "../com/user.com";
 // import axios from 'axios';
 import "../styles/User.css";
 
@@ -16,8 +16,8 @@ function User() {
   const matches_won: number = 0;
   const matches_lost: number = 0;
 
-  UserCom.get({nick: 'joe43'})
- 	.then(res => console.log(res));
+  getUser({nick: 'joe43'})
+    .then(res => console.log(res));
   return (
     <div>
       <Header />

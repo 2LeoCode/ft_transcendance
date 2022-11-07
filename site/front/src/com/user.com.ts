@@ -1,6 +1,6 @@
 import { Channel } from './channel.com';
 import { Message } from './message.com';
-import { hash }from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { Checker } from '../checker/checker';
 import fetch from 'node-fetch';
 
@@ -21,23 +21,25 @@ export interface User {
   channels: Channel[];
 }
 
-export namespace UserCom {
+export async function getUser(opts: {
+  id?: string,
+  nick?: string,
+  mail?: string,
+  active?: string
+}) {
+  let url = 'http://localhost:2000/user?';
+  for (const key in opts)
+    url += `${key}=${opts[key as keyof typeof opts]}&`;
+  const response = await fetch(url, {method: 'GET'});
+  return response.json();
+}
+
+export class UserCom {
 
   /* Get user(s) from the database
     * using the following optional filters:
     * id, nick, mail, active */
-  export async function get(opts: {
-    id?: string,
-    nick?: string,
-    mail?: string,
-    active?: string
-  }) {
-    let url = 'http://localhost:2000/user?';
-    for (const key in opts)
-      url += `${key}=${opts[key as keyof typeof opts]}&`;
-    const response = await fetch(url, {method: 'GET'});
-    return response.json();
-  }
+  
 
   /* Add a user to the database
     * @param opts: {
@@ -47,7 +49,7 @@ export namespace UserCom {
     *   lastName: string,
     *   password: string (min 8, only printable characters)
     * } */
-  export async function add(opts: {
+  async add(opts: {
     nick: string,
     mail: string,
     firstName: string,
@@ -61,7 +63,7 @@ export namespace UserCom {
     if (!Checker.userPassword(opts.password))
       throw Error('Bad password');
     const url = 'http://localhost:2000/user';
-    opts.password = await hash(opts.password, 10);
+    opts.password = await bcrypt.hash(opts.password, 10);
     const response = await fetch(url, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -71,7 +73,7 @@ export namespace UserCom {
   }
 
   /* Remove a user from the database */
-  export async function remove(id: string) {
+  async remove(id: string) {
     const url = `http://localhost:2000/user?id=${id}`;
     const response = await fetch(url, {method: 'DELETE'});
     return response.json();
@@ -91,7 +93,7 @@ export namespace UserCom {
     *   friendIds?: string[],
     * }
     * Note: password is hashed before being sent to the server */
-  export async function update(id: string, opts: {
+  async update(id: string, opts: {
     nick?: string,
     mail?: string,
     firstName?: string,
@@ -109,7 +111,7 @@ export namespace UserCom {
     if (opts.mail && !Checker.mail(opts.mail))
       throw Error('Bad mail');
     const url = `http://localhost:2000/user?id=${id}`;
-    //opts.password &&= await hash(opts.password, 10);
+    opts.password &&= await bcrypt.hash(opts.password, 10);
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {'Content-Type': 'application/json'},

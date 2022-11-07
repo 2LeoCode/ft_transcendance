@@ -1,6 +1,6 @@
 import { User } from "./user.com";
 import { Message } from "./message.com";
-import { hash } from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { Checker } from "../checker/checker";
 
 export interface Channel {
@@ -49,7 +49,7 @@ export namespace ChannelCom {
     if (!Checker.channelPassword(opts.password))
       throw Error('Bad channel password');
     const url = 'http://localhost:2000/channel';
-    opts.password = await hash(opts.password, 10);
+    opts.password = await bcrypt.hash(opts.password, 10);
     const response = await fetch(url, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -84,7 +84,7 @@ export namespace ChannelCom {
       throw Error('Bad channel password');
     const url = `http://localhost:2000/channel?id=${id}`;
     if (opts.password !== undefined)
-      opts.password = await hash(opts.password, 10);
+      opts.password = await bcrypt.hash(opts.password, 10);
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {'Content-Type': 'application/json'},

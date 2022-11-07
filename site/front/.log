@@ -1,0 +1,1275 @@
+
+> my-app@0.1.0 start
+> react-scripts start
+
+(node:35653) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:35653) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Failed to compile.
+
+Module parse failed: Unexpected token (1:0)
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+> <!doctype html>
+| <html>
+| <head>
+WARNING in ./node_modules/@mapbox/node-pre-gyp/lib/util/compile.js 30:26-53
+Module not found: Error: Can't resolve 'node-gyp' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+WARNING in ./node_modules/@mapbox/node-pre-gyp/lib/util/compile.js 40:23-45
+Module not found: Error: Can't resolve 'npm' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+WARNING in ./node_modules/@mapbox/node-pre-gyp/lib/util/versioning.js 15:18-65
+Critical dependency: the request of a dependency is an expression
+
+WARNING in ./node_modules/bcrypt/bcrypt.js 6:15-36
+Critical dependency: the request of a dependency is an expression
+
+WARNING in ./node_modules/https-proxy-agent/dist/agent.js
+Module Warning (from ./node_modules/source-map-loader/dist/cjs.js):
+Failed to parse source map from '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/src/agent.ts' file: Error: ENOENT: no such file or directory, open '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/src/agent.ts'
+
+WARNING in ./node_modules/https-proxy-agent/dist/index.js
+Module Warning (from ./node_modules/source-map-loader/dist/cjs.js):
+Failed to parse source map from '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/src/index.ts' file: Error: ENOENT: no such file or directory, open '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/src/index.ts'
+
+WARNING in ./node_modules/https-proxy-agent/dist/parse-proxy-response.js
+Module Warning (from ./node_modules/source-map-loader/dist/cjs.js):
+Failed to parse source map from '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/src/parse-proxy-response.ts' file: Error: ENOENT: no such file or directory, open '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/src/parse-proxy-response.ts'
+
+WARNING in ./node_modules/minimatch/minimatch.js 5:11-26
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/minimatch'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+WARNING in ./node_modules/node-domexception/index.js 7:10-35
+Module not found: Error: Can't resolve 'worker_threads' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/node-domexception'
+
+WARNING in ./src/styles/Chat.scss (./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[2]!./node_modules/resolve-url-loader/index.js??ruleSet[1].rules[1].oneOf[7].use[3]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[4]!./src/styles/Chat.scss)
+Module Warning (from ./node_modules/resolve-url-loader/index.js):
+resolve-url-loader: webpack misconfiguration
+  webpack or the upstream loader did not supply a source-map
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/nw-pre-gyp/index.html 1:0
+Module parse failed: Unexpected token (1:0)
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+> <!doctype html>
+| <html>
+| <head>
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/clean.js 6:15-35
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/clean.js 6:39-61
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/install.js 5:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/install.js 6:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/main.js 45:13-26
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/main.js 108:13-26
+Module not found: Error: Can't resolve 'os' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "os": require.resolve("os-browserify/browser") }'
+	- install 'os-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "os": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/node-pre-gyp.js 17:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/node-pre-gyp.js 18:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/node-pre-gyp.js 24:17-41
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/package.js 5:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/package.js 6:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/pre-binding.js 6:19-43
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/pre-binding.js 6:47-73
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/publish.js 5:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/publish.js 6:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/publish.js 12:12-26
+Module not found: Error: Can't resolve 'url' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "url": require.resolve("url/") }'
+	- install 'url'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "url": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/testbinary.js 5:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/testbinary.js 7:11-35
+Module not found: Error: Can't resolve 'child_process' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/testpackage.js 5:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/testpackage.js 6:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/unpublish.js 9:12-26
+Module not found: Error: Can't resolve 'url' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "url": require.resolve("url/") }'
+	- install 'url'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "url": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/compile.js 4:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/compile.js 5:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/compile.js 8:11-35
+Module not found: Error: Can't resolve 'child_process' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/napi.js 3:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/s3_setup.js 4:12-26
+Module not found: Error: Can't resolve 'url' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "url": require.resolve("url/") }'
+	- install 'url'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "url": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/s3_setup.js 5:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/s3_setup.js 6:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/s3_setup.js 39:20-42
+Module not found: Error: Can't resolve 'mock-aws-s3' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/s3_setup.js 40:15-28
+Module not found: Error: Can't resolve 'os' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "os": require.resolve("os-browserify/browser") }'
+	- install 'os-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "os": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/s3_setup.js 72:14-32
+Module not found: Error: Can't resolve 'aws-sdk' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/s3_setup.js 103:15-30
+Module not found: Error: Can't resolve 'nock' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/versioning.js 4:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/@mapbox/node-pre-gyp/lib/util/versioning.js 6:12-26
+Module not found: Error: Can't resolve 'url' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/@mapbox/node-pre-gyp/lib/util'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "url": require.resolve("url/") }'
+	- install 'url'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "url": false }
+
+ERROR in ./node_modules/are-we-there-yet/lib/tracker-base.js 4:11-26
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/are-we-there-yet/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/are-we-there-yet/lib/tracker-group.js 3:11-26
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/are-we-there-yet/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/are-we-there-yet/lib/tracker-stream.js 3:11-26
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/are-we-there-yet/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/are-we-there-yet/lib/tracker.js 3:11-26
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/are-we-there-yet/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/bcrypt/bcrypt.js 4:11-26
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/bcrypt'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/bcrypt/bcrypt.js 7:13-30
+Module not found: Error: Can't resolve 'crypto' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/bcrypt'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "crypto": require.resolve("crypto-browserify") }'
+	- install 'crypto-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "crypto": false }
+
+ERROR in ./node_modules/chownr/chownr.js 3:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/chownr'
+
+ERROR in ./node_modules/chownr/chownr.js 4:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/chownr'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/detect-libc/lib/detect-libc.js 3:21-45
+Module not found: Error: Can't resolve 'child_process' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/detect-libc/lib'
+
+ERROR in ./node_modules/fs-minipass/index.js 5:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/fs-minipass'
+
+ERROR in ./node_modules/fs.realpath/index.js 7:9-22
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/fs.realpath'
+
+ERROR in ./node_modules/fs.realpath/old.js 22:17-32
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/fs.realpath'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/fs.realpath/old.js 24:9-22
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/fs.realpath'
+
+ERROR in ./node_modules/gauge/error.js 3:11-26
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/gauge'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/glob/common.js 11:9-22
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/glob'
+
+ERROR in ./node_modules/glob/common.js 12:11-26
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/glob'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/glob/glob.js 47:11-26
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/glob'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/glob/glob.js 48:13-30
+Module not found: Error: Can't resolve 'assert' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/glob'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "assert": require.resolve("assert/") }'
+	- install 'assert'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "assert": false }
+
+ERROR in ./node_modules/glob/glob.js 55:11-26
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/glob'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/glob/sync.js 7:11-26
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/glob'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/glob/sync.js 8:11-26
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/glob'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/glob/sync.js 9:13-30
+Module not found: Error: Can't resolve 'assert' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/glob'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "assert": require.resolve("assert/") }'
+	- install 'assert'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "assert": false }
+
+ERROR in ./node_modules/has-unicode/index.js 3:9-22
+Module not found: Error: Can't resolve 'os' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/has-unicode'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "os": require.resolve("os-browserify/browser") }'
+	- install 'os-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "os": false }
+
+ERROR in ./node_modules/https-proxy-agent/dist/agent.js 38:30-44
+Module not found: Error: Can't resolve 'net' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/dist'
+
+ERROR in ./node_modules/https-proxy-agent/dist/agent.js 39:30-44
+Module not found: Error: Can't resolve 'tls' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/dist'
+
+ERROR in ./node_modules/https-proxy-agent/dist/agent.js 40:30-44
+Module not found: Error: Can't resolve 'url' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/dist'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "url": require.resolve("url/") }'
+	- install 'url'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "url": false }
+
+ERROR in ./node_modules/https-proxy-agent/dist/agent.js 41:33-50
+Module not found: Error: Can't resolve 'assert' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/https-proxy-agent/dist'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "assert": require.resolve("assert/") }'
+	- install 'assert'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "assert": false }
+
+ERROR in ./node_modules/make-dir/index.js 3:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/make-dir'
+
+ERROR in ./node_modules/make-dir/index.js 4:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/make-dir'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/make-dir/index.js 7:4-19
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/make-dir'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/minipass/index.js 8:15-32
+Module not found: Error: Can't resolve 'stream' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/minipass'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "stream": require.resolve("stream-browserify") }'
+	- install 'stream-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "stream": false }
+
+ERROR in ./node_modules/minizlib/constants.js 5:26-51
+Module not found: Error: Can't resolve 'zlib' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/minizlib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "zlib": require.resolve("browserify-zlib") }'
+	- install 'browserify-zlib'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "zlib": false }
+
+ERROR in ./node_modules/minizlib/index.js 3:15-32
+Module not found: Error: Can't resolve 'assert' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/minizlib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "assert": require.resolve("assert/") }'
+	- install 'assert'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "assert": false }
+
+ERROR in ./node_modules/minizlib/index.js 4:15-39
+Module not found: Error: Can't resolve 'buffer' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/minizlib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "buffer": require.resolve("buffer/") }'
+	- install 'buffer'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "buffer": false }
+
+ERROR in ./node_modules/minizlib/index.js 5:17-32
+Module not found: Error: Can't resolve 'zlib' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/minizlib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "zlib": require.resolve("browserify-zlib") }'
+	- install 'browserify-zlib'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "zlib": false }
+
+ERROR in ./node_modules/nopt/lib/nopt.js 6:10-24
+Module not found: Error: Can't resolve 'url' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/nopt/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "url": require.resolve("url/") }'
+	- install 'url'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "url": false }
+
+ERROR in ./node_modules/nopt/lib/nopt.js 7:9-24
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/nopt/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/nopt/lib/nopt.js 8:11-35
+Module not found: Error: Can't resolve 'stream' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/nopt/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "stream": require.resolve("stream-browserify") }'
+	- install 'stream-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "stream": false }
+
+ERROR in ./node_modules/nopt/lib/nopt.js 10:7-20
+Module not found: Error: Can't resolve 'os' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/nopt/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "os": require.resolve("os-browserify/browser") }'
+	- install 'os-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "os": false }
+
+ERROR in ./node_modules/npmlog/log.js 7:11-26
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/npmlog'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/readable-stream/lib/_stream_readable.js 43:13-37
+Module not found: Error: Can't resolve 'buffer' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/readable-stream/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "buffer": require.resolve("buffer/") }'
+	- install 'buffer'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "buffer": false }
+
+ERROR in ./node_modules/readable-stream/lib/_stream_writable.js 65:13-37
+Module not found: Error: Can't resolve 'buffer' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/readable-stream/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "buffer": require.resolve("buffer/") }'
+	- install 'buffer'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "buffer": false }
+
+ERROR in ./node_modules/readable-stream/lib/internal/streams/buffer_list.js 63:15-32
+Module not found: Error: Can't resolve 'buffer' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/readable-stream/lib/internal/streams'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "buffer": require.resolve("buffer/") }'
+	- install 'buffer'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "buffer": false }
+
+ERROR in ./node_modules/rimraf/rimraf.js 1:15-32
+Module not found: Error: Can't resolve 'assert' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/rimraf'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "assert": require.resolve("assert/") }'
+	- install 'assert'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "assert": false }
+
+ERROR in ./node_modules/rimraf/rimraf.js 2:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/rimraf'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/rimraf/rimraf.js 3:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/rimraf'
+
+ERROR in ./node_modules/safe-buffer/index.js 3:13-30
+Module not found: Error: Can't resolve 'buffer' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/safe-buffer'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "buffer": require.resolve("buffer/") }'
+	- install 'buffer'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "buffer": false }
+
+ERROR in ./node_modules/signal-exit/index.js 17:15-32
+Module not found: Error: Can't resolve 'assert' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/signal-exit'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "assert": require.resolve("assert/") }'
+	- install 'assert'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "assert": false }
+
+ERROR in ./node_modules/tar/lib/create.js 8:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/extract.js 6:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+ERROR in ./node_modules/tar/lib/extract.js 8:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/get-write-flag.js 11:41-54
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+ERROR in ./node_modules/tar/lib/header.js 8:19-40
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/list.js 9:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+ERROR in ./node_modules/tar/lib/list.js 11:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/mkdir.js 8:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+ERROR in ./node_modules/tar/lib/mkdir.js 9:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/pack.js 51:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+ERROR in ./node_modules/tar/lib/pack.js 52:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/parse.js 32:4-22
+Module not found: Error: Can't resolve 'process' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "process": require.resolve("process/browser") }'
+	- install 'process'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "process": false }
+
+ERROR in ./node_modules/tar/lib/path-reservations.js 9:15-32
+Module not found: Error: Can't resolve 'assert' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "assert": require.resolve("assert/") }'
+	- install 'assert'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "assert": false }
+
+ERROR in ./node_modules/tar/lib/path-reservations.js 14:4-19
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/pax.js 4:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/replace.js 6:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+ERROR in ./node_modules/tar/lib/replace.js 9:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/strip-absolute-path.js 5:4-25
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/unpack.js 8:15-32
+Module not found: Error: Can't resolve 'assert' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "assert": require.resolve("assert/") }'
+	- install 'assert'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "assert": false }
+
+ERROR in ./node_modules/tar/lib/unpack.js 10:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+ERROR in ./node_modules/tar/lib/unpack.js 12:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/lib/unpack.js 45:15-32
+Module not found: Error: Can't resolve 'crypto' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "crypto": require.resolve("crypto-browserify") }'
+	- install 'crypto-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "crypto": false }
+
+ERROR in ./node_modules/tar/lib/write-entry.js 6:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+ERROR in ./node_modules/tar/lib/write-entry.js 7:13-28
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/node_modules/mkdirp/lib/find-made.js 3:4-19
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/node_modules/mkdirp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/node_modules/mkdirp/lib/mkdirp-manual.js 3:4-19
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/node_modules/mkdirp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/node_modules/mkdirp/lib/mkdirp-native.js 3:4-19
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/node_modules/mkdirp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/node_modules/mkdirp/lib/opts-arg.js 3:4-19
+Module not found: Error: Can't resolve 'util' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/node_modules/mkdirp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "util": require.resolve("util/") }'
+	- install 'util'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "util": false }
+
+ERROR in ./node_modules/tar/node_modules/mkdirp/lib/opts-arg.js 4:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/node_modules/mkdirp/lib'
+
+ERROR in ./node_modules/tar/node_modules/mkdirp/lib/path-arg.js 5:4-19
+Module not found: Error: Can't resolve 'path' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/node_modules/mkdirp/lib'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need this module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add a fallback 'resolve.fallback: { "path": require.resolve("path-browserify") }'
+	- install 'path-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.fallback: { "path": false }
+
+ERROR in ./node_modules/tar/node_modules/mkdirp/lib/use-native.js 1:11-24
+Module not found: Error: Can't resolve 'fs' in '/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tar/node_modules/mkdirp/lib'
+
+ERROR in ./src/styles/Chat.scss (./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[2]!./node_modules/resolve-url-loader/index.js??ruleSet[1].rules[1].oneOf[7].use[3]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[4]!./src/styles/Chat.scss)
+Module Error (from ./node_modules/sass-loader/dist/cjs.js):
+Cannot find module 'sass'
+Require stack:
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/sass-loader/dist/utils.js
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/sass-loader/dist/index.js
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/sass-loader/dist/cjs.js
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/loadLoader.js
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack-manifest-plugin/dist/index.js
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/react-scripts/config/webpack.config.js
+- /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/react-scripts/scripts/start.js
+
+ERROR in ./src/styles/Chat.scss (./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[2]!./node_modules/resolve-url-loader/index.js??ruleSet[1].rules[1].oneOf[7].use[3]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[7].use[4]!./src/styles/Chat.scss)
+Module build failed (from ./node_modules/resolve-url-loader/index.js):
+Error: resolve-url-loader: error processing CSS
+  PostCSS received undefined instead of CSS string
+  at new Input (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/resolve-url-loader/node_modules/postcss/lib/input.js:38:13)
+    at encodeError (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/resolve-url-loader/index.js:287:12)
+    at onFailure (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/resolve-url-loader/index.js:228:14)
+
+ERROR in node:buffer
+Module build failed: UnhandledSchemeError: Reading from "node:buffer" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+ERROR in node:fs
+Module build failed: UnhandledSchemeError: Reading from "node:fs" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+ERROR in node:https
+Module build failed: UnhandledSchemeError: Reading from "node:https" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+ERROR in node:http
+Module build failed: UnhandledSchemeError: Reading from "node:http" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/Hook.js:18:14)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+
+ERROR in node:net
+Module build failed: UnhandledSchemeError: Reading from "node:net" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+ERROR in node:path
+Module build failed: UnhandledSchemeError: Reading from "node:path" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+ERROR in node:stream
+Module build failed: UnhandledSchemeError: Reading from "node:stream" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+ERROR in node:url
+Module build failed: UnhandledSchemeError: Reading from "node:url" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+ERROR in node:util
+Module build failed: UnhandledSchemeError: Reading from "node:util" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+ERROR in node:zlib
+Module build failed: UnhandledSchemeError: Reading from "node:zlib" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:832:25
+    at Hook.eval [as callAsync] (eval at create (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Object.processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:829:8)
+    at processResource (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:220:11)
+    at iteratePitchingLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:171:10)
+    at runLoaders (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/loader-runner/lib/LoaderRunner.js:398:2)
+    at NormalModule._doBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:819:3)
+    at NormalModule.build (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:963:15)
+    at /home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/Compilation.js:1371:12
+    at NormalModule.needBuild (/home/crochu/Documents/42/ft_transcendance/site/front/node_modules/webpack/lib/NormalModule.js:1256:26)
+
+webpack compiled with 126 errors and 10 warnings
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
