@@ -21,6 +21,20 @@ export interface User {
   channels: Channel[];
 }
 
+export async function get(opts: {
+  id?: string,
+  nick?: string,
+  mail?: string,
+  active?: string
+}) {
+  let url = 'http://127.0.0.1:2000/user?';
+  for (const key in opts)
+    url += `${key}=${opts[key as keyof typeof opts]}&`;
+  const response = await fetch(url, {method: 'GET'});
+  return response.json();
+}
+
+
 export namespace UserCom {
 
   /* Get user(s) from the database

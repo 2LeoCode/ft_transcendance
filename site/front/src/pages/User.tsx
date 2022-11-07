@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
-import { UserCom } from "../com/user.com";
+import fetch from 'node-fetch';
 // import axios from 'axios';
 import "../styles/User.css";
+import {UserCom} from "../com/user.com"
 
 declare var Blob: {
   prototype: Blob;
@@ -13,16 +14,18 @@ declare var Blob: {
 function User() {
   const [image, setImage] = useState(new Blob());
   const [uploaded, setUploaded] = useState(false);
+  const [username, setUsername] = useState("");
   const matches_won: number = 0;
   const matches_lost: number = 0;
 
-  UserCom.get({nick: 'joe43'})
- 	.then(res => console.log(res));
+  UserCom.get({nick: 'joe42'})
+  .then(res => {setUsername(res[0].nick);});
+
   return (
     <div>
       <Header />
     <div className="User">
-      <h3>Username</h3>
+      <h3>{username}</h3>
       <div className="avatar">
         {!uploaded && (
           <img src="./default-avatar.webp" alt="Avatar" width="80%" />
