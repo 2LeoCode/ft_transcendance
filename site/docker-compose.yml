@@ -12,7 +12,7 @@ services:
     ports:
       - 2000:2000
     volumes:
-      - ./back:/app
+      - nest:/app
     networks:
       - backend
     depends_on:
@@ -54,25 +54,26 @@ services:
     logging:
       driver: none
 
-  # frontend:                                       #THE FRONTEND SIDE OF OUR APP ITSELF :
-  #   build:
-  #     dockerfile: front/Dockerfile
-  #   env_file:
-  #     - ./env/front.env
-  #   ports:
-  #     - 8080:8080
-  #   restart: unless-stopped
-  #   networks:
-  #     - backend
-  #   volumes:
-  #     - ./front:/app
-  #   depends_on:
-  #     - backend
+  frontend:                                       #THE FRONTEND SIDE OF OUR APP ITSELF :
+    build:
+      context: ./front
+    env_file:
+      - ./env/front.env
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    networks:
+      - backend
+    volumes:
+      - react:/app
+    depends_on:
+      - backend
     
 
 volumes:
   postgres:
-  back:
+  nest:
+  react:
 
 networks:
   backend:

@@ -15,6 +15,7 @@ import { InsertResult, UpdateResult } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { Express } from 'express';
 
 @Controller('user')
 export class UserController {

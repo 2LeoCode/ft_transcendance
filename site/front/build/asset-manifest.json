@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ae43b5e4.css",
+    "main.js": "/static/js/main.25b647fb.js",
+    "static/media/Sternbach-Italic.otf": "/static/media/Sternbach-Italic.6011b5b98aa6250e8495.otf",
+    "static/media/Sternbach.otf": "/static/media/Sternbach.a0d09369d745ea663fee.otf",
+    "index.html": "/index.html",
+    "main.ae43b5e4.css.map": "/static/css/main.ae43b5e4.css.map",
+    "main.25b647fb.js.map": "/static/js/main.25b647fb.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ae43b5e4.css",
+    "static/js/main.25b647fb.js"
+  ]
+}
