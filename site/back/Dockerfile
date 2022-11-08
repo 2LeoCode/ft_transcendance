@@ -1,28 +1,26 @@
 # syntax:docker/dockerfile:1
 
 #base
-FROM node:16.14.2-alpine AS base
+from	node:16.14.2-alpine as base
 
-ENV NODE_ENV=production
+env		NODE_ENV=production
+workdir	/app
 
-WORKDIR /app
+run		npm i -g npm@8.19.3
+add		. .
 
-COPY ["package.json", "package-lock.json", "./"]
 
 #dev
-FROM base AS dev
-RUN npm install --frozen-lockfile
-COPY . .
-CMD ["npm", "run", "start:dev"]
+from	base as dev
+
+run		npm i
+
+cmd		["npm", "run", "start:dev"]
+
 
 #prod
-FROM base AS prod
+from	base as prod
 
-RUN npm install --frozen-lockfile --production
+run		npm i --production
 
-COPY . .
-
-RUN npm add global @nestjs/cli
-RUN npm run build 
-
-CMD ["npm", "run", "start:dev"]
+cmd		["npm", "run", "start:prod"]

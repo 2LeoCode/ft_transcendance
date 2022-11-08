@@ -1,8 +1,16 @@
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  const config = new DocumentBuilder()
+    .setTitle('Transcendance API')
+    .setVersion('1.0')
+    .build();
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+  app.enableCors();
+  await app.listen(2000);
 }
 bootstrap();

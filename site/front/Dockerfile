@@ -1,20 +1,18 @@
-FROM node:lts
-#lts = Long Term Supported (safe)
+from	node:16.14.2-alpine
 
-WORKDIR /app
+#lts = Long Term Supported (safe) (before)
 
-RUN apt-get update -y
-#update packages... just in case.  -y to validate all
+workdir	/app
 
-COPY *.json .
+#update packages... just in case.  -y to validate all (before)
 
-RUN npm install -g npm@8.19.2
-#npm@8.19.2 is the latest npm version according to npmjs doc
+#npm@8.19.3 is the latest npm version according to npmjs doc
+run		npm i -g npm@8.19.3
 
-COPY . .
+add		. .
+run		npm i
 
-CMD ["npm", "start"]
+#fix setupMiddlewares warning
+run		mv -f webpackDevServer.config.js node_modules/react-scripts/config/webpackDevServer.config.js
 
-
-
-
+cmd		["npm", "run", "start"]

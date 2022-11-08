@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/Log.css";
 import { NavLink } from "react-router-dom";
+import SignUp from "../components/SignUp";
 
 function Log({ log }: any) {
   return (
@@ -11,6 +12,7 @@ function Log({ log }: any) {
           Sign in
         </button>
       </NavLink>
+      {/* <SignUp /> */}
     </div>
   );
 }

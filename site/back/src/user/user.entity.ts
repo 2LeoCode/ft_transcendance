@@ -25,6 +25,9 @@ export class User {
   @Column()
   lastName: string;
 
+  @Column({nullable: true})
+  avatarPath: string;
+
   @Column()
   password: string;
 
@@ -37,8 +40,8 @@ export class User {
   @Column({ default: true })
   active: boolean;
 
-  @Column('json', { array: true, default: [] })
-  friends: User[];
+  @Column('json', { default: [] })
+  friendIds: string[];
 
   @OneToMany(() => Channel, (cha) => cha.owner)
   ownedChannels: Channel[];

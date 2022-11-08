@@ -28,7 +28,7 @@ import { ChannelModule } from './channel/channel.module';
     }),
     UserModule,
     MessageModule,
-    ChannelModule,
+    ChannelModule
   ],
   controllers: [],
   providers: [],
