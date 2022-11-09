@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { UserCom } from "../com/user.com";
 import Header from "../components/Header";
-// import axios from 'axios';
+import { user_infos } from "../components/SignUp";
 import "../styles/User.css";
 
 declare var Blob: {
@@ -17,8 +17,8 @@ function User() {
   const matches_won: number = 0;
   const matches_lost: number = 0;
 
-  UserCom.get({nick: "joe43"})
-  	.then((res) => console.log(res));
+  UserCom.get({nick: "bob43"})
+  	.then((res) => setUsername(res[0].nick));
 
   return (
     <div>
