@@ -54,8 +54,8 @@ export namespace UserCom {
     lastName: string,
     password: string
   }) {
-    if (!Checker.nickname(opts.nick))
-      throw Error('Bad nickname');
+    // if (!Checker.nickname(opts.nick))
+    //   throw Error('Bad nickname');
     if (!Checker.mail(opts.mail))
       throw Error('Bad mail');
     if (!Checker.userPassword(opts.password))

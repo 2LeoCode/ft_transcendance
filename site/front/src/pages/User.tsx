@@ -17,8 +17,8 @@ function User() {
   const matches_won: number = 0;
   const matches_lost: number = 0;
 
-  UserCom.get({nick: "bob43"})
-  	.then((res) => setUsername(res[0].nick));
+  UserCom.get({nick: user_infos.nick})
+  	.then((res) => {console.log(res); setUsername(res[0].nick)});
 
   return (
     <div>
