@@ -102,8 +102,8 @@ export namespace UserCom {
     active?: boolean,
     friendIds?: string[]
   }) {
-    if (opts.nick && !Checker.nickname(opts.nick))
-      throw Error('Bad nickname');
+    // if (opts.nick && !Checker.nickname(opts.nick))
+    //   throw Error('Bad nickname');
     if (opts.password && !Checker.userPassword(opts.password))
       throw Error('Bad password');
     if (opts.mail && !Checker.mail(opts.mail))

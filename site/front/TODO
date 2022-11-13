@@ -1,5 +1,5 @@
 USER :
-- change avatar
+- change avatar (fix in back)
 - design signin signup
 - error message when bad connection
 - gestion des erreurs (ex password too short)

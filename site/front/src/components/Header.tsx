@@ -18,9 +18,6 @@ function Header() {
       console.log(res);
     });
     localStorage.clear();
-    // UserCom.remove(id).then((res) => {
-    //   console.log(res);
-    // });
     navigate("/");
   }
 
