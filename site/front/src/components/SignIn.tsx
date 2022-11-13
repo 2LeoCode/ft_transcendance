@@ -1,41 +1,51 @@
 import React, { useState, useEffect } from "react";
+import "../styles/SignIn.css";
 import { useNavigate } from "react-router-dom";
 import { UserCom } from "../com/user.com";
-import "../styles/SignUp.css";
+import { user_infos } from "../components/SignUp";
 
-export let user_infos = {
-  nick: JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1'),
-  mail: "abc@abc.fr",
-  firstName: "bob",
-  lastName: "abc",
-  password: JSON.stringify(localStorage.getItem("password")).replace(/^"(.*)"$/, '$1'),
-};
+async function log() {
+  let id: string = "";
+  await UserCom.get({ nick: user_infos.nick }).then((res) => {
+    console.log(res);
+    id = res[0].id;
+  });
+const len = id.length;
+  if (len > 1) {
+    await UserCom.update(id, { active: true }).then((res) => {
+      console.log(res);
+    });
+	return 0;
+  } else {
+    console.log("Account doesn't exist");
+	return 1;
+  }
+}
 
-function SignUp() {
+function SignIn() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  let exist = false;
+  let pass;
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await UserCom.get({ nick: name }).then((res) => {
-      console.log(res);
-      if (res.length > 0)
-        exist = true;
-    });
-    if (exist === true)
-      return console.log("Username already taken");
     localStorage.setItem("username", name);
     localStorage.setItem("password", password);
-    user_infos.nick = JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1');
-    user_infos.password = JSON.stringify(localStorage.getItem("password")).replace(/^"(.*)"$/, '$1');
-    await UserCom.add(user_infos);
-    navigate("/pong");
+    user_infos.nick = JSON.stringify(localStorage.getItem("username")).replace(
+      /^"(.*)"$/,
+      "$1"
+    );
+    user_infos.password = JSON.stringify(
+      localStorage.getItem("password")
+    ).replace(/^"(.*)"$/, "$1");
+    await log().then((res) => {
+		pass = res;})
+	if (pass = 0)
+    	navigate("/pong");
   };
-
   return (
-    <div className="SignUp">
+    <div className="SignIn">
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username :</label>
         <input
@@ -61,4 +71,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignIn;

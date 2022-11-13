@@ -5,22 +5,20 @@ import "../styles/Header.css";
 import { user_infos } from "../components/SignUp";
 
 function Header() {
-  const [id, setId] = useState("");
-  useEffect(() => {
-    UserCom.get({ nick: user_infos.nick }).then((res) => {
-      setId(res[0].id);
-      console.log(res);
-    });
-  }, []);
+  let id: string = "";
   const navigate = useNavigate();
-  function handleLogout() {
+  async function handleLogout() {
+    await UserCom.get({ nick: user_infos.nick }).then((res) => {
+      id = res[0].id;
+      console.log(res);
+    });
+    await UserCom.update(id, { active: false }).then((res) => {
+      console.log(res);
+    });
     localStorage.clear();
-    UserCom.update(id, { active: false }).then((res) => {
-      console.log(res);
-    });
-    UserCom.remove(id).then((res) => {
-      console.log(res);
-    });
+    // UserCom.remove(id).then((res) => {
+    //   console.log(res);
+    // });
     navigate("/");
   }
 

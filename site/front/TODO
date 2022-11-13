@@ -1,6 +1,6 @@
 USER :
-- pb need to change page to fetch
 - change username, avatar
+- verif password
 
 CHAT :
 - onChange other write msg add {...} (optionnal)
