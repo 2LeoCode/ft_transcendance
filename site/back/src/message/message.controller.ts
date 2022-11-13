@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpException,
+  Logger,
   Patch,
   Post,
   Query,
@@ -60,9 +61,7 @@ export class MessageController {
     @Query('receiverId') receiverId?: string,
   ): Promise<Message[]> {
     if (type === undefined && receiverId !== undefined)
-      console.warn(
-        '\x1b[31m[WARNING] receiverId is ignored since type is not defined in GET /message request',
-      );
+      Logger.warn('receiverId is ignored since type is not defined in GET /message request');
     return this.messageService.find({
       id,
       createDate,
@@ -79,9 +78,7 @@ export class MessageController {
     dto: CreateMessageDto
   ): Promise<InsertResult> {
     if (dto.receiverId === undefined) {
-      console.error(
-        '\x1b[31m[ERROR] receiverId is undefined in POST /message request',
-      );
+     Logger.error('receiverId is undefined in POST /message request');
       throw new HttpException('Internal server error', 500);
     }
     if (dto.type === 'private') {

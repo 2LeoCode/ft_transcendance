@@ -8,7 +8,7 @@ import { ChannelModule } from './channel/channel.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `env/${process.env.DB_ENVFILE}.env`,
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -16,11 +16,11 @@ import { ChannelModule } from './channel/channel.module';
       useFactory: async (configService: ConfigService) => {
         return {
           type: 'postgres',
-          host: configService.get('DB_HOST'),
-          port: configService.get('DB_PORT'),
-          database: configService.get('DB_NAME'),
-          username: configService.get('DB_USERNAME'),
-          password: configService.get('DB_PASSWORD'),
+          host: configService.get('POSTGRES_HOST'),
+          port: configService.get('POSTGRES_PORT'),
+          database: configService.get('POSTGRES_DB'),
+          username: configService.get('POSTGRES_USER'),
+          password: configService.get('POSTGRES_PASSWORD'),
           synchronize: true,
           autoLoadEntities: true,
         };

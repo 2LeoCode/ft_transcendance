@@ -104,7 +104,6 @@ export class UserController {
     @Query('id') id: string,
     @UploadedFile() file: Express.Multer.File
   ): Promise<UpdateResult> {
-    console.log(file);
     return this.userService.update(id, { avatarPath: file.path });
   }
 }
