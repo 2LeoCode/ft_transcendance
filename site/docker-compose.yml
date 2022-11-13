@@ -2,34 +2,15 @@ version: '3.9'
 
 services:
 
-  backend:                                      #THE BACKEND SIDE OF OUR APP ITSELF :
-    build:
-      context: ./back 
-      #dockerfile: ./back/Dockerfile
-      target: dev #for multi stage
-    env_file:
-      - ./env/back.env
-    ports:
-      - 2000:2000
-    volumes:
-      - nest:/app
-    networks:
-      - backend
-    depends_on:
-      - database
-    restart: unless-stopped
-
   database:                                      #THE POSTGRESQL DATABASE
     image: postgres:latest
     restart: unless-stopped
     ports:
-      - 5432:5432
-  #  env_file:
-  #    - ./env/postgres.env
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
-      POSTGRES_USER: transcendeur
-      POSTGRES_PASSWORD: bigData
-      POSTGRES_DB: transcendb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     networks:
       - backend
     volumes:
@@ -38,42 +19,57 @@ services:
   databaseadmin:                                 #THE DATABASE 'ADMIN GRAPHICAL INTERFACE'
     image: dpage/pgadmin4:latest
     restart: unless-stopped
-    ports:
-      - 5050:80
-    env_file:
-      - ./env/pgadmin.env
     environment:
-      PGADMIN_DEFAULT_EMAIL: nidma@nidma.com
-      PGADMIN_DEFAULT_PASSWORD: dimnagp4
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     networks:
       - backend
     volumes:
-      - ./docker/pgadmin_servers.json:/pgadmin4/servers.json
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
     depends_on:
       - database
     logging:
       driver: none
 
-  # frontend:                                       #THE FRONTEND SIDE OF OUR APP ITSELF :
-  #   build:
-  #     context: ./front
-  #   env_file:
-  #     - ./env/front.env
-  #   ports:
-  #     - 3000:3000
-  #   restart: unless-stopped
-  #   networks:
-  #     - backend
-  #   volumes:
-  #     - react:/app
-  #   depends_on:
-  #     - backend
+
+  backend:                                      #THE BACKEND SIDE OF OUR APP ITSELF :
+    image: node:lts-alpine
+    working_dir: /app
+    environment:
+      PORT: ${BACK_PORT}
+    ports:
+      - ${BACK_PORT}:${BACK_PORT}
+    volumes:
+      - ./back:/app
+      - ./.env:/app/.env
+    networks:
+      - backend
+    depends_on:
+      - database
+    restart: unless-stopped
+    command: sh ./start.sh ${NODE_ENV}
+    
+
+
+  frontend:    
+    image: node:lts-alpine                       #THE FRONTEND SIDE OF OUR APP ITSELF :
+    working_dir: /app
+    environment:
+      PORT: ${FRONT_PORT}
+    ports:
+      - ${FRONT_PORT}:${FRONT_PORT}
+    restart: unless-stopped
+    networks:
+      - backend
+    volumes:
+      - ./front:/app
+    depends_on:
+      - backend
+    command: sh ./start.sh ${NODE_ENV}
     
 
 volumes:
   postgres:
-  nest:
-  react:
 
 networks:
   backend:
