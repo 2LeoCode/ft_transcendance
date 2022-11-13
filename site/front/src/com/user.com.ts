@@ -30,7 +30,7 @@ export namespace UserCom {
     id?: string,
     nick?: string,
     mail?: string,
-    active?: string
+    active?: boolean
   }) {
     let url = 'http://localhost:2000/user?';
     for (const key in opts)
@@ -54,8 +54,8 @@ export namespace UserCom {
     lastName: string,
     password: string
   }) {
-    if (!Checker.nickname(opts.nick))
-      throw Error('Bad nickname');
+    // if (!Checker.nickname(opts.nick))
+    //   throw Error('Bad nickname');
     if (!Checker.mail(opts.mail))
       throw Error('Bad mail');
     if (!Checker.userPassword(opts.password))

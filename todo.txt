@@ -1,0 +1,2 @@
+- if user already exist
+- patch by nick

@@ -28,8 +28,8 @@ function Pong() {
   const [width, setWitdh] = useState<number | any>(vw_to_px(70));
   const [height, setHeight] = useState<number | any>(vh_to_px(50));
   const [play, setPlay] = useState<boolean | any>(false);
-  setInterval(() => setWitdh(vw_to_px(70)), 100);
-  setInterval(() => setHeight(vh_to_px(50)), 100);
+  // setInterval(() => setWitdh(vw_to_px(70)), 100);
+  // setInterval(() => setHeight(vh_to_px(50)), 100);
 
   
   return (

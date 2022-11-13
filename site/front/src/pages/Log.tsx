@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/Log.css";
-import { NavLink } from "react-router-dom";
 import SignUp from "../components/SignUp";
+import SignIn from "../components/SignIn";
 
-function Log({ log }: any) {
+function Log() {
+
+  const [log, setLog] = useState(false);
+  const [log2, setLog2] = useState(false);
+
   return (
     <div className="Log">
+      {log && <SignUp />}
+      {log2 && <SignIn />}
       <h1>Fight Pong</h1>
-      <NavLink to="/pong">
-        <button type="button">
-          Sign in
+      <button type="button" onClick={() => setLog2(true)}>
+          Sign In
         </button>
-      </NavLink>
-      {/* <SignUp /> */}
+        <br />
+        <br />
+        <button type="button" onClick={() => setLog(true)}>
+          Sign Up
+        </button>
     </div>
   );
 }

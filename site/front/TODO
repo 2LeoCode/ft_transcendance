@@ -1,5 +1,12 @@
+USER :
+- change username, avatar
+- verif password
+
 CHAT :
 - onChange other write msg add {...} (optionnal)
 
 PONG : 
 - waiting page
+
+SETTINGS :
+- do components
