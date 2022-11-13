@@ -1,6 +1,9 @@
 import React from "react";
 import Header from "../components/Header";
+import Channels from "../components/Channels";
 import "../styles/Chat.scss";
+import OnlineUsers from "../components/OnlineUsers";
+import Messages from "../components/Messages";
 
 function Chat() {
   return (
@@ -8,12 +11,7 @@ function Chat() {
       <Header />
       <div className="Chat">
         <div className="left-pannel">
-          <h3>Channels</h3>
-          <ul className="channels_list">
-            <li>Channel 1</li>
-            <li>Channel 2</li>
-            <li>Channel 3</li>
-          </ul>
+          <Channels />
           <h3>Admins</h3>
           <ul className="admins">
             <li>
@@ -22,36 +20,10 @@ function Chat() {
               Admin 1
             </li>
           </ul>
-          <h3>Members</h3>
-          <ul className="members">
-            <li>
-              <div className="status online"></div>
-              <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-              Member 1
-            </li>
-            <li>
-              <div className="status online"></div>
-              <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-              Member 2
-            </li>
-            <li>
-              <div className="status online"></div>
-              <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-              Member 3
-            </li>
-          </ul>
-          <h4 className="create_channel">Create Channel</h4>
+          <OnlineUsers />
         </div>
         <ul className="main">
-          <li className="own_message">Message 1</li>
-          <li className="other_message">Message 2</li>
-          <li className="own_message">Message 3</li>
-          <li className="other_message">Message plus long 4</li>
-          <li className="other_message">
-            Message
-            beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaucoup
-            plus long 5
-          </li>
+          <Messages />
         </ul>
         <div className="write_msg">
           <form action="">

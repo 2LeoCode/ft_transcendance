@@ -6,6 +6,12 @@ then
 	exit 1
 fi
 
-npm i
+npm init -y
+npm i -g typescript
+npm i -g ts-node
+npm i -g nodemon
+
+tsc --init
+sleep 10
 
 npm run start:$1

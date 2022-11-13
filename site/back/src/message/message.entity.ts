@@ -27,7 +27,7 @@ export class Message {
   sender: User;
 
   @Column()
-  type: 'private' | 'channel';
+  type: 'private' | 'channel' | 'global';
 
   @ManyToOne(() => Channel, (cha) => cha.messages)
   channelReceiver: Channel;

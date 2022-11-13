@@ -57,7 +57,7 @@ export class MessageController {
     @Query('createDate') createDate?: Date,
     @Query('updateDate') updateDate?: Date,
     @Query('senderId') senderId?: string,
-    @Query('type') type?: 'private' | 'channel',
+    @Query('type') type?: 'private' | 'channel' | 'global',
     @Query('receiverId') receiverId?: string,
   ): Promise<Message[]> {
     if (type === undefined && receiverId !== undefined)

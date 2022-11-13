@@ -7,7 +7,7 @@ export interface Message {
   createDate: Date;
   updateDate: Date;
   sender: User;
-  type: 'private' | 'channel';
+  type: 'private' | 'channel' | 'global';
   channelReceiver: Channel;
   userReceiver: User;
 }
@@ -22,7 +22,7 @@ export namespace MessageCom {
     createDate?: Date,
     updateDate?: Date,
     senderId?: string,
-    type?: 'private' | 'channel',
+    type?: 'private' | 'channel' | 'global',
     receiverId?: string
   }) {
     let url = 'http://localhost:2000/message?';
@@ -43,7 +43,7 @@ export namespace MessageCom {
   export async function add(opts: {
     content: string,
     senderId: string,
-    type: 'private' | 'channel',
+    type: 'private' | 'channel' | 'global',
     receiverId: string
   }) {
     const url = 'http://localhost:2000/message';

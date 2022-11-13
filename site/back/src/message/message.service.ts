@@ -16,7 +16,7 @@ export class MessageService {
     createDate?: Date;
     updateDate?: Date;
     senderId?: string;
-    type?: 'private' | 'channel';
+    type?: 'private' | 'channel' | 'global';
     receiverId?: string;
   }): Promise<Message[]> {
     if (opts.type === undefined)
@@ -45,7 +45,7 @@ export class MessageService {
   async insert(opts: {
     content: string;
     sender: User;
-    type: 'private' | 'channel';
+    type: 'private' | 'channel' | 'global';
     channelReceiver: Channel;
     userReceiver: User;
   }): Promise<InsertResult> {
