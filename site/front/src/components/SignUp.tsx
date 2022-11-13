@@ -4,6 +4,7 @@ import { UserCom } from "../com/user.com";
 import "../styles/SignUp.css";
 
 export let user_infos = {
+  id: "a2c6e86a-182a-48a3-8907-428c264d0943",
   nick: JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1'),
   mail: "abc@abc.fr",
   firstName: "bob",

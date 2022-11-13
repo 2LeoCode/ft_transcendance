@@ -30,7 +30,7 @@ export namespace UserCom {
     id?: string,
     nick?: string,
     mail?: string,
-    active?: string
+    active?: boolean
   }) {
     let url = 'http://localhost:2000/user?';
     for (const key in opts)
