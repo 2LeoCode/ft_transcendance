@@ -3,22 +3,34 @@ import "../styles/SignIn.css";
 import { useNavigate } from "react-router-dom";
 import { UserCom } from "../com/user.com";
 import { user_infos } from "../components/SignUp";
+import bcrypt from "bcryptjs";
 
-async function log() {
+async function log(password: string) {
   let id: string = "";
+  let pass: string = "";
+  let goodpassword: boolean = false;
   await UserCom.get({ nick: user_infos.nick }).then((res) => {
     console.log(res);
     id = res[0].id;
+    pass = res[0].password;
   });
-const len = id.length;
+  const len = id.length;
   if (len > 1) {
-    await UserCom.update(id, { active: true }).then((res) => {
-      console.log(res);
+    await bcrypt.compare(password, pass).then((res) => {
+      goodpassword = res;
     });
-	return 0;
+    if (goodpassword === false) {
+      console.log("Bad password");
+      return 2;
+    } else {
+      await UserCom.update(id, { active: true }).then((res) => {
+        console.log(res);
+      });
+      return 0;
+    }
   } else {
     console.log("Account doesn't exist");
-	return 1;
+    return 1;
   }
 }
 
@@ -26,7 +38,7 @@ function SignIn() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  let pass;
+  let pass: number;
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -39,10 +51,10 @@ function SignIn() {
     user_infos.password = JSON.stringify(
       localStorage.getItem("password")
     ).replace(/^"(.*)"$/, "$1");
-    await log().then((res) => {
-		pass = res;})
-	if (pass = 0)
-    	navigate("/pong");
+    await log(password).then((res) => {
+      pass = res;
+    });
+    if (pass === 0) navigate("/pong");
   };
   return (
     <div className="SignIn">

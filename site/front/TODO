@@ -1,6 +1,7 @@
 USER :
-- change username, avatar
-- verif password
+- change avatar
+- design signin signup
+- error message when bad connection
 
 CHAT :
 - onChange other write msg add {...} (optionnal)

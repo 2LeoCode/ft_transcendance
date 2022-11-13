@@ -4,7 +4,6 @@ import SignUp from "../components/SignUp";
 import SignIn from "../components/SignIn";
 
 function Log() {
-
   const [log, setLog] = useState(false);
   const [log2, setLog2] = useState(false);
 
@@ -14,13 +13,13 @@ function Log() {
       {log2 && <SignIn />}
       <h1>Fight Pong</h1>
       <button type="button" onClick={() => setLog2(true)}>
-          Sign In
-        </button>
-        <br />
-        <br />
-        <button type="button" onClick={() => setLog(true)}>
-          Sign Up
-        </button>
+        Sign In
+      </button>
+      <br />
+      <br />
+      <button type="button" onClick={() => setLog(true)}>
+        Sign Up
+      </button>
     </div>
   );
 }

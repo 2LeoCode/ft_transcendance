@@ -3,8 +3,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { UserCom } from "../com/user.com";
 import "../styles/Header.css";
 import { user_infos } from "../components/SignUp";
+import Settings from "./Settings";
 
 function Header() {
+  const [settings, setSettings] = useState(false);
   let id: string = "";
   const navigate = useNavigate();
   async function handleLogout() {
@@ -40,7 +42,14 @@ function Header() {
       <div className="dropdown">
         <button className="dropbtn">Menu</button>
         <div className="dropdown-content">
-          <button>Settings</button>
+          <button
+            type="button"
+            onClick={() => {
+              setSettings(true);
+            }}
+          >
+            Settings
+          </button>
           <button>Link 2</button>
           <button
             type="button"
@@ -52,6 +61,7 @@ function Header() {
           </button>
         </div>
       </div>
+      {settings && <Settings isOn={setSettings}/>}
     </div>
   );
 }
