@@ -2,6 +2,7 @@ USER :
 - change avatar
 - design signin signup
 - error message when bad connection
+- gestion des erreurs (ex password too short)
 
 CHAT :
 - onChange other write msg add {...} (optionnal)
@@ -10,4 +11,4 @@ PONG :
 - waiting page
 
 SETTINGS :
-- do components
+- do components (logic and design)
