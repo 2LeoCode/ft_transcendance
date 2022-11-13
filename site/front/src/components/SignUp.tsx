@@ -1,14 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserCom } from "../com/user.com";
 import "../styles/SignUp.css";
 
 export let user_infos = {
-  nick: "bobabc",
+  nick: JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1'),
   mail: "abc@abc.fr",
   firstName: "bob",
   lastName: "abc",
-  password: "test1234",
+  password: JSON.stringify(localStorage.getItem("password")).replace(/^"(.*)"$/, '$1'),
 };
 
 function SignUp() {
@@ -18,8 +18,10 @@ function SignUp() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    user_infos.nick = name;
-    user_infos.password = password;
+    localStorage.setItem("username", name);
+    localStorage.setItem("password", password);
+    user_infos.nick = JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1');
+    user_infos.password = JSON.stringify(localStorage.getItem("password")).replace(/^"(.*)"$/, '$1');
     UserCom.add(user_infos);
     navigate("/pong");
   };

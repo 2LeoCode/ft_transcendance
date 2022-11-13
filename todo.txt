@@ -1,1 +1,2 @@
--if user already exist
+- if user already exist
+- patch by nick

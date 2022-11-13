@@ -58,8 +58,8 @@ export namespace UserCom {
     //   throw Error('Bad nickname');
     if (!Checker.mail(opts.mail))
       throw Error('Bad mail');
-    if (!Checker.userPassword(opts.password))
-      throw Error('Bad password');
+    // if (!Checker.userPassword(opts.password))
+    //   throw Error('Bad password');
     const url = 'http://localhost:2000/user';
     opts.password = await bcrypt.hash(opts.password, 10);
     const response = await fetch(url, {
