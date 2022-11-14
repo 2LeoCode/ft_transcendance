@@ -1,1 +1,10 @@
-- patch by nick
+JEU
+- Connecter jeu db
+- Sockets
+- Watch game
+
+CHAT
+- TOUT
+
+AUTH
+- Api 42

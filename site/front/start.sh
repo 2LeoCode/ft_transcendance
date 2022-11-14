@@ -16,5 +16,3 @@ else
 	npm run start:prod
 	npm add -g serve
 fi
-
-npm run start:$1

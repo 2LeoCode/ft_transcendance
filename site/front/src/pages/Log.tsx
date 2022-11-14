@@ -6,7 +6,6 @@ import SignIn from "../components/SignIn";
 function Log() {
   const [log, setLog] = useState(false);
   const [log2, setLog2] = useState(false);
-
   return (
     <div className="Log">
       {log && <SignUp />}

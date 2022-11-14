@@ -17,7 +17,7 @@ export class SocketEvents {
 
 	//disconnection
 	handleDisconnect(client: Socket){
-		console.log(`Client diconnected: ${client.id}`);
+		console.log(`Client disconnected: ${client.id}`);
 	}
 
 	//receive an event
