@@ -5,13 +5,6 @@ import { UserCom } from "../com/user.com";
 import { user_infos } from "../components/SignUp";
 import { useNavigate } from "react-router-dom";
 
-async function getId(id: string) {
-  await UserCom.get({ nick: user_infos.nick }).then((res) => {
-    id = res[0].id;
-    console.log(res);
-  });
-}
-
 function Settings(props: any) {
   const [newName, setNewName] = useState("");
   const navigate = useNavigate();

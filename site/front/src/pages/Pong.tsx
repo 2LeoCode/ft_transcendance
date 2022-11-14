@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import "../styles/Pong.css";
+import { io } from "socket.io-client"
 
 function vw_to_px(vw: number) {
   return (window.innerWidth * vw) / 100;
@@ -17,7 +18,6 @@ function activate_script()
     script.src = "./game.js";
     script.async = true;
     document.body.appendChild(script);
-
   //   return () => {
   //     document.body.removeChild(script);
   //   };
