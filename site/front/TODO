@@ -5,6 +5,7 @@ USER :
 - gestion des erreurs (ex password too short) (optionnal, log42)
 
 CHAT :
+- remplacer key index par id
 - onChange other write msg add {...} (optionnal)
 
 PONG : 

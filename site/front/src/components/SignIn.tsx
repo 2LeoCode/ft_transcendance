@@ -42,14 +42,14 @@ function SignIn() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    localStorage.setItem("username", name);
-    localStorage.setItem("password", password);
-    user_infos.nick = JSON.stringify(localStorage.getItem("username")).replace(
+    sessionStorage.setItem("username", name);
+    sessionStorage.setItem("password", password);
+    user_infos.nick = JSON.stringify(sessionStorage.getItem("username")).replace(
       /^"(.*)"$/,
       "$1"
     );
     user_infos.password = JSON.stringify(
-      localStorage.getItem("password")
+      sessionStorage.getItem("password")
     ).replace(/^"(.*)"$/, "$1");
     await log(password).then((res) => {
       pass = res;

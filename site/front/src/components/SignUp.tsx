@@ -4,11 +4,11 @@ import { UserCom } from "../com/user.com";
 import "../styles/SignUp.css";
 
 export let user_infos = {
-  nick: JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1'),
+  nick: JSON.stringify(sessionStorage.getItem("username")).replace(/^"(.*)"$/, '$1'),
   mail: "abc@abc.fr",
   firstName: "bob",
   lastName: "abc",
-  password: JSON.stringify(localStorage.getItem("password")).replace(/^"(.*)"$/, '$1'),
+  password: JSON.stringify(sessionStorage.getItem("password")).replace(/^"(.*)"$/, '$1'),
 };
 
 function SignUp() {
@@ -20,16 +20,15 @@ function SignUp() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     await UserCom.get({ nick: name }).then((res) => {
-      console.log(res);
       if (res.length > 0)
         exist = true;
     });
     if (exist === true)
       return console.log("Username already taken");
-    localStorage.setItem("username", name);
-    localStorage.setItem("password", password);
-    user_infos.nick = JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1');
-    user_infos.password = JSON.stringify(localStorage.getItem("password")).replace(/^"(.*)"$/, '$1');
+    sessionStorage.setItem("username", name);
+    sessionStorage.setItem("password", password);
+    user_infos.nick = JSON.stringify(sessionStorage.getItem("username")).replace(/^"(.*)"$/, '$1');
+    user_infos.password = JSON.stringify(sessionStorage.getItem("password")).replace(/^"(.*)"$/, '$1');
     await UserCom.add(user_infos);
     navigate("/pong");
   };
