@@ -105,6 +105,7 @@ function Chat() {
         <div className="right-pannel">
           <h3>Friends</h3>
           <ul className="friends">
+          <Friend key="36" name="abc" />
             {friends_name_tab.map((x, index) => {
               return <Friend key={index} name={x} />;
             })}

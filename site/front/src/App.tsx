@@ -6,6 +6,7 @@ import Pong from "./pages/Pong";
 import Chat from "./pages/Chat";
 import User from "./pages/User";
 import Watch from "./pages/Watch";
+import OtherUser from "./pages/OtherUser";
 
 function App() {
   return (
