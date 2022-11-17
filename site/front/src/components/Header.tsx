@@ -25,7 +25,7 @@ function Header() {
     <div className="Header">
       <NavLink to="/user" className="infos_user">
         <img height="50%" src="./default-avatar.webp" alt="avatar" />
-        <p>name</p>
+        <p>{user_infos.nick}</p>
       </NavLink>
       <NavLink to="/watch">
         <p className="watch">Watch</p>

@@ -20,12 +20,11 @@ function User() {
 
   useEffect(() => {
     UserCom.get({ nick: user_infos.nick }).then((res) => {
-      console.log("test");
       console.log(res);
       setUsername(res[0].nick);
       setId(res[0].id);
     });
-  }, [user_infos]);
+  }, []);
 
   return (
     <div>
