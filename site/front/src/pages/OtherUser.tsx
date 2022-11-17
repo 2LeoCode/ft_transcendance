@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { UserCom } from "../com/user.com";
 import Header from "../components/Header";
-import { user_infos } from "../components/SignUp";
 import "../styles/User.css";
 
 declare var Blob: {
@@ -10,15 +10,18 @@ declare var Blob: {
   new (request: any, mime: string): Blob;
 };
 
-function OtherUser(props: any) {
+function OtherUser() {
   const matches_won: number = 0;
   const matches_lost: number = 0;
-
+  const params = useParams();
+  const username = params.userName;
+  //recup infos when db ok
+  UserCom.get({nick: username}).then((res) => (console.log(res)));
   return (
     <div>
       <Header />
       <div className="User">
-        <h3>{props.name}</h3>
+        <h3>{username}</h3>
         <div className="avatar">
             <img src="./default-avatar.webp" alt="Avatar" width="80%" />
           <br />

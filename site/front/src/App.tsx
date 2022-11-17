@@ -16,6 +16,7 @@ function App() {
           <Route path="/pong" element={<Pong />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/user" element={<User />} />
+          <Route path="/other_user/:userName" element={<OtherUser />} />
           <Route path="/watch" element={<Watch />} />
           <Route path="*" element={<Pong />} />
       </Routes>

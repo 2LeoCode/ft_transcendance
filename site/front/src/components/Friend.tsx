@@ -1,30 +1,32 @@
 import React, { useState } from "react";
-import OtherUser from "../pages/OtherUser";
+import { Link } from "react-router-dom";
 import "../styles/Chat.css";
 import "../styles/Friend.css";
 
-function printInfos()
-{
-  document.getElementById('infos')!.style.display = "block";
-}
+function Friend(props: any) {
+  function printInfos(name: string) {
+    document.getElementById(name)!.style.display = "block";
+  }
 
-function closeInfos()
-{
-  document.getElementById('infos')!.style.display = "none";
-}
-
-function Friend(props :any) {
+  function closeInfos(name: string) {
+    document.getElementById(name)!.style.display = "none";
+  }
   return (
-    <li >
-      <div onClick={printInfos}>
-      <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-      {props.name}
+    <li>
+      <div onClick={() => printInfos(props.name)}>
+        <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+        {props.name}
       </div>
-      <div className="infos" id="infos">
-        <button>Chat</button><br />
-        <button>Play</button><br />
-        <button onClick={ () => {return <OtherUser name={props.name} />}}>View profile</button><br />
-        <button onClick={closeInfos}>Close</button>
+      <div className="infos" id={props.name}>
+        <button>Chat</button>
+        <br />
+        <button>Play</button>
+        <br />
+        <Link to={`/other_user/${props.name}`}>
+          <button>View profile</button>
+        </Link>
+        <br />
+        <button onClick={() => closeInfos(props.name)}>Close</button>
       </div>
     </li>
   );

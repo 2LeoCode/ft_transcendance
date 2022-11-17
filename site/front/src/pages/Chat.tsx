@@ -15,7 +15,7 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
     // console.log(res);
     friends_tab.push(res[0].id);
     // friends_name_tab.push(res[0].nick);
-  });
+  }).catch(() => {console.log("user doesn't exist")});
   await UserCom.update(id, { friendIds: friends_tab });
 }
 
@@ -26,12 +26,10 @@ function Chat() {
   const [mounted, setMounted] = useState(false);
   const initFriends = async () => {
     await UserCom.get({ nick: user_infos.nick }).then((res) => {
-      // console.log(res);
       setId(res[0].id);
       setFriends_id_tab(res[0].friendIds);
       for (let i = 0; i < res[0].friendIds.length; i++) {
         UserCom.get({ id: res[0].friendIds[i] }).then((res) => {
-          // console.log(res);
           setFriends_name_tab((friends_name_tab) => [
             ...friends_name_tab,
             res[0].nick,
@@ -105,9 +103,8 @@ function Chat() {
         <div className="right-pannel">
           <h3>Friends</h3>
           <ul className="friends">
-          <Friend key="36" name="abc" />
             {friends_name_tab.map((x, index) => {
-              return <Friend key={index} name={x} />;
+              return <Friend key={index} index={index} name={x} />;
             })}
           </ul>
           <form onSubmit={(e) => addFriend(e, id, friends_id_tab)}>
