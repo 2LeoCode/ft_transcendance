@@ -26,7 +26,6 @@ function Game() {
             id="pong"
             width={width}
             height={height}
-            onKeyDown={(e) => console.log("test")}
           ></canvas>
   );
 }
