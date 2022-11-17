@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { UserCom } from "../com/user.com";
+import Channel from "../components/Channel";
 import Friend from "../components/Friend";
 import Header from "../components/Header";
 import { user_infos } from "../components/SignUp";
@@ -18,6 +19,10 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
   }).catch(() => {console.log("user doesn't exist")});
   await UserCom.update(id, { friendIds: friends_tab });
   window.location.reload();
+}
+
+async function createChannel(e: any) {
+  
 }
 
 function Chat() {
@@ -56,7 +61,8 @@ function Chat() {
             <li>Channel 2</li>
             <li>Channel 3</li>
           </ul>
-          <h3>Admins</h3>
+          <Channel />
+          {/* <h3>Admins</h3>
           <ul className="admins">
             <li>
               <div className="status online"></div>
@@ -81,8 +87,8 @@ function Chat() {
               <img src="./default-avatar.webp" alt="Avatar" width="20px" />
               Member 3
             </li>
-          </ul>
-          <h4 className="create_channel">Create Channel</h4>
+          </ul> */}
+          <h4 className="create_channel" onClick={(e) => {createChannel(e)}} >Create Channel</h4>
         </div>
         <ul className="main">
           <li className="own_message">Message 1</li>
