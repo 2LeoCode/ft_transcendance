@@ -4,54 +4,44 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
-import { Channel } from '../channel/channel.entity';
-import { Message } from '../message/message.entity';
+import Receiver from 'src/receiver/receiver.entity';
+import Channel from '../channel/channel.entity';
+import Message from '../message/message.entity';
+import Score from '../score/score.entity';
 
 @Entity()
-export class User {
+export default class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   nick: string;
 
-  @Column()
-  mail: string;
+  @Column('text', { nullable: true })
+  avatar: Express.Multer.File;
 
-  @Column()
-  firstName: string;
-
-  @Column()
-  lastName: string;
-
-  @Column({nullable: true})
-  avatarPath: string;
-
-  @Column()
-  password: string;
-
-  @Column({ default: 0 })
-  highestScore: number;
-
-  @Column('int', { array: true, default: [] })
-  scoreHistory: number[];
+  @OneToMany(() => Score, scr => scr.user, { cascade: true })
+  scores: Score[];
 
   @Column({ default: true })
-  active: boolean;
+  online: boolean;
 
   @Column('json', { default: [] })
   friendIds: string[];
 
-  @OneToMany(() => Channel, (cha) => cha.owner)
+  @OneToMany(() => Channel, cha => cha.owner, { cascade: true })
   ownedChannels: Channel[];
 
-  @OneToMany(() => Message, (msg) => msg.userReceiver)
-  messagesIn: Message[];
+  @OneToMany(() => Message, msg => msg.sender, { cascade: true })
+  messages: Message[];
 
-  @OneToMany(() => Message, (msg) => msg.sender)
-  messagesOut: Message[];
-
-  @ManyToMany(() => Channel, (cha) => cha.users)
+  @ManyToMany(() => Channel, cha => cha.users)
   channels: Channel[];
+
+  @OneToOne(() => Receiver, { cascade: true })
+  @JoinColumn()
+  receiver: Receiver;
 }

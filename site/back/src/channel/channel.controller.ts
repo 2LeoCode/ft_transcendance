@@ -7,15 +7,15 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
-import { ChannelService } from './channel.service';
-import { Channel } from './channel.entity';
-import { User } from 'src/user/user.entity';
+import ChannelService from './channel.service';
+import Channel from './channel.entity';
+import User from 'src/user/user.entity';
 import { InsertResult, UpdateResult } from 'typeorm';
 import { CreateChannelDto, UpdateChannelDto } from './channel.dto';
 import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('channel')
-export class ChannelController {
+export default class ChannelController {
   constructor(private channelService: ChannelService) {}
 
   @Get()

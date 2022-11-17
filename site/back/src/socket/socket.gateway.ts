@@ -6,7 +6,7 @@ import { Server, Socket } from 'socket.io';
 		origin: '*',
 	},
 })
-export class SocketEvents {
+export default class SocketGateway {
 	@WebSocketServer()
 	server: Server;
 

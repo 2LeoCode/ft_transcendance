@@ -11,14 +11,14 @@ import {
 } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { InsertResult, UpdateResult } from 'typeorm';
-import { Channel } from '../channel/channel.entity';
-import { User } from '../user/user.entity';
 import { CreateMessageDto, UpdateMessageDto } from './message.dto';
-import { Message } from './message.entity';
-import { MessageService } from './message.service';
+import User from '../user/user.entity';
+import Channel from '../channel/channel.entity';
+import Message from './message.entity';
+import MessageService from './message.service';
 
 @Controller('message')
-export class MessageController {
+export default class MessageController {
   constructor(private messageService: MessageService) {}
 
   @Get()
@@ -57,18 +57,14 @@ export class MessageController {
     @Query('createDate') createDate?: Date,
     @Query('updateDate') updateDate?: Date,
     @Query('senderId') senderId?: string,
-    @Query('type') type?: 'private' | 'channel',
     @Query('receiverId') receiverId?: string,
   ): Promise<Message[]> {
-    if (type === undefined && receiverId !== undefined)
-      Logger.warn('receiverId is ignored since type is not defined in GET /message request');
     return this.messageService.find({
       id,
       createDate,
       updateDate,
       senderId,
-      type,
-      receiverId,
+      receiverId
     });
   }
 
@@ -77,26 +73,7 @@ export class MessageController {
     @Body()
     dto: CreateMessageDto
   ): Promise<InsertResult> {
-    if (dto.receiverId === undefined) {
-     Logger.error('receiverId is undefined in POST /message request');
-      throw new HttpException('Internal server error', 500);
-    }
-    if (dto.type === 'private') {
-      return this.messageService.insert({
-        content: dto.content,
-        sender: { id: dto.senderId } as User,
-        type: dto.type,
-        channelReceiver: null,
-        userReceiver: { id: dto.receiverId } as User,
-      });
-    }
-    return this.messageService.insert({
-      content: dto.content,
-      sender: { id: dto.senderId } as User,
-      type: dto.type,
-      channelReceiver: { id: dto.receiverId } as Channel,
-      userReceiver: null,
-    });
+    return this.messageService.insert(dto);
   }
 
   @Delete()

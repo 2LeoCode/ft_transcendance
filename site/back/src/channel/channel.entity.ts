@@ -6,12 +6,14 @@ import {
   ManyToMany,
   JoinTable,
   ManyToOne,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
-import { User } from '../user/user.entity';
-import { Message } from 'src/message/message.entity';
+import User from '../user/user.entity';
+import Receiver from 'src/receiver/receiver.entity';
 
 @Entity()
-export class Channel {
+export default class Channel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -24,13 +26,14 @@ export class Channel {
   @Column({ default: false })
   isPrivate: boolean;
 
-  @ManyToOne(() => User, (usr) => usr.ownedChannels)
+  @ManyToOne(() => User, (usr) => usr.ownedChannels, { nullable: false, onDelete: 'CASCADE' })
   owner: User;
 
   @ManyToMany(() => User, (usr) => usr.channels)
   @JoinTable()
   users: User[];
 
-  @OneToMany(() => Message, (msg) => msg.channelReceiver)
-  messages: Message[];
+  @OneToOne(() => Receiver, { cascade: true })
+  @JoinColumn()
+  receiver: Receiver;
 }

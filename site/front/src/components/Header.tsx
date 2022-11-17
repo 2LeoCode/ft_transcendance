@@ -14,7 +14,7 @@ function Header() {
       id = res[0].id;
       console.log(res);
     });
-    await UserCom.update(id, { active: false }).then((res) => {
+    await UserCom.update(id, { online: false }).then((res) => {
       console.log(res);
     });
     localStorage.clear();

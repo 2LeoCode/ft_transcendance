@@ -23,7 +23,7 @@ async function log(password: string) {
       console.log("Bad password");
       return 2;
     } else {
-      await UserCom.update(id, { active: true }).then((res) => {
+      await UserCom.update(id, { online: true }).then((res) => {
         console.log(res);
       });
       return 0;
