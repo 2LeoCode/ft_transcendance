@@ -17,6 +17,7 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
     // friends_name_tab.push(res[0].nick);
   }).catch(() => {console.log("user doesn't exist")});
   await UserCom.update(id, { friendIds: friends_tab });
+  window.location.reload();
 }
 
 function Chat() {
