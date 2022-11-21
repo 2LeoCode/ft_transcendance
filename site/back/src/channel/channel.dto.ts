@@ -23,7 +23,4 @@ export class UpdateChannelDto {
 
 	@ApiPropertyOptional({example: false})
 	isPrivate: boolean;
-
-	@ApiPropertyOptional({example: ['ff9619c7-930e-42d2-9b30-8e2e29316665', '29446624-db02-47ff-8d30-43abfeabf56c']})
-	userIds: string[];
 }

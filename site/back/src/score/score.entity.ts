@@ -1,8 +1,8 @@
-import User from "src/user/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import UserEntity from '../user/user.entity';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export default class Score {
+export default class ScoreEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
@@ -15,6 +15,10 @@ export default class Score {
 	@CreateDateColumn()
 	date: Date;
 
-	@ManyToOne(() => User, user => user.scores, { onDelete: 'CASCADE' })
-	user: User;
+	@ManyToOne(
+		() => UserEntity,
+		(user: UserEntity) => user.scores,
+		{ onDelete: 'CASCADE' },
+	)
+	user: UserEntity;
 }

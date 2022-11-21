@@ -1,11 +1,14 @@
-import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
-import { ApiQuery } from "@nestjs/swagger";
-import { CreateScoreDto } from "./score.dto";
-import ScoreService from "./score.service";
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
+import { CreateScoreDto } from './score.dto';
+import ScoreEntity from './score.entity';
+import ScoreService from './score.service';
 
 @Controller('score')
 export default class ScoreController {
-	constructor(private readonly scoreService: ScoreService) {}
+	constructor(
+		private readonly scoreService: ScoreService
+	) {}
 
 	@Get()
 	@ApiQuery({
@@ -13,17 +16,36 @@ export default class ScoreController {
 		name: 'id',
 		required: false
 	})
-	get(
-		@Query('id') id?: string
-	) {
-		return this.scoreService.find({id: id});
+	@ApiQuery({
+		type: String,
+		name: 'userId',
+		required: false
+	})
+	async get(
+		@Query('id') id?: string,
+		@Query('userId') userId?: string,
+	): Promise<ScoreEntity[]> {
+		return this.scoreService.get({
+			id: id,
+			userId: userId
+		});
+	}
+
+	@Get('userId')
+	@ApiQuery({
+		type: String,
+		name: 'id',
+		required: true
+	})
+	async getUserId(id: string): Promise<string> {
+		return this.scoreService.getUserId(id);
 	}
 
 	@Post()
-	post(
+	async post(
 		@Body() dto: CreateScoreDto
-	) {
-		return this.scoreService.insert(dto);
+	): Promise<void> {
+		return this.scoreService.add(dto);
 	}
 
 	@Delete()
@@ -32,9 +54,9 @@ export default class ScoreController {
 		name: 'id',
 		required: true
 	})
-	delete(
+	async delete(
 		@Query('id') id: string
-	) {
+	): Promise<void> {
 		return this.scoreService.remove(id);
 	}
 }

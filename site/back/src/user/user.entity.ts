@@ -1,47 +1,66 @@
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  ManyToMany,
-  OneToOne,
-  JoinColumn,
-} from 'typeorm';
-import Receiver from 'src/receiver/receiver.entity';
-import Channel from '../channel/channel.entity';
-import Message from '../message/message.entity';
-import Score from '../score/score.entity';
+import ScoreEntity from '../score/score.entity';
+import ReceiverEntity from '../receiver/receiver.entity';
+import MessageEntity from '../message/message.entity';
+import ChannelEntity from '../channel/channel.entity';
+import { Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export default class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export default class UserEntity {
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
-  @Column()
-  nick: string;
+	@Column()
+	nick: string;
 
-  @Column('text', { nullable: true })
-  avatar: Express.Multer.File;
+	@Column('text', { nullable: true })
+	avatar: Express.Multer.File;
 
-  @OneToMany(() => Score, scr => scr.user, { cascade: true })
-  scores: Score[];
+	@OneToMany(
+		() => ScoreEntity,
+		(scr: ScoreEntity) => scr.user,
+		{ cascade: true }
+	)
+	scores: ScoreEntity[];
 
-  @Column({ default: true })
-  online: boolean;
+	@Column({ default: true })
+	online: boolean;
 
-  @Column('json', { default: [] })
-  friendIds: string[];
+	@ManyToMany(
+		() => UserEntity,
+		{ cascade: true }
+	)
+	friendRequests: UserEntity[];
 
-  @OneToMany(() => Channel, cha => cha.owner, { cascade: true })
-  ownedChannels: Channel[];
+	@ManyToMany(
+		() => UserEntity,
+		{ cascade: true }
+	)
+	friends: UserEntity[];
 
-  @OneToMany(() => Message, msg => msg.sender, { cascade: true })
-  messages: Message[];
+	@OneToMany(
+		() => ChannelEntity,
+		(cha: ChannelEntity) => cha.owner,
+		{ cascade: true }
+	)
+	ownedChannels: ChannelEntity[];
 
-  @ManyToMany(() => Channel, cha => cha.users)
-  channels: Channel[];
+	@OneToMany(
+		() => ChannelEntity,
+		(cha: ChannelEntity) => cha.users,
+		{ cascade: true }
+	)
+	channels: ChannelEntity[];
 
-  @OneToOne(() => Receiver, { cascade: true })
-  @JoinColumn()
-  receiver: Receiver;
+	@OneToMany(
+		() => MessageEntity,
+		(msg: MessageEntity) => msg.sender,
+		{ cascade: true }
+	)
+	messages: MessageEntity[];
+	
+	@OneToOne(
+		() => ReceiverEntity,
+		{ cascade: true }
+	)
+	receiver: ReceiverEntity;
 }

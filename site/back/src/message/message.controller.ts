@@ -1,102 +1,91 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  Logger,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { InsertResult, UpdateResult } from 'typeorm';
 import { CreateMessageDto, UpdateMessageDto } from './message.dto';
-import User from '../user/user.entity';
-import Channel from '../channel/channel.entity';
-import Message from './message.entity';
+import MessageEntity from './message.entity';
 import MessageService from './message.service';
 
 @Controller('message')
 export default class MessageController {
-  constructor(private messageService: MessageService) {}
+	constructor(
+		private readonly messageService: MessageService
+	) {}
 
-  @Get()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: false
-  })
-  @ApiQuery({
-    type: Date,
-    name: 'createDate',
-    required: false
-  })
-  @ApiQuery({
-    type: Date,
-    name: 'updateDate',
-    required: false
-  })
-  @ApiQuery({
-    type: String,
-    name: 'senderId',
-    required: false
-  })
-  @ApiQuery({
-    type: String,
-    name: 'type',
-    required: false
-  })
-  @ApiQuery({
-    type: String,
-    name: 'receiverId',
-    required: false
-  })
-  async get(
-    @Query('id') id?: string,
-    @Query('createDate') createDate?: Date,
-    @Query('updateDate') updateDate?: Date,
-    @Query('senderId') senderId?: string,
-    @Query('receiverId') receiverId?: string,
-  ): Promise<Message[]> {
-    return this.messageService.find({
-      id,
-      createDate,
-      updateDate,
-      senderId,
-      receiverId
-    });
-  }
+	@Get()
+	@ApiQuery({
+		type: String,
+		name: 'id',
+		required: false
+	})
+	@ApiQuery({
+		type: String,
+		name: 'senderId',
+		required: false
+	})
+	@ApiQuery({
+		type: String,
+		name: 'receiverId',
+		required: false
+	})
+	async get(
+		@Query('id') id?: string,
+		@Query('senderId') senderId?: string,
+		@Query('receiverId') receiverId?: string,
+	): Promise<MessageEntity[]> {
+		return this.messageService.get({
+			id: id,
+			senderId: senderId,
+			receiverId: receiverId
+		});
+	}
 
-  @Post()
-  async post(
-    @Body()
-    dto: CreateMessageDto
-  ): Promise<InsertResult> {
-    return this.messageService.insert(dto);
-  }
+	@Get('senderId')
+	@ApiQuery({
+		type: String,
+		name: 'id',
+		required: true
+	})
+	async getSenderId(
+		@Query('id') id: string
+	): Promise<string> {
+		return this.messageService.getSenderId(id);
+	}
 
-  @Delete()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: true
-  })
-  async delete(@Query('id') id: string): Promise<Message[]> {
-    return this.messageService.remove(id);
-  }
+	@Get('receiverId')
+	async getReceiverId(
+		@Query('id') id: string
+	): Promise<string> {
+		return this.messageService.getReceiverId(id);
+	}
 
-  @Patch()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: true
-  })
-  async patch(
-    @Query('id') id: string,
-    @Body()
-    dto: UpdateMessageDto
-  ): Promise<UpdateResult> {
-    return this.messageService.update(id, dto);
-  }
+	@Post()
+	async post(
+		@Body() dto: CreateMessageDto
+	): Promise<void> {
+		return this.messageService.add(dto);
+	}
+
+	@Delete()
+	@ApiQuery({
+		type: String,
+		name: 'id',
+		required: true
+	})
+	async delete(
+		@Query('id') id: string
+	): Promise<void> {
+		return this.messageService.remove(id);
+	}
+
+	@Post('update')
+	@ApiQuery({
+		type: String,
+		name: 'id',
+		required: true
+	})
+	async update(
+		@Query('id') id: string,
+		@Body() dto: UpdateMessageDto
+	) {
+		return this.messageService.update(id, dto);
+	}
 }

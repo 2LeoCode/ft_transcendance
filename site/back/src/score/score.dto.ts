@@ -1,12 +1,14 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateScoreDto {
-	@ApiProperty({example: 10})
+	@ApiProperty({
+		example: '123e4567-e89b-12d3-a456-426614174000'
+	})
+	userId: string;
+
+	@ApiProperty({example: 0})
 	playerScore: number;
 
-	@ApiProperty({example: 5})
+	@ApiProperty({example: 0})
 	enemyScore: number;
-
-	@ApiProperty({example: '123e4567-e21b-12d3-a456-426614174000'})
-	userId: string;
 }

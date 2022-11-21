@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import UserModule from './user/user.module';
 import MessageModule from './message/message.module';
 import ChannelModule from './channel/channel.module';
-import SocketModule from './socket/socket.module';
 import ReceiverModule from './receiver/receiver.module';
 import ScoreModule from './score/score.module';
 
@@ -32,7 +31,6 @@ import ScoreModule from './score/score.module';
     UserModule,
     MessageModule,
     ChannelModule,
-    SocketModule,
     ReceiverModule,
     ScoreModule
   ],

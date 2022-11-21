@@ -1,30 +1,43 @@
-import { InjectRepository } from "@nestjs/typeorm";
-import User from "src/user/user.entity";
-import { InsertResult, Repository } from "typeorm";
-import { CreateScoreDto } from "./score.dto";
-import Score from "./score.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateScoreDto } from './score.dto';
+import { Repository } from 'typeorm';
+import ScoreEntity from './score.entity';
 
+@Injectable()
 export default class ScoreService {
 	constructor(
-		@InjectRepository(Score)
-		private scoreRepository: Repository<Score>,
+		@InjectRepository(ScoreEntity) private readonly scoreRepository: Repository<ScoreEntity>,
 	) {}
 
-	async insert(dto: CreateScoreDto): Promise<InsertResult> {
-		return this.scoreRepository.insert({
-			playerScore: dto.playerScore,
-			enemyScore: dto.enemyScore,
-			user: { id: dto.userId } as User,
+	async get(opts: {
+		id?: string;
+		userId?: string;
+	}): Promise<ScoreEntity[]> {
+		return this.scoreRepository.find({
+			where: {
+				id: opts.id,
+				user: { id: opts.userId }
+			}
 		});
 	}
 
-	async find(opts: {
-		id?: string;
-	}): Promise<Score[]> {
-		return this.scoreRepository.findBy(opts);
+	async getUserId(id: string): Promise<string> {
+		return this.scoreRepository.findOne({
+			relations: ['user'],
+			where: { id: id },
+		}).then((score: ScoreEntity) => score.user.id);
 	}
 
-	async remove(id: string): Promise<Score[]> {
-		return this.scoreRepository.remove(await this.find({ id: id }));
+	async add(dto: CreateScoreDto): Promise<void> {
+		await this.scoreRepository.save({
+			user: { id: dto.userId },
+			playerScore: dto.playerScore,
+			enemyScore: dto.enemyScore
+		});
+	}
+
+	async remove(id: string): Promise<void> {
+		await this.scoreRepository.remove(await this.get({ id: id }));
 	}
 }
