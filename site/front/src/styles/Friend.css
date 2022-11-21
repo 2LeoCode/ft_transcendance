@@ -1,0 +1,7 @@
+.infos {
+    display: none;
+    width: 20vw;
+    height: 10vh;
+    background-color: rgb(255, 125, 125);
+    margin: auto;
+}

@@ -1,0 +1,22 @@
+Fix l'avatar
+
+JEU
+- Connecter jeu db
+- Sockets
+- Watch game
+Vous devez offrir quelques options de customisation (par exemple, des power-ups
+ou des maps différentes) mais l’utilisateur doit pouvoir jouer à la version par défaut
+sans options s’il le souhaite.
+
+CHAT
+- Create channels
+- Directs messages
+- Block users
+- Add friends
+
+AUTH
+- Api 42
+- 2FA
+
+SECU
+- Injection SQL

@@ -1,5 +1,15 @@
+USER :
+- change avatar (fix in back)
+- design signin signup
+- error message when bad connection (optionnal, log42)
+- gestion des erreurs (ex password too short) (optionnal, log42)
+
 CHAT :
+- remplacer key index par id
 - onChange other write msg add {...} (optionnal)
 
 PONG : 
 - waiting page
+
+SETTINGS :
+- do design

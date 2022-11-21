@@ -1,0 +1,11 @@
+.Settings {
+	position: absolute;
+	margin-top: 20vh;
+	margin-left: calc(15vw);
+	padding-top: 50px;
+	height: 50vh;
+	width: 70vw;
+	background-color: white;
+	border-radius: 10%;
+	overflow-y: auto;
+}
