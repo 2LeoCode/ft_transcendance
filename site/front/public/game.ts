@@ -1,3 +1,5 @@
+import { io } from "socket.io-client";
+
 enum KeyBindings{
     UP = 38,
 	DOWN = 40,
@@ -6,6 +8,8 @@ enum KeyBindings{
 }
 
 class Game{
+
+    private socket = io();
 
     private gameCanvas;
     private gameContext;
@@ -158,11 +162,15 @@ class Game{
         // this.gameContext.font = 'ufc';
 		this.gameContext.textAlign = 'center';
 		if (Game.playerScore == 7)
-		this.gameContext.fillText("player one wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
+		this.gameContext.fillText("Player one wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
 		if (Game.player2Score == 7)
-		this.gameContext.fillText("player two wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
+		this.gameContext.fillText("Player two wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
 	}
     gameLoop(){
+        this.socket.on("keyUp", (e) => {
+            console.log("Arrow up in game.ts");
+        })
+
 		if (Game.playerScore == 0 && Game.player2Score == 0)
 			game.draw();
 

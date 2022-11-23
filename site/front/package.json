@@ -63,6 +63,7 @@
     "html-webpack-plugin": "^5.5.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "react-app-rewired": "^2.2.1",
+    "socket.io": "^4.5.3",
     "socket.io-client": "^4.5.3",
     "stream-browserify": "^3.0.0",
     "webpack": "^5.74.0"

@@ -1,3 +1,4 @@
+"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13,6 +14,8 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+exports.__esModule = true;
+var socket_io_client_1 = require("socket.io-client");
 var KeyBindings;
 (function (KeyBindings) {
     KeyBindings[KeyBindings["UP"] = 38] = "UP";
@@ -22,6 +25,7 @@ var KeyBindings;
 })(KeyBindings || (KeyBindings = {}));
 var Game = /** @class */ (function () {
     function Game() {
+        this.socket = (0, socket_io_client_1.io)();
         this.gameWidth = 0;
         this.gameHeight = 0;
         this.gameX = 0;
@@ -143,11 +147,14 @@ var Game = /** @class */ (function () {
         // this.gameContext.font = 'ufc';
         this.gameContext.textAlign = 'center';
         if (Game.playerScore == 7)
-            this.gameContext.fillText("player one wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
+            this.gameContext.fillText("Player one wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
         if (Game.player2Score == 7)
-            this.gameContext.fillText("player two wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
+            this.gameContext.fillText("Player two wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
     };
     Game.prototype.gameLoop = function () {
+        this.socket.on("keyUp", function (e) {
+            console.log("Arrow up in game.ts");
+        });
         if (Game.playerScore == 0 && Game.player2Score == 0)
             game.draw();
         if (Game.playerScore == 7 || Game.player2Score == 7) {
