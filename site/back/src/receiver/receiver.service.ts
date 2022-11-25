@@ -23,7 +23,10 @@ export default class ReceiverService {
 	}
 
 	async add(type: ReceiverType): Promise<ReceiverEntity> {
-		return this.receiverRepository.save({ type: type });
+		const receiver = this.receiverRepository.create({
+			type: type
+		});
+		return this.receiverRepository.save(receiver);
 	}
 
 	async getMessages(id: string): Promise<MessageEntity[]> {

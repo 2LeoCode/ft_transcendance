@@ -38,9 +38,9 @@ export default class MessageService {
 		})).receiver.id;
 	}
 
-	async add(dto: CreateMessageDto): Promise<void> {
+	async add(senderId: string, dto: CreateMessageDto): Promise<void> {
 		await this.messageRepository.save({
-			sender: { id: dto.senderId },
+			sender: { id: senderId },
 			receiver: { id: dto.receiverId },
 			content: dto.content,
 		});

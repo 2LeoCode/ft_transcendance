@@ -6,6 +6,9 @@ import MessageModule from './message/message.module';
 import ChannelModule from './channel/channel.module';
 import ReceiverModule from './receiver/receiver.module';
 import ScoreModule from './score/score.module';
+import AuthModule from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -32,9 +35,8 @@ import ScoreModule from './score/score.module';
     MessageModule,
     ChannelModule,
     ReceiverModule,
-    ScoreModule
-  ],
-  controllers: [],
-  providers: [],
+    ScoreModule,
+    AuthModule
+  ]
 })
 export default class AppModule {}

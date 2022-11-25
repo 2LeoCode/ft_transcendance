@@ -2,7 +2,7 @@ import ScoreEntity from '../score/score.entity';
 import ReceiverEntity from '../receiver/receiver.entity';
 import MessageEntity from '../message/message.entity';
 import ChannelEntity from '../channel/channel.entity';
-import { Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export default class UserEntity {
@@ -12,8 +12,24 @@ export default class UserEntity {
 	@Column()
 	nick: string;
 
+	@Column()
+	user42: string;
+
 	@Column('text', { nullable: true })
 	avatar: Express.Multer.File;
+
+	@ManyToMany(
+		() => UserEntity,
+		(user: UserEntity) => user.blocked,
+	)
+	blockedBy: UserEntity[];
+
+	@ManyToMany(
+		() => UserEntity,
+		(user: UserEntity) => user.blockedBy,
+	)
+	@JoinTable()
+	blocked: UserEntity[];
 
 	@OneToMany(
 		() => ScoreEntity,
@@ -25,17 +41,20 @@ export default class UserEntity {
 	@Column({ default: true })
 	online: boolean;
 
-	@ManyToMany(
-		() => UserEntity,
-		{ cascade: true }
-	)
+	@ManyToMany(() => UserEntity)
+	@JoinTable()
 	friendRequests: UserEntity[];
 
+	@ManyToMany(() => UserEntity)
+	@JoinTable()
+	friends: UserEntity[];
+
 	@ManyToMany(
-		() => UserEntity,
+		() => ChannelEntity,
+		(channel: ChannelEntity) => channel.invites,
 		{ cascade: true }
 	)
-	friends: UserEntity[];
+	channelInvites: ChannelEntity[];
 
 	@OneToMany(
 		() => ChannelEntity,
@@ -44,7 +63,7 @@ export default class UserEntity {
 	)
 	ownedChannels: ChannelEntity[];
 
-	@OneToMany(
+	@ManyToMany(
 		() => ChannelEntity,
 		(cha: ChannelEntity) => cha.users,
 		{ cascade: true }
@@ -62,5 +81,6 @@ export default class UserEntity {
 		() => ReceiverEntity,
 		{ cascade: true }
 	)
+	@JoinColumn()
 	receiver: ReceiverEntity;
 }

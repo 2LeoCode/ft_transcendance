@@ -1,202 +1,111 @@
-import { Body, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
+import JwtGuard from 'src/auth/guards/jwt.guard';
 import ChannelEntity from 'src/channel/channel.entity';
 import MessageEntity from 'src/message/message.entity';
 import ScoreEntity from 'src/score/score.entity';
-import { CreateUserDto } from './user.dto';
+import { UserId } from './decorators/user-id.decorator';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import UserEntity from './user.entity';
 import UserService from './user.service';
 
+@Controller('user')
+@UseGuards(JwtGuard)
 export default class UserController {
 	constructor(
 		private readonly userService: UserService
 	) {}
 
+	@Get('online')
+	async getOnline() {
+		return this.userService.get({online: true});
+	}
+
 	@Get()
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: false
-	})
-	@ApiQuery({
-		type: String,
-		name: 'nick',
-		required: false
-	})
-	@ApiQuery({
-		type: Boolean,
-		name: 'online',
-		required: false
-	})
-	async get(
-		@Query('id') id?: string,
-		@Query('nick') nick?: string,
-		@Query('online') online?: boolean,
-	): Promise<UserEntity[]> {
-		return this.userService.get({
-			id: id,
-			nick: nick,
-			online: online
-		});
+	async getCurrentUser(
+		@UserId() userId: string
+	) {
+		return this.userService.getFull(userId);
 	}
 
-	@Get('debug')
-	async getDebug(): Promise<UserEntity[]> {
-		return this.userService.getDebug();
+	@Post('update')
+	async update(
+		@UserId() userId: string,
+		@Body() dto: UpdateUserDto
+	) {
+		return this.userService.update(userId, dto);
 	}
 
-	@Get('scores')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async getScores(
-		@Query('id') id: string
-	): Promise<ScoreEntity[]> {
-		return this.userService.getScores(id);
+	@Put('message')
+	async sendPrivMsg(
+		@UserId() userId: string,
+		@Body() [otherId, content]: [string, string]
+	) {
+		return this.userService.sendPrivMsg(userId, otherId, content);
 	}
 
-	@Get('friendRequests')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async getFriendRequests(
-		@Query('id') id: string
-	): Promise<UserEntity[]> {
-		return this.userService.getFriendRequests(id);
+	@Delete('message')
+	async deletePrivMsg(
+		@UserId() userId: string,
+		@Body() [messageId]: [string]
+	) {
+		return this.userService.deletePrivMsg(userId, messageId);
 	}
 
-	@Get('friends')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async getFriends(
-		@Query('id') id: string
-	): Promise<UserEntity[]> {
-		return this.userService.getFriends(id);
+	@Post('avatar')
+	async updateAvatar(
+		@UserId() userId: string,
+		@Body() avatar: any
+	) {
+		//
 	}
 
-	@Get('ownedChannels')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async getOwnedChannels(
-		@Query('id') id: string
-	): Promise<ChannelEntity[]> {
-		return this.userService.getOwnedChannels(id);
-	}
-
-	@Get('channels')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async getChannels(
-		@Query('id') id: string
-	): Promise<ChannelEntity[]> {
-		return this.userService.getChannels(id);
-	}
-
-	@Get('messagesIn')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async getMessagesIn(
-		@Query('id') id: string
-	): Promise<MessageEntity[]> {
-		return this.userService.getMessagesIn(id);
-	}
-
-	@Get('messagesOut')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async getMessagesOut(
-		@Query('id') id: string
-	): Promise<MessageEntity[]> {
-		return this.userService.getMessagesOut(id);
-	}
-
-	@Post()
-	async add(
-		@Body() dto: CreateUserDto
-	): Promise<UserEntity> {
-		return this.userService.add(dto);
-	}
-
-	@Put('sendFriendRequest')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
+	@Put('friendRequest')
 	async sendFriendRequest(
-		@Query('id') id: string,
-		@Body() dstId: string
-	): Promise<void> {
-		await this.userService.sendFriendRequest(id, dstId);
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.sendFriendRequest(userId, otherId);
 	}
 
-	@Put('acceptFriendRequest')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
+	@Post('acceptFriendRequest')
 	async acceptFriendRequest(
-		@Query('id') id: string,
-		@Body() srcId: string
-	): Promise<void> {
-		await this.userService.acceptFriendRequest(id, srcId);
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.acceptFriendRequest(userId, otherId);
 	}
 
-	@Put('rejectFriendRequest')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async rejectFriendRequest(
-		@Query('id') id: string,
-		@Body() srcId: string
-	): Promise<void> {
-		await this.userService.rejectFriendRequest(id, srcId);
+	@Delete('friendRequest')
+	async deleteFriendRequest(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.rejectFriendRequest(userId, otherId);
 	}
 
-	@Delete()
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async remove(
-		@Query('id') id: string
-	): Promise<void> {
-		await this.userService.remove(id);
+	@Delete('friend')
+	async deleteFriend(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.removeFriend(userId, otherId);
 	}
 
-	@Delete('removeFriend')
-	@ApiQuery({
-		type: String,
-		name: 'id',
-		required: true
-	})
-	async removeFriend(
-		@Query('id') id: string,
-		@Body() dstId: string
-	): Promise<void> {
-		await this.userService.removeFriend(id, dstId);
+	@Put('block')
+	async block(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.block(userId, otherId);
 	}
+
+	@Delete('block')
+	async unblock(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.unblock(userId, otherId);
+	}
+
 }

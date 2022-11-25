@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateScoreDto } from './score.dto';
 import { Repository } from 'typeorm';
@@ -29,15 +29,23 @@ export default class ScoreService {
 		}).then((score: ScoreEntity) => score.user.id);
 	}
 
-	async add(dto: CreateScoreDto): Promise<void> {
+	async add(userId: string, dto: CreateScoreDto): Promise<void> {
 		await this.scoreRepository.save({
-			user: { id: dto.userId },
+			user: { id: userId },
 			playerScore: dto.playerScore,
 			enemyScore: dto.enemyScore
 		});
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(userId: string, id: string): Promise<void> {
+		const curScore = await this.scoreRepository.findOne({
+			relations: ['user'],
+			where: {
+				id: id,
+			}
+		});
+		if (curScore.user.id !== userId)
+			throw new UnauthorizedException();
 		await this.scoreRepository.remove(await this.get({ id: id }));
 	}
 }

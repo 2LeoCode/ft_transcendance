@@ -4,11 +4,6 @@ export class CreateMessageDto {
 	@ApiProperty({
 		example: 'e0b9b9a0-5d6c-11eb-ae93-0242ac130002',
 	})
-	senderId: string;
-
-	@ApiProperty({
-		example: 'e0b9b9a0-5d6c-11eb-ae93-0242ac130002',
-	})
 	receiverId: string;
 
 	@ApiProperty({

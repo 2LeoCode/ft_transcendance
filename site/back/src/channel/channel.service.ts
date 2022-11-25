@@ -1,103 +1,322 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InsertResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateChannelDto, UpdateChannelDto } from './channel.dto';
 import UserEntity from '../user/user.entity';
 import ReceiverService from '../receiver/receiver.service';
-import MessageEntity from '../message/message.entity';
-import ChannelEntity from './channel.entity';
+import ChannelEntity, { ChannelAccessibility, ChannelVisibility } from './channel.entity';
+import * as bcrypt from 'bcrypt';
+import MessageService from 'src/message/message.service';
 
 @Injectable()
 export default class ChannelService {
 	constructor(
 		@InjectRepository(ChannelEntity) private readonly channelRepository: Repository<ChannelEntity>,
 		private readonly receiverService: ReceiverService,
+		private readonly messageService: MessageService
 	) {}
 
 	async get(opts: {
 		id?: string;
 		name?: string;
-		isPrivate?: boolean;
+		accessibility?: ChannelAccessibility;
+		visibility?: ChannelVisibility;
 		ownerId?: string;
-	}): Promise<ChannelEntity[]> {
+	}) {
 		return this.channelRepository.find({
 			where: {
 				id: opts.id,
 				name: opts.name,
-				isPrivate: opts.isPrivate,
+				accessibility: opts.accessibility,
+				visibility: opts.visibility,
 				owner: { id: opts.ownerId }
 			}
 		});
 	}
 
-	async getOwner(id: string): Promise<UserEntity> {
-		return this.channelRepository.findOne({
-			relations: ['owner'],
-			where: { id: id }
-		}).then((channel: ChannelEntity) => channel.owner);
+	async getFull(opts: {
+		id?: string;
+		name?: string;
+		accessibility?: ChannelAccessibility;
+		visibility?: ChannelVisibility;
+		ownerId?: string;
+	}): Promise<ChannelEntity[]> {
+		return this.channelRepository.find({
+			relations: ['owner', 'users', 'receiver'],
+			where: {
+				id: opts.id,
+				name: opts.name,
+				accessibility: opts.accessibility,
+				visibility: opts.visibility,
+				owner: { id: opts.ownerId }
+			}
+		});
 	}
 
-	async getUsers(id: string): Promise<UserEntity[]> {
-		return this.channelRepository.findOne({
-			relations: ['users'],
-			where: { id: id }
-		}).then((channel: ChannelEntity) => channel.users);
+	async getByUser(userId: string): Promise<ChannelEntity> {
+		const channel = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { users: { id: userId } }
+		});
+		if (!channel)
+			throw new Error(`User ${userId} is not in any channel`);
+		return channel;
 	}
 
-	async getMessages(id: string): Promise<MessageEntity[]> {
-		return this.channelRepository.findOne({
-			relations: ['receiver'],
-			where: { id: id }
-		}).then(
-			(channel: ChannelEntity) =>
-				this.receiverService.getMessages(channel.receiver.id)
-		);
-	}
-
-	async add(dto: CreateChannelDto): Promise<string> {
+	async add(userId: string, dto: CreateChannelDto): Promise<string> {
+		const exists: boolean = await this.channelRepository.findOne({
+			where: { name: dto.name }
+		}).then((channel: ChannelEntity) => !!channel);
+	
+		if (exists)
+			throw new Error(`Channel ${dto.name} already exists`);
 		return this.channelRepository.save({
 			name: dto.name,
-			password: dto.password,
-			isPrivate: dto.isPrivate,
-			owner: { id: dto.ownerId },
+			password: bcrypt.hashSync(dto.password, 10),
+			accessibility: dto.accessibility,
+			visibility: dto.visibility,
+			owner: { id: userId },
 			receiver: await this.receiverService.add('Channel')
 		}).then(async (result: ChannelEntity) => {
-			result.users.push({ id: dto.ownerId } as UserEntity);
+			result.users.push({ id: userId } as UserEntity);
 			await this.channelRepository.save(result);
 			return result.id;
 		});
 	}
 
-	async remove(id: string): Promise<void> {
-		await this.channelRepository.remove(await this.get({ id: id }));
+	async remove(userId: string, channelName: string): Promise<void> {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (channel.owner.id !== userId)
+			throw new Error(`User ${userId} is not the owner of channel ${channelName}`);
+		await this.channelRepository.remove(channel);
 	}
 
-	async update(
-		id: string,
-		dto: UpdateChannelDto
+	async update(userId: string, channelName: string, dto: UpdateChannelDto): Promise<void> {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (channel.owner.id !== userId && !channel.adminsIds.find((id: string) => id === userId))
+			throw new Error(`User ${userId} is not admin of channel ${channelName}`);
+		await this.channelRepository.update(channel.id, dto);
+	}
+
+	async join(userId: string, name: string, password: string): Promise<void> {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'invites'],
+			where: { name: name }
+		});
+		if (!channel)
+			throw new Error(`Channel ${name} does not exist`);
+		if (channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} already in channel ${name}`);
+		if (channel.accessibility === 'private') {
+			if (!channel.invites.find((user: UserEntity) => user.id === userId))
+				throw new Error(`User ${userId} is not invited to channel ${name}`);
+			channel.invites = channel.invites.filter((user: UserEntity) => user.id !== userId);
+		}
+		if (!bcrypt.compareSync(password, channel.password))
+			throw new Error(`Incorrect password for channel ${name}`);
+		channel.users.push({ id: userId } as UserEntity);
+		await this.channelRepository.save(channel);
+	}
+
+	async leave(userId: string, name: string): Promise<void> {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: name }
+		});
+		if (!channel)
+			throw new Error(`Channel ${name} does not exist`);
+		if (channel.owner.id === userId)
+			return this.remove(userId, channel.id);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${name}`);
+		channel.adminsIds = channel.adminsIds.filter((id: string) => id !== userId);
+		channel.users = channel.users.filter((user: UserEntity) => user.id !== userId);
+		await this.channelRepository.save(channel);
+	}
+
+	async addMessage(userId: string, channelName: string, content: string): Promise<void> {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['messages', 'receiver'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (channel.mutedIds.includes(userId))
+			throw new Error(`User ${userId} is muted in channel ${channelName}`);
+		
+		await this.messageService.add(userId, {
+			receiverId: channel.receiver.id,
+			content: content
+		});
+	}
+
+	async removeMessage(userId: string, channelName: string, messageId: string) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['messages', 'receiver', 'owner'],
+			where: { name: channelName }
+		});
+		const senderId: string = await this.messageService.getSenderId(messageId);
+
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (userId != senderId && channel.owner.id !== userId && !channel.adminsIds.includes(userId))
+			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+		await this.messageService.remove(messageId);
+	}
+
+	async mute(
+		userId: string,
+		channelName: string,
+		otherId: string,
+		time: number
 	): Promise<void> {
-		await this.channelRepository.update({ id: id }, dto);
-	}
-
-	async addUsers(id: string, userIds: string[]): Promise<void> {
 		const channel: ChannelEntity = await this.channelRepository.findOne({
-			relations: ['users'],
-			where: { id: id }
+			relations: ['users', 'owner'],
+			where: { name: channelName }
 		});
-		channel.users = channel.users.concat(
-			userIds.map((userId: string) => ({ id: userId } as UserEntity))
-		);
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (!channel.users.find((user: UserEntity) => user.id === otherId))
+			throw new Error(`User ${otherId} not in channel ${channelName}`);
+		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
+			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+		if (channel.mutedIds.includes(otherId))
+			throw new Error(`User ${otherId} is already muted in channel ${channelName}`);
+		if (channel.adminsIds.includes(otherId))
+			throw new Error(`User ${otherId} is admin in channel ${channelName}`);
+		channel.mutedIds.push(otherId);
+		// Automatically unmute after time (in seconds)
+		setTimeout(() => this.unmute(userId, channelName, otherId), time * 1000);
 		await this.channelRepository.save(channel);
 	}
 
-	async removeUsers(id: string, userIds: string[]): Promise<void> {
+	async unmute(userId: string, channelName: string, otherId: string): Promise<void> {
 		const channel: ChannelEntity = await this.channelRepository.findOne({
-			relations: ['users'],
-			where: { id: id }
+			relations: ['users', 'owner'],
+			where: { name: channelName }
 		});
-		channel.users = channel.users.filter(
-			(user: UserEntity) => !userIds.includes(user.id)
-		);
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (!channel.users.find((user: UserEntity) => user.id === otherId))
+			throw new Error(`User ${otherId} not in channel ${channelName}`);
+		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
+			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+		if (!channel.mutedIds.includes(otherId))
+			throw new Error(`User ${otherId} is not muted in channel ${channelName}`);
+		if (channel.adminsIds.includes(otherId))
+			throw new Error(`User ${otherId} is admin in channel ${channelName}`);
+		channel.mutedIds = channel.mutedIds.filter((id: string) => id !== otherId);
 		await this.channelRepository.save(channel);
 	}
+
+	async promote(
+		userId: string,
+		channelName: string,
+		otherId: string
+	) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (!channel.users.find((user: UserEntity) => user.id === otherId))
+			throw new Error(`User ${otherId} not in channel ${channelName}`);
+		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
+			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+		if (channel.adminsIds.includes(otherId))
+			throw new Error(`User ${otherId} is already admin in channel ${channelName}`);
+		if (channel.owner.id === otherId)
+			throw new Error(`User ${otherId} is owner in channel ${channelName}`);
+		channel.adminsIds.push(otherId);
+		await this.channelRepository.save(channel);
+	}
+
+	async demote(
+		userId: string,
+		channelName: string,
+		otherId: string
+	) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (!channel.users.find((user: UserEntity) => user.id === otherId))
+			throw new Error(`User ${otherId} not in channel ${channelName}`);
+		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
+			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+		if (!channel.adminsIds.includes(otherId))
+			throw new Error(`User ${otherId} is not admin in channel ${channelName}`);
+		if (channel.owner.id === otherId)
+			throw new Error(`User ${otherId} is owner in channel ${channelName}`);
+		channel.adminsIds = channel.adminsIds.filter((id: string) => id !== otherId);
+		await this.channelRepository.save(channel);
+	}
+
+	async kick(
+		userId: string,
+		channelName: string,
+		otherId: string
+	) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (!channel.users.find((user: UserEntity) => user.id === otherId))
+			throw new Error(`User ${otherId} not in channel ${channelName}`);
+		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
+			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+		if (channel.owner.id === otherId || channel.adminsIds.includes(otherId))
+			throw new Error(`User ${otherId} is admin in channel ${channelName}`);
+		channel.users = channel.users.filter((user: UserEntity) => user.id !== otherId);
+		await this.channelRepository.save(channel);
+	}
+
+	async invite(
+		userId: string,
+		channelName: string,
+		otherId: string
+	) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (channel.users.find((user: UserEntity) => user.id === otherId))
+			throw new Error(`User ${otherId} already in channel ${channelName}`);
+		channel.invites.push({ id: otherId } as UserEntity);
+		await this.channelRepository.save(channel);
+	}
+	
 }
