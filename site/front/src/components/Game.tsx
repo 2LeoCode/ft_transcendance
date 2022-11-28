@@ -15,9 +15,26 @@ function Game() {
     setWitdh(vw_to_px(70));
     setHeight(vh_to_px(50));
   });
+
+
   document.addEventListener("keydown", function (e) {
-    if (e.code == "KeyW") {
-      console.log("w pressed");
+    if (e.code == "ArrowUp") {
+      console.log("ArrowUp pressed");
+    }
+  });
+  document.addEventListener("keyup", function (e) {
+    if (e.code == "ArrowUp") {
+      console.log("ArrowUp released");
+    }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.code == "ArrowDown") {
+      console.log("ArrowDown pressed");
+    }
+  });
+  document.addEventListener("keyup", function (e) {
+    if (e.code == "ArrowDown") {
+      console.log("ArrowDown released");
     }
   });
   return <canvas id="pong" width={width} height={height}></canvas>;
