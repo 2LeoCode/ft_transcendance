@@ -17,6 +17,7 @@ function Pong() {
   const [play, setPlay] = useState<boolean | any>(false);
 
   const socket = io("http://localhost:2000");
+  socket.emit("message", "coucou");
   socket.on("message", (message) => {
     console.log(message);
   });
