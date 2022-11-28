@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { UserCom } from "../com/user.com";
+//import { UserCom } from "../com/user.com";
 import Friend from "../components/Friend";
 import Header from "../components/Header";
 import { user_infos } from "../components/SignUp";
@@ -8,15 +8,15 @@ import "../styles/Chat.css";
 async function addFriend(e: any, id: string, friends_name_tab: string[]) {
   e.preventDefault();
   let friends_tab: string[] = [];
-  await UserCom.get({ nick: user_infos.nick }).then((res) => {
-    friends_tab = res[0].friendIds;
-  });
-  await UserCom.get({ nick: e.target[0].value }).then((res) => {
-    // console.log(res);
-    friends_tab.push(res[0].id);
-    // friends_name_tab.push(res[0].nick);
-  }).catch(() => {console.log("user doesn't exist")});
-  await UserCom.update(id, { friendIds: friends_tab });
+  //await UserCom.get({ nick: user_infos.nick }).then((res) => {
+  //  friends_tab = res[0].friendIds;
+  //});
+  //await UserCom.get({ nick: e.target[0].value }).then((res) => {
+  //  // console.log(res);
+  //  friends_tab.push(res[0].id);
+  //  // friends_name_tab.push(res[0].nick);
+  //}).catch(() => {console.log("user doesn't exist")});
+  //await UserCom.update(id, { friendIds: friends_tab });
   window.location.reload();
 }
 
@@ -26,18 +26,18 @@ function Chat() {
   const [friends_name_tab, setFriends_name_tab] = useState<any[] | any[]>([]);
   const [mounted, setMounted] = useState(false);
   const initFriends = async () => {
-    await UserCom.get({ nick: user_infos.nick }).then((res) => {
-      setId(res[0].id);
-      setFriends_id_tab(res[0].friendIds);
-      for (let i = 0; i < res[0].friendIds.length; i++) {
-        UserCom.get({ id: res[0].friendIds[i] }).then((res) => {
-          setFriends_name_tab((friends_name_tab) => [
-            ...friends_name_tab,
-            res[0].nick,
-          ]);
-        });
-      }
-    });
+    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
+    //  setId(res[0].id);
+    //  setFriends_id_tab(res[0].friendIds);
+    //  for (let i = 0; i < res[0].friendIds.length; i++) {
+    //    UserCom.get({ id: res[0].friendIds[i] }).then((res) => {
+    //      setFriends_name_tab((friends_name_tab) => [
+    //        ...friends_name_tab,
+    //        res[0].nick,
+    //      ]);
+    //    });
+    //  }
+    //});
   };
   if (!mounted) {
     initFriends();

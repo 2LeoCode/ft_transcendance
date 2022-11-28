@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserCom } from "../com/user.com";
+//import { UserCom } from "../com/user.com";
 import "../styles/SignUp.css";
 
 export let user_infos = {
@@ -19,17 +19,17 @@ function SignUp() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await UserCom.get({ nick: name }).then((res) => {
-      if (res.length > 0)
-        exist = true;
-    });
+    //await UserCom.get({ nick: name }).then((res) => {
+    //  if (res.length > 0)
+    //    exist = true;
+    //});
     if (exist === true)
       return console.log("Username already taken");
     sessionStorage.setItem("username", name);
     sessionStorage.setItem("password", password);
     user_infos.nick = JSON.stringify(sessionStorage.getItem("username")).replace(/^"(.*)"$/, '$1');
     user_infos.password = JSON.stringify(sessionStorage.getItem("password")).replace(/^"(.*)"$/, '$1');
-    await UserCom.add(user_infos);
+    //await UserCom.add(user_infos);
     navigate("/pong");
   };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { UserCom } from "../com/user.com";
+//import { UserCom } from "../com/user.com";
 import Header from "../components/Header";
 import { user_infos } from "../components/SignUp";
 import "../styles/User.css";
@@ -19,11 +19,12 @@ function User() {
   const matches_lost: number = 0;
 
   useEffect(() => {
-    UserCom.get({ nick: user_infos.nick }).then((res) => {
-      console.log(res);
-      setUsername(res[0].nick);
-      setId(res[0].id);
-    });
+	// Get user infos from database
+    //UserCom.get({ nick: user_infos.nick }).then((res) => {
+    //  console.log(res);
+    //  setUsername(res[0].nick);
+    //  setId(res[0].id);
+    //});
   }, []);
 
   return (
