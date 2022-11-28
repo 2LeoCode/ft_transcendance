@@ -3,7 +3,6 @@ import ReactJS from "react";
 import Header from "../components/Header";
 import "../styles/Pong.css";
 import Game from "../components/Game";
-import { io } from "socket.io-client";
 
 
 function activate_script() {
@@ -14,13 +13,9 @@ function activate_script() {
 }
 
 function Pong() {
+  const [isReady, setIsReady] = useState<boolean | any>(false);
   const [play, setPlay] = useState<boolean | any>(false);
 
-  const socket = io("http://localhost:2000");
-  socket.emit("message", "coucou");
-  socket.on("message", (message) => {
-    console.log(message);
-  });
   return (
     <div>
       <Header />
@@ -29,7 +24,7 @@ function Pong() {
           <button
             type="button"
             className="play_button"
-            onClick={() => {
+            onClick={() => {            // create room on the onClick
               setPlay(true);
               activate_script();
             }}
