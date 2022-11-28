@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Channel } from './channel.entity';
+import Channel from './channel.entity';
 import { ArrayContains, Repository, UpdateResult } from 'typeorm';
-import { User } from 'src/user/user.entity';
+import User from 'src/user/user.entity';
 
 @Injectable()
-export class ChannelService {
+export default class ChannelService {
   constructor(
     @InjectRepository(Channel) private channelRepository: Repository<Channel>,
   ) {}

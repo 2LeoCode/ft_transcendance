@@ -21,7 +21,7 @@ body {
   margin: auto;
 }
 
-a, a:hover, a:focus, a:active {
+a, a:hover, a:focus, a:online {
   text-decoration: none;
   color: inherit;
 }

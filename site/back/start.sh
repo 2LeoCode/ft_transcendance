@@ -1,7 +1,5 @@
 #!/bin/sh
 
-env
-
 if [ -z "$1" ]
 then
 	echo "Usage: $0 <dev|prod>"

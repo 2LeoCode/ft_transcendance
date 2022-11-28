@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Channel } from '../channel/channel.entity';
-import { User } from '../user/user.entity';
 import { InsertResult, Repository, UpdateResult } from 'typeorm';
-import { Message } from './message.entity';
+import Channel from '../channel/channel.entity';
+import User from '../user/user.entity';
+import MessageEntity from './message.entity';
 
 @Injectable()
-export class MessageService {
+export default class MessageService {
   constructor(
-    @InjectRepository(Message) private messageRepository: Repository<Message>,
+    @InjectRepository(MessageEntity) private messageRepository: Repository<MessageEntity>,
   ) {}
 
   async find(opts: {
@@ -16,43 +16,24 @@ export class MessageService {
     createDate?: Date;
     updateDate?: Date;
     senderId?: string;
-    type?: 'private' | 'channel';
     receiverId?: string;
-  }): Promise<Message[]> {
-    if (opts.type === undefined)
-      return this.messageRepository.findBy({
-        createDate: opts.createDate,
-        updateDate: opts.updateDate,
-        sender: { id: opts.senderId },
-      });
-    if (opts.type === 'private')
-      return this.messageRepository.findBy({
-        createDate: opts.createDate,
-        updateDate: opts.updateDate,
-        sender: { id: opts.senderId },
-        type: opts.type,
-        userReceiver: { id: opts.receiverId },
-      });
-    return this.messageRepository.findBy({
-      createDate: opts.createDate,
-      updateDate: opts.updateDate,
-      sender: { id: opts.senderId },
-      type: opts.type,
-      channelReceiver: { id: opts.receiverId },
-    });
+  }): Promise<MessageEntity[]> {
+    return this.messageRepository.findBy(opts);
   }
 
   async insert(opts: {
     content: string;
-    sender: User;
-    type: 'private' | 'channel';
-    channelReceiver: Channel;
-    userReceiver: User;
+    senderId: string;
+    receiverId: string;
   }): Promise<InsertResult> {
-    return this.messageRepository.insert(opts);
+    return this.messageRepository.insert({
+      content: opts.content,
+      sender: { id: opts.senderId } as User,
+      receiver: { id: opts.receiverId } as Channel,
+    });
   }
 
-  async remove(id: string): Promise<Message[]> {
+  async remove(id: string): Promise<MessageEntity[]> {
     return this.messageRepository.remove(await this.find({ id: id }));
   }
 

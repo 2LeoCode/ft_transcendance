@@ -13,7 +13,7 @@ export interface User {
   password: string;
   highestScore: number;
   scoreHistory: number;
-  active: boolean;
+  online: boolean;
   friends: User[];
   ownedChannels: Channel[];
   messagesIn: Message[];
@@ -25,12 +25,12 @@ export namespace UserCom {
 
   /* Get user(s) from the database
     * using the following optional filters:
-    * id, nick, mail, active */
+    * id, nick, mail, online */
   export async function get(opts: {
     id?: string,
     nick?: string,
     mail?: string,
-    active?: string
+    online?: string
   }) {
     let url = 'http://localhost:2000/user?';
     for (const key in opts)
@@ -87,7 +87,7 @@ export namespace UserCom {
     *   password?: string (min 8, max 16, only printable characters),
     *   highestScore?: number (the user's highest score in pong),
     *   scoreHistory?: number (the user's score history in pong),
-    *   active?: boolean (is the user online or not),
+    *   online?: boolean (is the user online or not),
     *   friendIds?: string[],
     * }
     * Note: password is hashed before being sent to the server */
@@ -99,7 +99,7 @@ export namespace UserCom {
     password?: string,
     highestScore?: number,
     scoreHistory?: number[],
-    active?: boolean,
+    online?: boolean,
     friendIds?: string[]
   }) {
     // if (opts.nick && !Checker.nickname(opts.nick))
