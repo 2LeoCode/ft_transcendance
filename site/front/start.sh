@@ -6,7 +6,9 @@ then
 	exit 1
 fi
 
+apk add sudo
+
 npm i
 cp -rf webpackDevServer.config.js node_modules/react-scripts/config/webpackDevServer.config.js
 
-npm run start:$1
+sudo npm run start:$1
