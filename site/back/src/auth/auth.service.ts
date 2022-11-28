@@ -10,15 +10,7 @@ export default class AuthService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	private async check42User(user42: string, password: string): Promise<boolean> {
-		// Ask 42 API if user is valid
-		return true;
-	}
-
-	async validateUser(user42: string, password: string): Promise<UserEntity> {
-		const isValid = await this.check42User(user42, password);
-		if (!isValid)
-			return null;
+	async validateUser(user42: string): Promise<UserEntity> {
 		return this.userService.add({
 			user42: user42
 		});

@@ -1,6 +1,5 @@
-import { Controller, Post, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { ApiBody } from "@nestjs/swagger";
 import AuthService from "./auth.service";
 
 @Controller('auth')
@@ -9,24 +8,23 @@ export default class AuthController {
 		private readonly authService: AuthService,
 	) {}
 
-	@Post('login')
-	@UseGuards(AuthGuard('local'))
-	@ApiBody({
-		schema: {
-			type: 'object',
-			properties: {
-				user42: {
-					type: 'string'
-				},
-				password: {
-					type: 'string'
-				}
-			}
-		}
-	})
+	@Get('login')
+	@UseGuards(AuthGuard('42'))
 	async login(
 		@Req() req: any,
 	): Promise<any> {
-		return this.authService.login(req.user);
 	}
+
+	@Get('callback')
+	@UseGuards(AuthGuard('42'))
+	async callback(
+		@Req() req: any,
+		@Res({ passthrough: true }) res: any,
+	): Promise<any> {
+		const user = req.user;
+		const token = await this.authService.login(user);
+		res.cookie('token', token.access_token);
+		res.redirect('http://localhost:3000');
+	}
+
 }

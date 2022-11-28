@@ -37,6 +37,7 @@ services:
     working_dir: /app
     environment:
       PORT: ${BACK_PORT}
+      FRONT_PORT: ${FRONT_PORT}
       JWT_SECRET: ${JWT_SECRET}
     ports:
       - ${BACK_PORT}:${BACK_PORT}

@@ -20,7 +20,6 @@ export default class JwtGuard extends AuthGuard('jwt') {
 		if (err || !user)
 			throw err || new UnauthorizedException();
 		const request = context.switchToHttp().getRequest();
-		console.log(user);
 		request.headers['user-id'] = user.userId;
 		return user;
 	}
