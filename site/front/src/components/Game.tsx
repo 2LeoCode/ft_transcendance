@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, BaseHTMLAttributes } from "react";
 import { io } from "socket.io-client";
 import { waitFor } from "@testing-library/react";
+
 
 function vw_to_px(vw: number) {
   return (window.innerWidth * vw) / 100;
@@ -28,15 +29,22 @@ function Game() {
 
   function waitingLine() {
 
-    socket.emit('client connected', "in game");
-    socket.on('client connected', (clientId) => {
-      console.log("client: " + clientId + " is connected to the front.");
-      socket.emit("join room", clientId);
+    socket.emit('client connected');
+    socket.on('room joined', (clientId) => {
+      console.log("room joined " + clientId);
     })
+
+    socket.on('2 players' , (clientId) => {
+      console.log("we have 2 players connected to the room");
+    })
+    // if (numConnected < 2) { 
+    //   return <canvas id="waiting" width={width} height={height}></canvas>;
+    // } else {
+      return <canvas id="pong" width={width} height={height}></canvas>;
+    // }
     
   }
 
-  waitingLine();
   document.addEventListener("keydown", function (e) {
     if (e.code == "ArrowUp") {
       console.log("ArrowUp pressed");
@@ -57,7 +65,7 @@ function Game() {
       console.log("ArrowDown released");
     }
   });
-  return <canvas id="pong" width={width} height={height}></canvas>;
+  return waitingLine();
 }
 
 export default Game;
