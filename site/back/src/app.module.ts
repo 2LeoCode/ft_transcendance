@@ -9,7 +9,7 @@ import ScoreModule from './score/score.module';
 import AuthModule from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { SocketModule } from './socket/socket.module';
+import { SocketModule } from './game/socket.module';
 
 @Module({
   imports: [

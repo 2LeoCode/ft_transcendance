@@ -46,6 +46,9 @@ class Game{
 		}
         
         window.addEventListener("keydown",function(e){
+            if (e.code == "ArrowUp") {
+              console.log("ArrowUp pressed in .ts sa grand mere");
+            }
            Game.keysPressed[e.which] = true;
         });
         

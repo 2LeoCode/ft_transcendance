@@ -51,6 +51,9 @@ var Game = /** @class */ (function () {
             this.gameY = this.gameCanvas.height / 2 - this.gameHeight / 2;
         }
         window.addEventListener("keydown", function (e) {
+            if (e.code == "ArrowUp") {
+                console.log("ArrowUp pressed in .ts sa grand mere");
+            }
             Game.keysPressed[e.which] = true;
         });
         window.addEventListener("keyup", function (e) {
