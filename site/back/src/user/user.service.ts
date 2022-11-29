@@ -1,52 +1,245 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InsertResult, Repository, UpdateResult } from 'typeorm';
-import { User } from './user.entity';
+import { Repository } from 'typeorm';
+import UserEntity from './user.entity';
+import MessageEntity from '../message/message.entity';
+import ScoreEntity from '../score/score.entity';
+import ChannelEntity from '../channel/channel.entity';
+import ReceiverService from '../receiver/receiver.service';
+import MessageService from '../message/message.service';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 
 @Injectable()
-export class UserService {
-  constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
-  ) {}
+export default class UserService {
+	constructor(
+		@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
+		private readonly receiverService: ReceiverService,
+		private readonly messageService: MessageService,
+	) {}
 
-  async find(opts: {
-    id?: string;
-    nick?: string;
-    mail?: string;
-    active?: boolean;
-  }): Promise<User[]> {
-    return this.userRepository.findBy(opts);
-  }
+	async get(opts: {
+		id?: string;
+		nick?: string;
+		online?: boolean;
+	}): Promise<UserEntity[]> {
+		return this.userRepository.find({
+			where: {
+				id: opts.id,
+				nick: opts.nick,
+				online: opts.online,
+			}
+		});
+	}
 
-  async insert(opts: {
-    nick: string;
-    mail: string;
-    firstName: string;
-    lastName: string;
-    password: string;
-  }): Promise<InsertResult> {
-    return this.userRepository.insert(opts);
-  }
+	async getFull(id: string): Promise<UserEntity> {
+		return this.userRepository.findOne({
+			relations: ['messages', 'scores', 'channels', 'receiver', 'ownedChannels', 'friends', 'friendRequests'],
+			where: { id: id }
+		});
+	}
 
-  async remove(id: string): Promise<User[]> {
-    return this.userRepository.remove(await this.find({ id: id }));
-  }
+	async update(id: string, dto: UpdateUserDto): Promise<void> {
+		const sameNick = await this.userRepository.findOne({
+			where: { nick: dto.nick }
+		});
+		if (sameNick && sameNick.id !== id)
+			throw new Error('Nickname already taken');
+		await this.userRepository.update(id, dto);
+	}
 
-  async update(
-    id: string,
-    opts: {
-      nick?: string;
-      mail?: string;
-      firstName?: string;
-      lastName?: string;
-      password?: string;
-      avatarPath?: string;
-      highestScore?: number;
-      scoreHistory?: number[];
-      active?: boolean;
-      friends?: User[];
-    },
-  ): Promise<UpdateResult> {
-    return this.userRepository.update({ id: id }, opts);
-  }
+	async sendPrivMsg(
+		userId: string,
+		otherId: string,
+		content: string
+	) {
+		const other = await this.userRepository.findOne({
+			relations: ['receiver', 'blocked'],
+			where: { id: otherId }
+		});
+		if (other.blocked.find((user: UserEntity) => user.id === userId))
+			throw new Error(`${otherId} blocked ${userId}`);
+		await this.messageService.add(userId, {
+			receiverId: other.receiver.id,
+			content: content
+		});
+	}
+
+	async deletePrivMsg(
+		userId: string,
+		msgId: string
+	) {
+		const user = await this.userRepository.findOne({
+			relations: ['receiver'],
+			where: { id: userId }
+		});
+		const senderId = await this.messageService.getSenderId(msgId);
+		const receiverId = await this.messageService.getReceiverId(msgId);
+		if (senderId !== userId || receiverId !== user.receiver.id)
+			throw new Error(`${userId} is not the sender/receiver of this message`);
+		await this.messageService.remove(msgId);
+	}
+	// For testing purpose
+	async getDebug(): Promise<UserEntity[]> {
+		return this.userRepository.find({
+			relations: ['messages', 'scores', 'channels', 'receiver', 'ownedChannels', 'friends', 'friendRequests'],
+			where: {}
+		});
+	}
+
+	async getScores(id: string): Promise<ScoreEntity[]> {
+		return this.userRepository.findOne({
+			relations: ['scores'],
+			where: { id: id }
+		}).then((user: UserEntity) => user.scores);
+	}
+
+	async getFriendRequests(id: string): Promise<UserEntity[]> {
+		return this.userRepository.findOne({
+			relations: ['friendRequests'],
+			where: { id: id }
+		}).then((user: UserEntity) => user.friendRequests);
+	}
+
+	async getFriends(id: string): Promise<UserEntity[]> {
+		return this.userRepository.findOne({
+			relations: ['friends'],
+			where: { id: id }
+		}).then((user: UserEntity) => user.friends);
+	}
+
+	async getOwnedChannels(id: string): Promise<ChannelEntity[]> {
+		return this.userRepository.findOne({
+			relations: ['ownedChannels'],
+			where: { id: id }
+		}).then((user: UserEntity) => user.ownedChannels);
+	}
+
+	async getChannels(id: string): Promise<ChannelEntity[]> {
+		return this.userRepository.findOne({
+			relations: ['channels'],
+			where: { id: id }
+		}).then((user: UserEntity) => user.channels);
+	}
+
+	async getMessagesIn(id: string): Promise<MessageEntity[]> {
+		return this.userRepository.findOne({
+			relations: ['receiver'],
+			where: { id: id }
+		}).then(
+			(user: UserEntity) => this.receiverService.getMessages(user.receiver.id)
+		);
+	}
+
+	async getMessagesOut(id: string): Promise<MessageEntity[]> {
+		return this.userRepository.findOne({
+			relations: ['messages'],
+			where: { id: id }
+		}).then((user: UserEntity) => user.messages);
+	}
+
+	async add(dto: CreateUserDto): Promise<UserEntity> {
+		const user = await this.userRepository.findOne({
+			where: { user42: dto.user42 }
+		});
+		if (user)
+			return user;
+		return this.userRepository.save({
+			user42: dto.user42,
+			nick: dto.user42,
+			receiver: await this.receiverService.add('User'),
+		});
+	}
+
+	async sendFriendRequest(id: string, dstId: string): Promise<void> {
+		const dstUser = await this.userRepository.findOne({
+			relations: ['friendRequests', 'blocked'],
+			where: { id: dstId }
+		});
+		if (dstUser.blocked.find((user: UserEntity) => user.id === id))
+			throw new Error(`${dstId} blocked ${id}`);
+		dstUser.friendRequests.push({id: id} as UserEntity);
+		await this.userRepository.save(dstUser);
+	}
+
+	async acceptFriendRequest(id: string, srcId: string): Promise<void> {
+		const user = await this.userRepository.findOne({
+			relations: ['friendRequests', 'friends'],
+			where: { id: id }
+		});
+		const index = user.friendRequests.findIndex((user: UserEntity) => user.id === srcId);
+		if (index === -1)
+			throw new Error(`${id} has no friend request from ${srcId}`);
+		const srcUser = await this.userRepository.findOne({
+			relations: ['friends'],
+			where: { id: srcId }
+		});
+		user.friendRequests.splice(index, 1);
+		user.friends.push({id: srcId} as UserEntity);
+		srcUser.friends.push(user);
+		await this.userRepository.save(user);
+		await this.userRepository.save(srcUser);
+	}
+
+	async rejectFriendRequest(id: string, srcId: string): Promise<void> {
+		const user = await this.userRepository.findOne({
+			relations: ['friendRequests'],
+			where: { id: id }
+		});
+		const index = user.friendRequests.findIndex((user: UserEntity) => user.id === srcId);
+		if (index === -1)
+			throw new Error(`${id} has no friend request from ${srcId}`);
+		user.friendRequests.splice(index, 1);
+		await this.userRepository.save(user);
+	}
+
+	async removeFriend(id: string, dstId: string): Promise<void> {
+		const user = await this.userRepository.findOne({
+			relations: ['friends'],
+			where: { id: id }
+		});
+		const index = user.friends.findIndex((user: UserEntity) => user.id === dstId);
+		if (index === -1)
+			throw new Error(`${id} is not friend with ${dstId}`);
+		const dstUser = await this.userRepository.findOne({
+			relations: ['friends'],
+			where: { id: dstId }
+		});
+		user.friends.splice(index, 1);
+		dstUser.friends.splice(dstUser.friends.indexOf(user), 1);
+		await this.userRepository.save(user);
+		await this.userRepository.save(dstUser);
+	}
+
+	async remove(id: string): Promise<void> {
+		await this.userRepository.delete(id);
+	}
+
+	async block(id: string, dstId: string): Promise<void> {
+		const user = await this.userRepository.findOne({
+			relations: ['blocked'],
+			where: { id: id }
+		});
+		const dstUser = await this.userRepository.findOne({
+			relations: ['blocked'],
+			where: { id: dstId }
+		});
+
+		if (user.blocked.find((user: UserEntity) => user.id === dstId))
+			throw new Error(`${id} already blocked ${dstId}`);
+		user.blocked.push(dstUser);
+		await this.userRepository.save(user);
+	}
+
+	async unblock(id: string, dstId: string): Promise<void> {
+		const user = await this.userRepository.findOne({
+			relations: ['blocked'],
+			where: { id: id }
+		});
+		const index = user.blocked.findIndex((user: UserEntity) => user.id === dstId);
+		if (index === -1)
+			throw new Error(`${dstId} is not blocked by ${id}`);
+		user.blocked.splice(index, 1);
+		await this.userRepository.save(user);
+	}
+
 }

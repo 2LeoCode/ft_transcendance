@@ -1,37 +1,38 @@
-import { Channel } from '../channel/channel.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { User } from '../user/user.entity';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import UserEntity from '../user/user.entity';
+import ReceiverEntity from '../receiver/receiver.entity';
 
 @Entity()
-export class Message {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export default class MessageEntity {
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
-  @Column()
-  content: string;
+	@Column()
+	content: string;
 
-  @CreateDateColumn()
-  createDate: Date;
+	@CreateDateColumn()
+	createDate: Date;
 
-  @UpdateDateColumn()
-  updateDate: Date;
+	@UpdateDateColumn()
+	updateDate: Date;
 
-  @ManyToOne(() => User, (usr) => usr.messagesOut, { nullable: false })
-  sender: User;
+	@ManyToOne(
+		() => UserEntity,
+		(user: UserEntity) => user.messages,
+		{
+			nullable: false,
+			onDelete: 'CASCADE'
+		},
+	)
+	sender: UserEntity;
 
-  @Column()
-  type: 'private' | 'channel';
-
-  @ManyToOne(() => Channel, (cha) => cha.messages)
-  channelReceiver: Channel;
-
-  @ManyToOne(() => User, (usr) => usr.messagesIn)
-  userReceiver: User;
+	@ManyToOne(
+		() => ReceiverEntity,
+		(receiver: ReceiverEntity) => receiver.messages,
+		{
+			nullable: false,
+			onDelete: 'CASCADE'
+		},
+	)
+	receiver: ReceiverEntity;
 }

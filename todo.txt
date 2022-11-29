@@ -1,12 +1,18 @@
 Fix l'avatar
 
 JEU
+- bouger le jeu dans le back et faire une interface dans le front
 - Connecter jeu db
-- Sockets
+    - score en fin de partie
+- Sockets 
+    - onKeyPress (react to get keyboard inputs)
+    - socket.io (make the link between front and back)
 - Watch game
-Vous devez offrir quelques options de customisation (par exemple, des power-ups
+    - socket.io as well
+- Vous devez offrir quelques options de customisation (par exemple, des power-ups
 ou des maps différentes) mais l’utilisateur doit pouvoir jouer à la version par défaut
 sans options s’il le souhaite.
+    - acceleration de la balle / changement de couleur en fond
 
 CHAT
 - Create channels

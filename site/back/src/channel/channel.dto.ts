@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ChannelAccessibility, ChannelVisibility } from "./channel.entity";
 
 export class CreateChannelDto {
 	@ApiProperty({example: 'MyChannel'})
@@ -8,22 +9,22 @@ export class CreateChannelDto {
 	password: string;
 
 	@ApiProperty({example: false})
-	isPrivate: boolean;
+	accessibility: ChannelAccessibility;
 
-	@ApiProperty({example: 'ff9619c7-930e-42d2-9b30-8e2e29316665'})
-	ownerId: string;
+	@ApiProperty({example: false})
+	visibility: ChannelVisibility;
 }
 
 export class UpdateChannelDto {
 	@ApiPropertyOptional({example: 'MyChannel'})
-	name: string;
+	name?: string;
 
 	@ApiPropertyOptional({example: 'foobar123'})
-	password: string;
+	password?: string;
 
 	@ApiPropertyOptional({example: false})
-	isPrivate: boolean;
+	accessibility?: ChannelAccessibility;
 
-	@ApiPropertyOptional({example: ['ff9619c7-930e-42d2-9b30-8e2e29316665', '29446624-db02-47ff-8d30-43abfeabf56c']})
-	userIds: string[];
+	@ApiPropertyOptional({example: false})
+	visibility?: ChannelVisibility;
 }

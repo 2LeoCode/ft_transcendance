@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { UserCom } from "../com/user.com";
+//import { UserCom } from "../com/user.com";
 import "../styles/Header.css";
 import { user_infos } from "../components/SignUp";
 import Settings from "./Settings";
@@ -10,13 +10,13 @@ function Header() {
   let id: string = "";
   const navigate = useNavigate();
   async function handleLogout() {
-    await UserCom.get({ nick: user_infos.nick }).then((res) => {
-      id = res[0].id;
-      console.log(res);
-    });
-    await UserCom.update(id, { active: false }).then((res) => {
-      console.log(res);
-    });
+    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
+    //  id = res[0].id;
+    //  console.log(res);
+    //});
+    //await UserCom.update(id, { online: false }).then((res) => {
+    //  console.log(res);
+    //});
     localStorage.clear();
     navigate("/");
   }
