@@ -22,6 +22,7 @@ socket.on("message", (message) => {
 function Game() {
   const [width, setWitdh] = useState<number | any>(vw_to_px(70));
   const [height, setHeight] = useState<number | any>(vh_to_px(50));
+  let cId:string;
   window.addEventListener("resize", () => {
     setWitdh(vw_to_px(70));
     setHeight(vh_to_px(50));
@@ -31,37 +32,34 @@ function Game() {
 
     socket.emit('client connected');
     socket.on('room joined', (clientId) => {
+      cId = clientId;
       console.log("room joined " + clientId);
     })
 
-    socket.on('2 players' , (clientId) => {
-      console.log("we have 2 players connected to the room");
-    })
-    // if (numConnected < 2) { 
-    //   return <canvas id="waiting" width={width} height={height}></canvas>;
-    // } else {
-      return <canvas id="pong" width={width} height={height}></canvas>;
-    // }
-    
+    return <canvas id="pong" width={width} height={height}></canvas>;
   }
 
   document.addEventListener("keydown", function (e) {
     if (e.code == "ArrowUp") {
+      socket.emit('ArrowUp pressed', cId);
       console.log("ArrowUp pressed");
     }
   });
   document.addEventListener("keyup", function (e) {
     if (e.code == "ArrowUp") {
+      socket.emit('ArrowUp released', cId);
       console.log("ArrowUp released");
     }
   });
   document.addEventListener("keydown", function (e) {
     if (e.code == "ArrowDown") {
+      socket.emit('ArrowDown pressed', cId);
       console.log("ArrowDown pressed");
     }
   });
   document.addEventListener("keyup", function (e) {
     if (e.code == "ArrowDown") {
+      socket.emit('ArrowDown released', cId);
       console.log("ArrowDown released");
     }
   });

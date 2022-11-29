@@ -3,7 +3,7 @@ import ReactJS from "react";
 import Header from "../components/Header";
 import "../styles/Pong.css";
 import Game from "../components/Game";
-
+ 
 
 function activate_script() {
   const script = document.createElement("script");

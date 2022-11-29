@@ -36,16 +36,15 @@ export class SocketEvents {
 		console.log("coucou " + client.id);
 		this.server.socketsJoin("room1");
 		this.server.emit('room joined', client.id);
-		console.log("coucou from join room event");
 
 		if (client.id !== previousId) {
 			numConnected = numConnected + 1;
 			previousId = client.id;
 		}
 
-		if (numConnected === 2) { 
+		if (numConnected === 2) {
 			console.log("2 playersssss");
-			this.server.emit('2 players', client.id);
+			this.server.emit('2 players');
 			// emit vers le jeu et fait la waiting page en interne.
 		}
 

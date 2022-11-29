@@ -324,4 +324,8 @@ var Ball = /** @class */ (function (_super) {
     return Ball;
 }(Entity));
 var game = new Game();
-requestAnimationFrame(game.gameLoop);
+function startGame() {
+    console.log("start game");
+    requestAnimationFrame(game.gameLoop);
+}
+startGame();

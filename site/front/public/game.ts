@@ -27,6 +27,7 @@ class Game{
 	//private computerPlayer: ComputerPaddle;
     private ball: Ball;
     constructor(){
+
         this.gameCanvas = document.getElementById("pong");
         this.gameContext = this.gameCanvas.getContext("2d");
 		this.gameContext.font = "30px Orbitron";
@@ -353,4 +354,10 @@ class Ball extends Entity{
 }
 
 var game = new Game();
-requestAnimationFrame(game.gameLoop);
+
+function startGame() {
+    console.log("start game");
+    requestAnimationFrame(game.gameLoop);
+}
+
+startGame();
