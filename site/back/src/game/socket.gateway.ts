@@ -51,7 +51,7 @@ export class SocketEvents {
 		this.server.emit('message', client.id, data);
 	}
 
-	@SubscribeMessage('client connected') 
+	@SubscribeMessage('client connected')
 	handleConnectionToGame(@ConnectedSocket() client: Socket){
 		//send an event
 		if (numConnected < 2) {

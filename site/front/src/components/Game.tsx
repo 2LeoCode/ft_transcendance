@@ -112,6 +112,10 @@ function Game() {
         });
         if (draw.playerScore < 7 && draw.player2Score < 7)
           draw.draw();
+        else {
+          draw.stopGame();
+          return ;
+        }
 
         animationFrameId = requestAnimationFrame(gameLoop);
 

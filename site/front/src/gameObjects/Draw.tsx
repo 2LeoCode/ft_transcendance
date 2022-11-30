@@ -4,15 +4,8 @@ type paddle = {
     width: number;
     height: number;
     x:number;
-    y:number;
+	y:number;
 }
-
-// type Net = {
-// 	x: number;
-// 	y: number;
-// 	width: number;
-// 	height: number;
-// }
 
 export class Draw {
 	gameCanvas: HTMLCanvasElement;
@@ -142,9 +135,9 @@ export class Draw {
         // this.gameContext.font = 'ufc';
 		this.gameContext.textAlign = 'center';
 		if (this.playerScore == 7)
-		this.gameContext.fillText("player one wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
+		this.gameContext.fillText("Left wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
 		if (this.player2Score == 7)
-		this.gameContext.fillText("player two wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
+		this.gameContext.fillText("Right wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
 		}
 	}
     
