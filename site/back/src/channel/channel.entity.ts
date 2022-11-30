@@ -60,6 +60,12 @@ export default class ChannelEntity {
     nullable: false,
     default: []
   })
+  bannedIds: string[];
+
+  @Column('jsonb', {
+    nullable: false,
+    default: []
+  })
   adminsIds: string[];
 
   @ManyToMany(
