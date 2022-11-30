@@ -71,7 +71,7 @@ export class Paddle extends Entity{
         super(w, h, x, y);
     }
     
-    update(secondPassed:number) {
+    update() {
      if( this.ArrowUp === true ){
         this.yVel = -1;
         if(this.y <= 5){
@@ -100,13 +100,13 @@ export class Paddle2 extends Entity{
         super(w,h,x,y);
     }
     
-    update(secondPassed:number) {
-     if ( this.ArrowUp ) {
+    update() {
+     if ( this.ArrowUp === true ) {
         this.yVel = -1;
         if(this.y <= 5){
             this.yVel = 0
         }
-     } else if ( this.ArrowUp ) {
+     } else if ( this.ArrowDown === true ) {
          this.yVel = 1;
          if(this.y + this.height >= 100 - 5){
              this.yVel = 0;

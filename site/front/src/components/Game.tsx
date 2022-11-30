@@ -16,6 +16,14 @@ function getCurrentTime() {
 	return date;
 }
 
+const downHandler = (event: KeyboardEvent): void => {
+  socket.emit('keyDown', event.key);
+};
+
+const upHandler = (event: KeyboardEvent): void => {
+  socket.emit('keyUp', event.key);
+};
+
 function vw_to_px(vw: number) {
   return (window.innerWidth * vw) / 100;
 }
@@ -64,22 +72,24 @@ function Game() {
       const draw = new Draw(canvas);
 
       //if not a spectator "if(isPlayer) {"
-    document.addEventListener("keydown", function (e) {
-      if (e.code == "ArrowUp") {
-        socket.emit('ArrowUp pressed', cId);
-      }
-      if (e.code == "ArrowDown") {
-        socket.emit('ArrowDown pressed', cId);
-      }
-    });
-    document.addEventListener("keyup", function (e) {
-      if (e.code == "ArrowUp") {
-        socket.emit('ArrowUp released', cId);
-      }
-      if (e.code == "ArrowDown") {
-        socket.emit('ArrowDown released', cId);
-      }
-    })
+      window.addEventListener("keydown", downHandler);
+			window.addEventListener("keyup", upHandler);
+    // document.addEventListener("keydown", function (e) {
+    //   if (e.code == "ArrowUp") {
+    //     socket.emit('ArrowUp pressed', cId);
+    //   }
+    //   if (e.code == "ArrowDown") {
+    //     socket.emit('ArrowDown pressed', cId);
+    //   }
+    // });
+    // document.addEventListener("keyup", function (e) {
+    //   if (e.code == "ArrowUp") {
+    //     socket.emit('ArrowUp released', cId);
+    //   }
+    //   if (e.code == "ArrowDown") {
+    //     socket.emit('ArrowDown released', cId);
+    //   }
+    // })
 
     socket.on('updateRoom', function(updateRoom: string) {
       // don't know but might be useful...
@@ -102,31 +112,34 @@ function Game() {
         elapsed = (timestamp - oldTimestamp);
         // console.log(elapsed);
 
-        if (elapsed > 60) {
+        if (elapsed > 30) {
           socket.emit("requestUpdate");
           oldTimestamp = timestamp;
-        } else {
-          draw.draw();
         }
   
-        socket.on("updatedRoom", ({ x, y }) => {
+        socket.on("updatedRoom", ({ x, y, paddle1x, paddle1y, paddle2x, paddle2y }) => {
           draw.ball.x = x;
           draw.ball.y = y;
+          draw.player1.x = paddle1x;
+          draw.player1.y = paddle1y;
+          draw.player2.x = paddle2x;
+          draw.player2.y = paddle2y;
         });
-        socket.on('update paddle1', ({ x, y, ballx, bally }) => {
-          draw.player1.x = x;
-          draw.player1.y = y;
-          draw.ball.x = ballx;
-          draw.ball.y = bally;
-        })
-        socket.on('update paddle2', ({ x, y, ballx, bally }) => {
-          draw.player2.x = x;
-          draw.player2.y = y;
-          draw.ball.x = ballx;
-          draw.ball.y = bally;
-        })
+        // socket.on('update paddle1', ({ x, y, ballx, bally }) => {
+        //   draw.player1.x = x;
+        //   draw.player1.y = y;
+        //   draw.ball.x = ballx;
+        //   draw.ball.y = bally;
+        // })
+        // socket.on('update paddle2', ({ x, y, ballx, bally }) => {
+        //   draw.player2.x = x;
+        //   draw.player2.y = y;
+        //   draw.ball.x = ballx;
+        //   draw.ball.y = bally;
+        // })
 
         // console.log("gameLoop draw");
+        draw.draw();
 
         animationFrameId = requestAnimationFrame(gameLoop);
 
