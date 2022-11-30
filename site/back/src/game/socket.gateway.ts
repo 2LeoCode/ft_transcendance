@@ -21,6 +21,8 @@ function update() {
 	paddle1.update();
 	paddle2.update();
 	ball.update(paddle1, paddle2);
+	paddle1.score = ball.score1;
+	paddle2.score = ball.score2;
 }
 
 @WebSocketGateway({
@@ -74,95 +76,6 @@ export class SocketEvents {
 
 
 	}
-	
-	// @SubscribeMessage('ArrowUp pressed')
-	// handleArrowUpPressed(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-	// 	if (client.id === paddle1.id){
-	// 		paddle1.ArrowUp = true;
-	// 		const payload = {
-	// 			x: paddle1.x,
-	// 			y: paddle1.y,
-	// 			ballx: ball.x,
-	// 			bally: ball.y,
-	// 		}
-	// 		this.server.emit('update paddle1', payload);
-	// 	} else if (client.id === paddle2.id){
-	// 		paddle2.ArrowUp = true;
-	// 		const payload = {
-	// 			x: paddle2.x,
-	// 			y: paddle2.y,
-	// 			ballx: ball.x,
-	// 			bally: ball.y,
-	// 		}
-	// 		this.server.emit('update paddle2', payload);
-	// 	}
-	// }
-	// @SubscribeMessage('ArrowUp released')
-	// handleArrowUpRealeased(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-	// 	if (client.id === paddle1.id){
-	// 		paddle1.ArrowUp = false;
-	// 		const payload = {
-	// 			x: paddle1.x,
-	// 			y: paddle1.y,
-	// 			ballx: ball.x,
-	// 			bally: ball.y,
-	// 		}
-	// 		this.server.emit('update paddle1', payload);
-	// 	} else if (client.id === paddle2.id){
-	// 		paddle2.ArrowUp = false;
-	// 		const payload = {
-	// 			x: paddle2.x,
-	// 			y: paddle2.y,
-	// 			ballx: ball.x,
-	// 			bally: ball.y,
-	// 		}
-	// 		this.server.emit('update paddle2', payload);
-	// 	}
-	// }
-	// @SubscribeMessage('ArrowDown pressed')
-	// handleArrowDownPressed(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-	// 	if (client.id === paddle1.id){
-	// 		paddle1.ArrowDown = true;
-	// 		const payload = {
-	// 			x: paddle1.x,
-	// 			y: paddle1.y,
-	// 			ballx: ball.x,
-	// 			bally: ball.y,
-	// 		}
-	// 		this.server.emit('update paddle1', payload);
-	// 	} else if (client.id === paddle2.id){
-	// 		paddle2.ArrowDown = true;
-	// 		const payload = {
-	// 			x: paddle2.x,
-	// 			y: paddle2.y,
-	// 			ballx: ball.x,
-	// 			bally: ball.y,
-	// 		}
-	// 		this.server.emit('update paddle2', payload);
-	// 	}
-	// }
-	// @SubscribeMessage('ArrowDown released')
-	// handleArrowDownRealeased(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-	// 	if (client.id === paddle1.id){
-	// 		paddle1.ArrowDown = false;
-	// 		const payload = {
-	// 			x: paddle1.x,
-	// 			y: paddle1.y,
-	// 			ballx: ball.x,
-	// 			bally: ball.y,
-	// 		}
-	// 		this.server.emit('update paddle1', payload);
-	// 	} else if (client.id === paddle2.id){
-	// 		paddle2.ArrowDown = false;
-	// 		const payload = {
-	// 			x: paddle2.x,
-	// 			y: paddle2.y,
-	// 			ballx: ball.x,
-	// 			bally: ball.y,
-	// 		}
-	// 		this.server.emit('update paddle2', payload);
-	// 	}
-	// }
 
 	@SubscribeMessage('keyDown')
 	async handleKeyUp(@ConnectedSocket() client: Socket, @MessageBody() key: string) {
@@ -215,6 +128,8 @@ export class SocketEvents {
 			paddle1y: paddle1.y,
 			paddle2x: paddle2.x,
 			paddle2y: paddle2.y,
+			score1: paddle1.score,
+			score2: paddle2.score,
 		}
 		this.server.emit("updatedRoom", payload);
 	}

@@ -66,6 +66,7 @@ export class Paddle extends Entity{
     private speed:number = 1;
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
+    public score: number = 0;
     
     constructor( w:number, h:number, x:number, y:number, id:string ) {
         super(w, h, x, y);
@@ -95,6 +96,7 @@ export class Paddle2 extends Entity{
     private speed:number = 1;
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
+    public score: number = 0;
     
     constructor( w:number,h:number,x:number,y:number, id:string ) {
         super(w,h,x,y);
@@ -156,6 +158,8 @@ export class Paddle2 extends Entity{
 export class Ball extends Entity{
     
     private speed:number = 1;
+    public score1:number = 0;
+    public score2:number = 0;
     
     constructor(w:number,h:number,x:number,y:number){
         super(w,h,x,y);
@@ -184,13 +188,13 @@ export class Ball extends Entity{
         //check left canvas bounds
         if(this.x <= 0){  
             this.x = 200 / 2 - this.width / 2;
-            Game.player2Score += 1;
+            this.score2 += 1;
         }
         
         //check right canvas bounds
         if(this.x + this.width >= 200){
             this.x = 200 / 2 - this.width / 2;
-            Game.playerScore += 1;
+            this.score1 += 1;
         }
         
         

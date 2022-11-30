@@ -74,23 +74,6 @@ function Game() {
       //if not a spectator "if(isPlayer) {"
       window.addEventListener("keydown", downHandler);
 			window.addEventListener("keyup", upHandler);
-    // document.addEventListener("keydown", function (e) {
-    //   if (e.code == "ArrowUp") {
-    //     socket.emit('ArrowUp pressed', cId);
-    //   }
-    //   if (e.code == "ArrowDown") {
-    //     socket.emit('ArrowDown pressed', cId);
-    //   }
-    // });
-    // document.addEventListener("keyup", function (e) {
-    //   if (e.code == "ArrowUp") {
-    //     socket.emit('ArrowUp released', cId);
-    //   }
-    //   if (e.code == "ArrowDown") {
-    //     socket.emit('ArrowDown released', cId);
-    //   }
-    // })
-
     socket.on('updateRoom', function(updateRoom: string) {
       // don't know but might be useful...
     });
@@ -117,29 +100,18 @@ function Game() {
           oldTimestamp = timestamp;
         }
   
-        socket.on("updatedRoom", ({ x, y, paddle1x, paddle1y, paddle2x, paddle2y }) => {
+        socket.on("updatedRoom", ({ x, y, paddle1x, paddle1y, paddle2x, paddle2y, score1, score2 }) => {
           draw.ball.x = x;
           draw.ball.y = y;
           draw.player1.x = paddle1x;
           draw.player1.y = paddle1y;
           draw.player2.x = paddle2x;
           draw.player2.y = paddle2y;
+          draw.playerScore = score1;
+          draw.player2Score = score2;
         });
-        // socket.on('update paddle1', ({ x, y, ballx, bally }) => {
-        //   draw.player1.x = x;
-        //   draw.player1.y = y;
-        //   draw.ball.x = ballx;
-        //   draw.ball.y = bally;
-        // })
-        // socket.on('update paddle2', ({ x, y, ballx, bally }) => {
-        //   draw.player2.x = x;
-        //   draw.player2.y = y;
-        //   draw.ball.x = ballx;
-        //   draw.ball.y = bally;
-        // })
-
-        // console.log("gameLoop draw");
-        draw.draw();
+        if (draw.playerScore < 7 && draw.player2Score < 7)
+          draw.draw();
 
         animationFrameId = requestAnimationFrame(gameLoop);
 
