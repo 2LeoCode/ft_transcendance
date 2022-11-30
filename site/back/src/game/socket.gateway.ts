@@ -8,7 +8,7 @@ let paddle1 = new Paddle(paddleWidth, paddleHeight, wallOffset, 100 / 2 - paddle
 let paddle2 = new Paddle2(paddleWidth, paddleHeight, 200 - (wallOffset + paddleWidth) , 100 / 2 - paddleHeight / 2, null);
 let ball = new Ball(ballSize, ballSize, 200 / 2 - ballSize / 2, 100 / 2 - ballSize / 2);
 let now = getCurrentTime();
-let elapsed = 0;
+let lastUpdate = 0;
 let then = now;
 let fps = 5;
 
@@ -17,19 +17,13 @@ function getCurrentTime() {
 	return date;
 }
 
-function update() {
-		now = getCurrentTime();
-		elapsed = now - then;        	// 1 try to implement the timing in the front and emit every frame one by one.
-										// scores don't work or at least don't draw
-		if (elapsed < fps){				// once finished with the game itself go do the rooms, the game modes, and the watch mode!
-			return ;
-		}
-		else
-			then = now;
+function update(currentTimestamp) {
+	const secondPassed: number = (currentTimestamp - lastUpdate) / 1000;
+	lastUpdate = currentTimestamp;
 
-		paddle1.update();
-		paddle2.update();
-		ball.update(paddle1, paddle2);
+	paddle1.update(secondPassed);
+	paddle2.update(secondPassed);
+	ball.update(paddle1, paddle2);
 
 }
 
@@ -74,9 +68,8 @@ export class SocketEvents {
 			}
 			if (numConnected === 2) {
 				console.log("2 playersssss");
-				update();
 				
-				this.server.emit('2 players');
+				this.server.emit('2 players', client.id);
 			}
 
 			this.server.socketsJoin("room1");
@@ -96,7 +89,6 @@ export class SocketEvents {
 				ballx: ball.x,
 				bally: ball.y,
 			}
-			update();
 			this.server.emit('update paddle1', payload);
 		} else if (client.id === paddle2.id){
 			paddle2.ArrowUp = true;
@@ -106,7 +98,6 @@ export class SocketEvents {
 				ballx: ball.x,
 				bally: ball.y,
 			}
-			update();
 			this.server.emit('update paddle2', payload);
 		}
 	}
@@ -120,7 +111,6 @@ export class SocketEvents {
 				ballx: ball.x,
 				bally: ball.y,
 			}
-			update();
 			this.server.emit('update paddle1', payload);
 		} else if (client.id === paddle2.id){
 			paddle2.ArrowUp = false;
@@ -130,7 +120,6 @@ export class SocketEvents {
 				ballx: ball.x,
 				bally: ball.y,
 			}
-			update();
 			this.server.emit('update paddle2', payload);
 		}
 	}
@@ -144,7 +133,6 @@ export class SocketEvents {
 				ballx: ball.x,
 				bally: ball.y,
 			}
-			update();
 			this.server.emit('update paddle1', payload);
 		} else if (client.id === paddle2.id){
 			paddle2.ArrowDown = true;
@@ -154,7 +142,6 @@ export class SocketEvents {
 				ballx: ball.x,
 				bally: ball.y,
 			}
-			update();
 			this.server.emit('update paddle2', payload);
 		}
 	}
@@ -168,7 +155,6 @@ export class SocketEvents {
 				ballx: ball.x,
 				bally: ball.y,
 			}
-			update();
 			this.server.emit('update paddle1', payload);
 		} else if (client.id === paddle2.id){
 			paddle2.ArrowDown = false;
@@ -178,9 +164,19 @@ export class SocketEvents {
 				ballx: ball.x,
 				bally: ball.y,
 			}
-			update();
 			this.server.emit('update paddle2', payload);
 		}
+	}
+	
+	@SubscribeMessage('requestUpdate') 
+	handleRequestUpdate(@ConnectedSocket() client: Socket){
+		const currentTimestamp: number = Date.now();
+		update(currentTimestamp);
+		const payload = {
+			x: ball.x,
+			y: ball.y,
+		}
+		this.server.emit("updatedRoom", payload);
 	}
 
 }

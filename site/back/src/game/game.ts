@@ -17,7 +17,7 @@ export class Game{
 
 
     constructor(){
-
+        this.now = this.getCurrentTime();
 		this.then = this.getCurrentTime();
 	}
 	getCurrentTime = (): number => {
@@ -63,7 +63,7 @@ export class Entity{
 
 export class Paddle extends Entity{
     
-    private speed:number = 2;
+    private speed:number = 1;
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
     
@@ -71,7 +71,7 @@ export class Paddle extends Entity{
         super(w, h, x, y);
     }
     
-    update() {
+    update(secondPassed:number) {
      if( this.ArrowUp === true ){
         this.yVel = -1;
         if(this.y <= 5){
@@ -92,7 +92,7 @@ export class Paddle extends Entity{
 
 export class Paddle2 extends Entity{
     
-    private speed:number = 2;
+    private speed:number = 1;
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
     
@@ -100,7 +100,7 @@ export class Paddle2 extends Entity{
         super(w,h,x,y);
     }
     
-    update() {
+    update(secondPassed:number) {
      if ( this.ArrowUp ) {
         this.yVel = -1;
         if(this.y <= 5){
@@ -155,7 +155,7 @@ export class Paddle2 extends Entity{
 
 export class Ball extends Entity{
     
-    private speed:number = 1.5;
+    private speed:number = 1;
     
     constructor(w:number,h:number,x:number,y:number){
         super(w,h,x,y);
