@@ -1,11 +1,11 @@
-import Receiver from './receiver.interface';
-import User from './public-user.interface';
+import PublicChannel from "./public-channel.interface";
+import PublicUser from "./public-user.interface";
 
 export default interface Message {
 	id: string;
-	sender: User;
-	receiver: Receiver;
+	content: string;
 	createDate: Date;
 	updateDate: Date;
-	content: string;
+	sender: PublicUser;
+	receiver: PublicUser | PublicChannel;
 }

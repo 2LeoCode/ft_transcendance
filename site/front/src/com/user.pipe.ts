@@ -2,13 +2,10 @@ import Channel from './channel.interface';
 import ComPipe from './com.pipe';
 import Message from './message.interface';
 import PublicUser from './public-user.interface';
-import Receiver from './receiver.interface';
 import Score from './score.interface';
 import User from './user.interface';
 
 export default class UserPipe {
-	
-	
 	constructor(
 		private readonly comPipe: ComPipe,
 		private readonly user: User
@@ -37,14 +34,14 @@ export default class UserPipe {
 	get channels(): Promise<Channel[]> {
 		return (async () => this.user.channels)();
 	}
-	get messages(): Promise<Message[]> {
-		return (async () => this.user.messages)();
+	get messagesIn(): Promise<Message[]> {
+		return (async () => this.user.messagesIn)();
+	}
+	get messagesOut(): Promise<Message[]> {
+		return (async () => this.user.messagesOut)();
 	}
 	get scores(): Promise<Score[]> {
 		return (async () => this.user.scores)();
-	}
-	get receiver(): Promise<Receiver> {
-		return (async () => this.user.receiver)();
 	}
 	get nick(): Promise<string> {
 		return (async () => this.user.nick)();
@@ -55,7 +52,7 @@ export default class UserPipe {
 
 	set nick(newNick: Promise<string> | string) {
 		this.user.nick = (async () => {
-			await fetch(`${this.comPipe.backendHost}/user/update`, {
+			await fetch(`${this.comPipe.backendHost}/update`, {
 				method: 'POST',
 				headers: {
 					'Authorization': `Bearer ${this.comPipe.jwtToken}`,
@@ -71,7 +68,7 @@ export default class UserPipe {
 	}
 	set online(status: Promise<boolean> | boolean) {
 		this.user.online = (async () => {
-			await fetch(`${this.comPipe.backendHost}/user/update`, {
+			await fetch(`${this.comPipe.backendHost}/update`, {
 				method: 'POST',
 				headers: {
 					'Authorization': `Bearer ${this.comPipe.jwtToken}`,
@@ -90,7 +87,7 @@ export default class UserPipe {
 		// Generated with copilot
 		const formData = new FormData();
 		formData.append('avatar', avatar);
-		await fetch(`${this.comPipe.backendHost}/user/update`, {
+		await fetch(`${this.comPipe.backendHost}/update`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${this.comPipe.jwtToken}`,
@@ -103,7 +100,22 @@ export default class UserPipe {
 	}
 
 	async sendPrivMsg(otherId: string, content: string): Promise<void> {
-		// ...
+		this.user.messagesOut.then(async res => {
+			res.push(await fetch(`${this.comPipe.backendHost}/sendPrivMsg`, {
+					method: 'POST',
+					headers: {
+						'Authorization': `Bearer ${this.comPipe.jwtToken}`,
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify([otherId, content])
+				}).then(async res => {
+    	  	if (!res.ok)
+    	  	  throw new Error('Error while sending private message');
+    	  	const msg = (await res.json()) as Message;
+					return msg;
+    		})
+			);
+		});
 	}
 
 	async deletePrivMsg(msgId: string): Promise<void> {
