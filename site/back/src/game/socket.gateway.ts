@@ -3,9 +3,34 @@ import { Server, Socket } from 'socket.io';
 import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSize, wallOffset } from './game';
 
 let numConnected = 0;
-let previousId = "0";
+let previousId = null;
 let paddle1 = new Paddle(paddleWidth, paddleHeight, wallOffset, 100 / 2 - paddleHeight / 2, null);
+let paddle2 = new Paddle(paddleWidth, paddleHeight, 200 - (wallOffset + paddleWidth) , 100 / 2 - paddleHeight / 2, null);
+let ball = new Ball(ballSize, ballSize, 200 / 2 - ballSize / 2, 100 / 2 - ballSize / 2);
+let now = getCurrentTime();
+let elapsed = 0;
+let then = now;
+let fps = 5;
 
+function getCurrentTime() {
+	const date: number = Date.now();
+	return date;
+}
+
+function update() {
+	now = getCurrentTime();
+	elapsed = now - then;        //maybe implement timing in gateway
+
+	if (elapsed < fps){
+		return ;
+	}
+	else
+		then = now;
+
+	paddle1.update();
+	paddle2.update();
+
+}
 
 @WebSocketGateway({
 	cors: {
@@ -36,59 +61,107 @@ export class SocketEvents {
 	@SubscribeMessage('client connected') 
 	handleConnectionToGame(@ConnectedSocket() client: Socket){
 		//send an event
-		paddle1.id = client.id;
+		if (numConnected < 2) {
+			if (previousId === null) {
+				paddle1.id = client.id;
+				numConnected = numConnected + 1;
+				previousId = client.id;
+			} else if (client.id !== previousId) {
+				paddle2.id = client.id;
+				numConnected = numConnected + 1;
+				previousId = client.id;
+			}
+			if (numConnected === 2) {
+				console.log("2 playersssss");
+				
+				this.server.emit('2 players');
+			}
 
-		this.server.socketsJoin("room1");
-		this.server.emit('room joined', client.id);
-
-		if (client.id !== previousId) {
-			numConnected = numConnected + 1;
-			previousId = client.id;
+			this.server.socketsJoin("room1");
+			this.server.emit('room joined', client.id);
 		}
 
-		if (numConnected === 2) {
-			console.log("2 playersssss");
-			
-			this.server.emit('2 players');
-		}
 
 	}
 	
 	@SubscribeMessage('ArrowUp pressed')
 	handleArrowUpPressed(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-		// console.log("arrow up pressed server.on with client id : " + client.id);
 		if (client.id === paddle1.id){
 			paddle1.ArrowUp = true;
-			paddle1.update();
 			const payload = {
 				x: paddle1.x,
 				y: paddle1.y,
 			}
+			update();
 			this.server.emit('update paddle1', payload);
+		} else if (client.id === paddle2.id){
+			paddle2.ArrowUp = true;
+			const payload = {
+				x: paddle2.x,
+				y: paddle2.y,
+			}
+			update();
+			this.server.emit('update paddle2', payload);
 		}
 	}
 	@SubscribeMessage('ArrowUp released')
 	handleArrowUpRealeased(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-		// console.log("arrow up released server.on with client id : " + client.id);
 		if (client.id === paddle1.id){
 			paddle1.ArrowUp = false;
-			paddle1.update();
+			const payload = {
+				x: paddle1.x,
+				y: paddle1.y,
+			}
+			update();
+			this.server.emit('update paddle1', payload);
+		} else if (client.id === paddle2.id){
+			paddle2.ArrowUp = false;
+			const payload = {
+				x: paddle2.x,
+				y: paddle2.y,
+			}
+			update();
+			this.server.emit('update paddle2', payload);
 		}
 	}
 	@SubscribeMessage('ArrowDown pressed')
 	handleArrowDownPressed(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-		// console.log("arrow Down pressed server.on with client id : " + client.id);
 		if (client.id === paddle1.id){
 			paddle1.ArrowDown = true;
-			paddle1.update();
+			const payload = {
+				x: paddle1.x,
+				y: paddle1.y,
+			}
+			update();
+			this.server.emit('update paddle1', payload);
+		} else if (client.id === paddle2.id){
+			paddle2.ArrowDown = true;
+			const payload = {
+				x: paddle2.x,
+				y: paddle2.y,
+			}
+			update();
+			this.server.emit('update paddle2', payload);
 		}
 	}
 	@SubscribeMessage('ArrowDown released')
 	handleArrowDownRealeased(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-		// console.log("arrow Down released server.on with client id : " + client.id);
 		if (client.id === paddle1.id){
 			paddle1.ArrowDown = false;
-			paddle1.update();
+			const payload = {
+				x: paddle1.x,
+				y: paddle1.y,
+			}
+			update();
+			this.server.emit('update paddle1', payload);
+		} else if (client.id === paddle2.id){
+			paddle2.ArrowDown = false;
+			const payload = {
+				x: paddle2.x,
+				y: paddle2.y,
+			}
+			update();
+			this.server.emit('update paddle2', payload);
 		}
 	}
 

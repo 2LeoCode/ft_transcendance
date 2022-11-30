@@ -14,6 +14,8 @@ export class Game{
 	private fps: number = 10; // number of millisecond between each update.
 	//private computerPlayer: ComputerPaddle;
     private ball: Ball;
+
+
     constructor(){
 
 		this.then = this.getCurrentTime();
@@ -61,7 +63,7 @@ export class Entity{
 
 export class Paddle extends Entity{
     
-    private speed:number = 1;
+    private speed:number = 2;
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
     
@@ -90,7 +92,7 @@ export class Paddle extends Entity{
 
 export class Paddle2 extends Entity{
     
-    private speed:number = 1;
+    private speed:number = 2;
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
     

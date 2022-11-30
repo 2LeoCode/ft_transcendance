@@ -41,7 +41,13 @@ function Game() {
       draw.player1.y = y;
       draw.draw();
       // console.log("x = " + x + " & y = " + y);
-    })  // <= affiche ca
+    })
+    socket.on('update paddle2', ({ x, y }) => {
+      draw.player2.x = x;
+      draw.player2.y = y;
+      draw.draw();
+      // console.log("x = " + x + " & y = " + y);
+    })
   })
 
   window.addEventListener("resize", () => {
@@ -56,22 +62,28 @@ function Game() {
       if (e.code == "ArrowUp") {
         socket.emit('ArrowUp pressed', cId);
       }
-    });
-    document.addEventListener("keyup", function (e) {
-      if (e.code == "ArrowUp") {
-        socket.emit('ArrowUp released', cId);
-      }
-    });
-    document.addEventListener("keydown", function (e) {
       if (e.code == "ArrowDown") {
         socket.emit('ArrowDown pressed', cId);
       }
     });
     document.addEventListener("keyup", function (e) {
+      if (e.code == "ArrowUp") {
+        socket.emit('ArrowUp released', cId);
+      }
       if (e.code == "ArrowDown") {
         socket.emit('ArrowDown released', cId);
       }
     });
+    // document.addEventListener("keydown", function (e) {
+    //   if (e.code == "ArrowDown") {
+    //     socket.emit('ArrowDown pressed', cId);
+    //   }
+    // });
+    // document.addEventListener("keyup", function (e) {
+    //   if (e.code == "ArrowDown") {
+    //     socket.emit('ArrowDown released', cId);
+    //   }
+    // });
   })
 
   return <canvas ref={canvasRef} width={width} height={height}></canvas>;
