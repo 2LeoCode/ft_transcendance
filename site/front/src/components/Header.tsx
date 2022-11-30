@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 //import { UserCom } from "../com/user.com";
 import "../styles/Header.css";
-import { user_infos } from "../components/SignUp";
 import Settings from "./Settings";
 
 function Header() {
@@ -25,7 +24,7 @@ function Header() {
     <div className="Header">
       <NavLink to="/user" className="infos_user">
         <img height="50%" src="./default-avatar.webp" alt="avatar" />
-        <p>{user_infos.nick}</p>
+        {/* <p>{user_infos.nick}</p> */}
       </NavLink>
       <NavLink to="/watch">
         <p className="watch">Watch</p>

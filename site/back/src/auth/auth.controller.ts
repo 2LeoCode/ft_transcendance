@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Get, Logger, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import AuthService from "./auth.service";
 
@@ -23,8 +23,9 @@ export default class AuthController {
 	): Promise<any> {
 		const user = req.user;
 		const token = await this.authService.login(user);
+		Logger.log(token);
 		res.cookie('token', token.access_token);
-		res.redirect('http://localhost:3000');
+		res.redirect('http://localhost:3000/pong');
 	}
 
 }

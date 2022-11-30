@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import "../styles/User.css";
 
-declare var Blob: {
+declare const Blob: {
   prototype: Blob;
   new (): Blob;
   new (request: any, mime: string): Blob;

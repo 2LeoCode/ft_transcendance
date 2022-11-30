@@ -14,10 +14,10 @@ function activate_script() {
 function Pong() {
   const [play, setPlay] = useState<boolean | any>(false);
 
-  const socket = io("http://localhost:2000");
-  socket.on("message", (msg) => {
-    console.log(msg);
-  });
+  // const socket = io("http://localhost:2000");
+  // socket.on("message", (msg) => {
+  //   console.log(msg);
+  // });
   return (
     <div>
       <Header />

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 //import { UserCom } from "../com/user.com";
 import Header from "../components/Header";
-import { user_infos } from "../components/SignUp";
 import "../styles/User.css";
 
 declare var Blob: {
@@ -31,7 +30,7 @@ function User() {
     <div>
       <Header />
       <div className="User">
-        <h3>{user_infos.nick}</h3>
+        {/* <h3>{user_infos.nick}</h3> */}
         <div className="avatar">
           {!uploaded && (
             <img src="./default-avatar.webp" alt="Avatar" width="80%" />

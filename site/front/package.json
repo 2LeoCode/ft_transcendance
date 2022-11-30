@@ -28,9 +28,9 @@
   },
   "scripts": {
     "start:dev": "react-app-rewired start",
-	"start:development": "react-app-rewired start",
+    "start:development": "react-app-rewired start",
     "start:prod": "serve -s build",
-	"start:production": "serve -s build",
+    "start:production": "serve -s build",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject"
@@ -62,7 +62,6 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/node-fetch": "^2.6.2",
     "babel-loader": "^9.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
     "html-webpack-plugin": "^5.5.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "react-app-rewired": "^2.2.1",
