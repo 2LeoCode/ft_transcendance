@@ -1,92 +1,239 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Query,
-  Body,
-  Delete,
-  Patch,
-} from '@nestjs/common';
-import ChannelService from './channel.service';
-import Channel from './channel.entity';
-import User from 'src/user/user.entity';
-import { InsertResult, UpdateResult } from 'typeorm';
+import { Body, Controller, Delete, Get, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiHeader, ApiQuery } from '@nestjs/swagger';
+import JwtGuard from 'src/auth/guards/jwt.guard';
+import { UserId } from 'src/user/decorators/user-id.decorator';
 import { CreateChannelDto, UpdateChannelDto } from './channel.dto';
-import { ApiQuery } from '@nestjs/swagger';
+import ChannelEntity from './channel.entity';
+import ChannelService from './channel.service';
 
 @Controller('channel')
+@UseGuards(JwtGuard)
+@ApiHeader({
+	name: 'Authorization',
+	description: 'Authentification token'
+})
 export default class ChannelController {
-  constructor(private channelService: ChannelService) {}
+	constructor(
+		private readonly channelService: ChannelService
+	) {}
+	
+	@Get()
+	async getVisible(): Promise<ChannelEntity[]> {
+		return this.channelService.get({
+			visibility: 'visible'
+		});
+	}
 
-  @Get()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: false
-  })
-  @ApiQuery({
-    type: String,
-    name: 'name',
-    required: false
-  })
-  @ApiQuery({
-    type: Boolean,
-    name: 'isPrivate',
-    required: false
-  })
-  @ApiQuery({
-    type: String,
-    name: 'ownerId',
-    required: false
-  })
-  async get(
-    @Query('id') id?: string,
-    @Query('name') name?: string,
-    @Query('isPrivate') isPrivate?: boolean,
-    @Query('ownerId') ownerId?: string,
-  ): Promise<Channel[]> {
-    return this.channelService.find({ id, name, isPrivate, ownerId });
-  }
+	@Post()
+	async add(
+		@UserId() userId: string,
+		@Body() body: CreateChannelDto
+	) {
+		return this.channelService.add(userId, body);
+	}
 
-  @Post()
-  async post(
-    @Body()
-    dto: CreateChannelDto
-  ): Promise<InsertResult> {
-    return this.channelService.insert({
-      name: dto.name,
-      password: dto.password,
-      isPrivate: dto.isPrivate,
-      owner: { id: dto.ownerId } as User,
-    });
-  }
+	@Post('update')
+	@ApiQuery({
+		type: String,
+		name: 'name',
+		description: 'Channel name'
+	})
+	async update(
+		@UserId() userId: string,
+		@Query('name') name: string,
+		@Body() dto: UpdateChannelDto
+	) {
+		return this.channelService.update(userId, name, dto);
+	}
 
-  @Delete()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: true
-  })
-  async delete(@Query('id') id: string): Promise<Channel[]> {
-    return this.channelService.remove(id);
-  }
 
-  @Patch()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: true
-  })
-  async patch(
-    @Query('id') id: string,
-    @Body()
-    dto: UpdateChannelDto
-  ): Promise<UpdateResult> {
-    return this.channelService.update(id, {
-      name: dto.name,
-      password: dto.password,
-      isPrivate: dto.isPrivate,
-      users: dto.userIds.map((_id) => ({id: _id} as User))
-    });
-  }
+	@Put('join')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, channelPassword]'
+		}
+	})
+	async join(
+		@UserId() userId: string,
+		@Body() [channelName, channelPassword]: [string, string]
+	) {
+		return this.channelService.join(userId, channelName, channelPassword);
+	}
+
+	@Put('leave')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 1,
+			maxItems: 1,
+			description: '[channelName]'
+		}
+	})
+	async leave(
+		@UserId() userId: string,
+		@Body() [channelName]: [string]
+	) {
+		return this.channelService.leave(userId, channelName);
+	}
+
+	@Put('message')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, content]'
+		}
+	})
+	async addMessage(
+		@UserId() userId: string,
+		@Body() [channelName, content]: [string, string]
+	) {
+		return this.channelService.addMessage(userId, channelName, content);
+	}
+
+	@Delete('message')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, messageId]'
+		}
+	})
+	async deleteMessage(
+		@UserId() userId: string,
+		@Body() [channelName, messageId]: [string, string]
+	) {
+		return this.channelService.removeMessage(userId, channelName, messageId);
+	}
+
+	@Put('mute')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 3,
+			maxItems: 3,
+			description: '[channelName, userName, time]'
+		}
+	})
+	async mute(
+		@UserId() userId: string,
+		@Body() [channelName, userName, time]: [string, string, number]
+	) {
+		return this.channelService.mute(userId, channelName, userName, time);
+	}
+
+	@Put('kick')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, otherId]'
+		}
+	})
+	async kick(
+		@UserId() userId: string,
+		@Body() [channelName, otherId]: [string, string]
+	) {
+		return this.channelService.kick(userId, channelName, otherId);
+	}
+
+	@Put('unmute')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, otherId]'
+		}
+	})
+	async unmute(
+		@UserId() userId: string,
+		@Body() [channelName, otherId]: [string, string]
+	) {
+		return this.channelService.unmute(userId, channelName, otherId);
+	}
+
+	@Put('promote')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, otherId]'
+		}
+	})
+	async promote(
+		@UserId() userId: string,
+		@Body() [channelName, otherId]: [string, string]
+	) {
+		return this.channelService.promote(userId, channelName, otherId);
+	}
+
+	@Put('demote')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, otherId]'
+		}
+	})
+	async demote(
+		@UserId() userId: string,
+		@Body() [channelName, otherId]: [string, string]
+	) {
+		return this.channelService.demote(userId, channelName, otherId);
+	}
+
+	@Put('invite')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, userName]'
+		}
+	})
+	async invite(
+		@UserId() userId: string,
+		@Body() [channelName, userName]: [string, string]
+	) {
+		return this.channelService.invite(userId, channelName, userName);
+	}
 }

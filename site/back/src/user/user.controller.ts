@@ -1,131 +1,111 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Logger,
-  Patch,
-  Post,
-  Put,
-  Query,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiQuery } from '@nestjs/swagger';
-import { UpdateResult } from 'typeorm';
+import { Body, Controller, Delete, Get, Headers, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
+import JwtGuard from 'src/auth/guards/jwt.guard';
+import ChannelEntity from 'src/channel/channel.entity';
+import MessageEntity from 'src/message/message.entity';
+import ScoreEntity from 'src/score/score.entity';
+import { UserId } from './decorators/user-id.decorator';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
-import { Express } from 'express';
-import User from './user.entity';
+import UserEntity from './user.entity';
 import UserService from './user.service';
-import Receiver from 'src/receiver/receiver.entity';
 
 @Controller('user')
+@UseGuards(JwtGuard)
 export default class UserController {
-  constructor(private userService: UserService) {}
+	constructor(
+		private readonly userService: UserService
+	) {}
 
-  @Get()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: false
-  })
-  @ApiQuery({
-    type: String,
-    name: 'nick',
-    required: false
-  })
-  @ApiQuery({
-    type: Boolean,
-    name: 'online',
-    required: false
-  })
-  async get(
-    @Query('id') id?: string,
-    @Query('nick') nick?: string,
-    @Query('online') online?: boolean,
-  ): Promise<User[]> {
-    return this.userService.find({ id, nick, online });
-  }
+	@Get('online')
+	async getOnline() {
+		return this.userService.get({online: true});
+	}
 
-  @Post()
-  async post(
-    @Body() dto: CreateUserDto
-  ): Promise<string> {
-    const ret =  (await this.userService.insert(dto))
-      .identifiers[0].id;
-    Logger.log(await this.userService.logReceiverId(ret));
-    return ret;
-  }
+	@Get()
+	async getCurrentUser(
+		@UserId() userId: string
+	) {
+		return this.userService.getFull(userId);
+	}
 
-  @Delete()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: true
-  })
-  async delete(@Query('id') id: string): Promise<User[]> {
-    return this.userService.remove(id);
-  }
+	@Post('update')
+	async update(
+		@UserId() userId: string,
+		@Body() dto: UpdateUserDto
+	) {
+		return this.userService.update(userId, dto);
+	}
 
-  @Patch()
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: true
-  })
-  async patch(
-    @Query('id') id: string,
-    @Body() dto: UpdateUserDto
-  ): Promise<UpdateResult> {
-    return (await this.userService.update(id, dto));
-  }
+	@Put('message')
+	async sendPrivMsg(
+		@UserId() userId: string,
+		@Body() [otherId, content]: [string, string]
+	) {
+		return this.userService.sendPrivMsg(userId, otherId, content);
+	}
 
-  @Put('avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: true
-  })
-  @ApiConsumes('image/*')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  async putAvatar(
-    @Query('id') id: string,
-    @UploadedFile() file: Express.Multer.File
-  ): Promise<UpdateResult> {
-    return this.userService.update(id, { avatar: file });
-  }
+	@Delete('message')
+	async deletePrivMsg(
+		@UserId() userId: string,
+		@Body() [messageId]: [string]
+	) {
+		return this.userService.deletePrivMsg(userId, messageId);
+	}
 
-  @Patch('friends')
-  @ApiQuery({
-    type: String,
-    name: 'id',
-    required: true
-  })
-  @ApiBody({
-    schema: {
-      type: 'array',
-      items: {
-        type: 'string',
-      },
-      example: ['123e4567-e89b-12d3-a456-426614174000', '987e6543-e21b-12d3-a456-426614100047']
-    }
-  })
-  async patchFriends(
-    @Query('id') id: string,
-    @Body() friendIds: string[]
-  ): Promise<User> {
-    return this.userService.addFriends(id, friendIds);
-  }
+	@Post('avatar')
+	async updateAvatar(
+		@UserId() userId: string,
+		@Body() avatar: any
+	) {
+		//
+	}
+
+	@Put('friendRequest')
+	async sendFriendRequest(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.sendFriendRequest(userId, otherId);
+	}
+
+	@Post('acceptFriendRequest')
+	async acceptFriendRequest(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.acceptFriendRequest(userId, otherId);
+	}
+
+	@Delete('friendRequest')
+	async deleteFriendRequest(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.rejectFriendRequest(userId, otherId);
+	}
+
+	@Delete('friend')
+	async deleteFriend(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.removeFriend(userId, otherId);
+	}
+
+	@Put('block')
+	async block(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.block(userId, otherId);
+	}
+
+	@Delete('block')
+	async unblock(
+		@UserId() userId: string,
+		@Body() [otherId]: [string]
+	) {
+		return this.userService.unblock(userId, otherId);
+	}
+
 }

@@ -1,14 +1,20 @@
-import Message from "src/message/message.entity";
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import MessageEntity from '../message/message.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+export type ReceiverType = 'User' | 'Channel';
 
 @Entity()
-export default class Receiver {
-	@PrimaryGeneratedColumn("uuid")
+export default class ReceiverEntity {
+	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
 	@Column()
-	type: 'User' | 'Channel';
+	type: ReceiverType;
 
-	@OneToMany(() => Message, (msg) => msg.receiver, { cascade: true })
-	messages: Message[];
+	@OneToMany(
+		() => MessageEntity,
+		(msg: MessageEntity) => msg.receiver,
+		{ cascade: true }
+	)
+	messages: MessageEntity[];
 }

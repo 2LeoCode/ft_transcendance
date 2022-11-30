@@ -2,18 +2,21 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  OneToMany,
   ManyToMany,
   JoinTable,
   ManyToOne,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import User from '../user/user.entity';
-import Receiver from 'src/receiver/receiver.entity';
+import UserEntity from '../user/user.entity';
+import ReceiverEntity from '../receiver/receiver.entity';
+
+export type ChannelAccessibility = 'public' | 'private';
+export type ChannelVisibility = 'visible' | 'hidden';
 
 @Entity()
-export default class Channel {
+export default class ChannelEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -23,17 +26,54 @@ export default class Channel {
   @Column()
   password: string;
 
-  @Column({ default: false })
-  isPrivate: boolean;
+  @Column({ default: 'public' })
+  accessibility: ChannelAccessibility;
 
-  @ManyToOne(() => User, (usr) => usr.ownedChannels, { nullable: false, onDelete: 'CASCADE' })
-  owner: User;
+  @Column({ default: 'visible' })
+  visibility: ChannelVisibility;
 
-  @ManyToMany(() => User, (usr) => usr.channels)
+  @ManyToOne(
+    () => UserEntity,
+    (user: UserEntity) => user.ownedChannels,
+    {
+      nullable: false,
+      onDelete: 'CASCADE'
+    }
+  )
+  owner: UserEntity;
+
+  @ManyToMany(
+    () => UserEntity,
+    (user: UserEntity) => user.channels,
+    { onUpdate: 'CASCADE' }
+  )
   @JoinTable()
-  users: User[];
+  users: UserEntity[];
 
-  @OneToOne(() => Receiver, { cascade: true })
+  @Column('jsonb', {
+    nullable: false,
+    default: []
+  })
+  mutedIds: string[];
+
+  @Column('jsonb', {
+    nullable: false,
+    default: []
+  })
+  adminsIds: string[];
+
+  @ManyToMany(
+    () => UserEntity,
+    (user: UserEntity) => user.channelInvites,
+    { onUpdate: 'CASCADE', onDelete: 'CASCADE' }
+  )
+  @JoinTable()
+  invites: UserEntity[];
+
+  @OneToOne(
+    () => ReceiverEntity,
+    { cascade: true }
+  )
   @JoinColumn()
-  receiver: Receiver;
+  receiver: ReceiverEntity;
 }

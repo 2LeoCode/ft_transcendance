@@ -1,28 +1,38 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import Receiver from "./receiver.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import MessageEntity from '../message/message.entity';
+import { Repository } from 'typeorm';
+import ReceiverEntity, { ReceiverType } from './receiver.entity';
 
 @Injectable()
 export default class ReceiverService {
 	constructor(
-		@InjectRepository(Receiver) private receiverRepository: Repository<Receiver>,
+		@InjectRepository(ReceiverEntity) private readonly receiverRepository: Repository<ReceiverEntity>,
 	) {}
 
-	async insert(type: 'User' | 'Channel'): Promise<Receiver> {
-		return this.receiverRepository.save({
-			type: type
+	async get(opts: {
+		id?: string;
+		type?: ReceiverType;
+	}): Promise<ReceiverEntity[]> {
+		return this.receiverRepository.find({
+			where: {
+				id: opts.id,
+				type: opts.type
+			}
 		});
 	}
 
-	async find(opts: {
-		id?: string;
-		type?: 'User' | 'Channel';
-	}): Promise<Receiver[]> {
-		return this.receiverRepository.findBy(opts);
+	async add(type: ReceiverType): Promise<ReceiverEntity> {
+		const receiver = this.receiverRepository.create({
+			type: type
+		});
+		return this.receiverRepository.save(receiver);
 	}
 
-	async remove(id: string): Promise<Receiver[]> {
-		return this.receiverRepository.remove(await this.find({ id: id }));
+	async getMessages(id: string): Promise<MessageEntity[]> {
+		return this.receiverRepository.findOne({
+			relations: ['messages'],
+			where: { id: id },
+		}).then((receiver: ReceiverEntity) => receiver.messages);
 	}
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/SignIn.css";
 import { useNavigate } from "react-router-dom";
-import { UserCom } from "../com/user.com";
+//import { UserCom } from "../com/user.com";
 import { user_infos } from "../components/SignUp";
 import bcrypt from "bcryptjs";
 
@@ -9,11 +9,11 @@ async function log(password: string) {
   let id: string = "";
   let pass: string = "";
   let goodpassword: boolean = false;
-  await UserCom.get({ nick: user_infos.nick }).then((res) => {
-    console.log(res);
-    id = res[0].id;
-    pass = res[0].password;
-  });
+  //await UserCom.get({ nick: user_infos.nick }).then((res) => {
+  //  console.log(res);
+  //  id = res[0].id;
+  //  pass = res[0].password;
+  //});
   const len = id.length;
   if (len > 1) {
     await bcrypt.compare(password, pass).then((res) => {
@@ -23,9 +23,9 @@ async function log(password: string) {
       console.log("Bad password");
       return 2;
     } else {
-      await UserCom.update(id, { online: true }).then((res) => {
-        console.log(res);
-      });
+      //await UserCom.update(id, { online: true }).then((res) => {
+      //  console.log(res);
+      //});
       return 0;
     }
   } else {

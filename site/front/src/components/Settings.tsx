@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/Settings.css";
 import { Switch } from "@mui/material";
-import { UserCom } from "../com/user.com";
+//import { UserCom } from "../com/user.com";
 import { user_infos } from "../components/SignUp";
 import { useNavigate } from "react-router-dom";
 
@@ -10,23 +10,23 @@ function Settings(props: any) {
   const navigate = useNavigate();
   let id: string = "";
   const changeUsername = async(e: any) => {
-    e.preventDefault();
-    await UserCom.get({ nick: user_infos.nick }).then((res) => {
-      id = res[0].id;
-    });
-    await UserCom.update(id, { nick: newName }).then((res) => {
-      console.log(res);
-    });
-    localStorage.setItem("username", newName);
-    user_infos.nick = JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1');
+    //e.preventDefault();
+    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
+    //  id = res[0].id;
+    //});
+    //await UserCom.update(id, { nick: newName }).then((res) => {
+    //  console.log(res);
+    //});
+    //localStorage.setItem("username", newName);
+    //user_infos.nick = JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1');
   };
   const deleteAccount = async (e: any) => {
-    e.preventDefault();
-    await UserCom.get({ nick: user_infos.nick }).then((res) => {
-      id = res[0].id;
-    });
-    await UserCom.remove(id).then(() => {});
-    localStorage.clear();
+    //e.preventDefault();
+    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
+    //  id = res[0].id;
+    //});
+    //await UserCom.remove(id).then(() => {});
+    //localStorage.clear();
     navigate("/");
   };
   return (
