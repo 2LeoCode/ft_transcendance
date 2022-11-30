@@ -36,15 +36,19 @@ function Game() {
     const draw = new Draw(canvas);
   
 
-    socket.on('update paddle1', ({ x, y }) => {
+    socket.on('update paddle1', ({ x, y, ballx, bally }) => {
       draw.player1.x = x;
       draw.player1.y = y;
+      draw.ball.x = ballx;
+      draw.ball.y = bally;
       draw.draw();
       // console.log("x = " + x + " & y = " + y);
     })
-    socket.on('update paddle2', ({ x, y }) => {
+    socket.on('update paddle2', ({ x, y, ballx, bally }) => {
       draw.player2.x = x;
       draw.player2.y = y;
+      draw.ball.x = ballx;
+      draw.ball.y = bally;
       draw.draw();
       // console.log("x = " + x + " & y = " + y);
     })

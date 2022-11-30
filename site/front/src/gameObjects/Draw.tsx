@@ -103,6 +103,7 @@ export class Draw {
 		if (this.gameContext){
         this.gameContext.fillStyle = "#000";
         this.gameContext.fillRect(0,0,this.gameWidth,this.gameHeight);
+		this.gameContext.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
               
 		this.drawBoardDetails();
 		

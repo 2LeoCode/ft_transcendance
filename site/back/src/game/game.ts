@@ -67,11 +67,11 @@ export class Paddle extends Entity{
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
     
-    constructor(w:number, h:number, x:number, y:number, id:string){
+    constructor( w:number, h:number, x:number, y:number, id:string ) {
         super(w, h, x, y);
     }
     
-    update(){
+    update() {
      if( this.ArrowUp === true ){
         this.yVel = -1;
         if(this.y <= 5){
@@ -96,7 +96,7 @@ export class Paddle2 extends Entity{
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
     
-    constructor(w:number,h:number,x:number,y:number){
+    constructor( w:number,h:number,x:number,y:number, id:string ) {
         super(w,h,x,y);
     }
     
