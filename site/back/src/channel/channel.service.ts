@@ -117,6 +117,8 @@ export default class ChannelService {
 			throw new Error(`Channel ${name} does not exist`);
 		if (channel.users.find((user: UserEntity) => user.id === userId))
 			throw new Error(`User ${userId} already in channel ${name}`);
+		if (channel.bannedIds.includes(userId))
+			throw new Error(`User ${userId} is banned from channel ${name}`);
 		if (channel.accessibility === 'private') {
 			if (!channel.invites.find((user: UserEntity) => user.id === userId))
 				throw new Error(`User ${userId} is not invited to channel ${name}`);
@@ -315,8 +317,59 @@ export default class ChannelService {
 			throw new Error(`User ${userId} not in channel ${channelName}`);
 		if (channel.users.find((user: UserEntity) => user.id === otherId))
 			throw new Error(`User ${otherId} already in channel ${channelName}`);
+		if (channel.bannedIds.includes(otherId))
+			throw new Error(`User ${otherId} is banned in channel ${channelName}`);
 		channel.invites.push({ id: otherId } as UserEntity);
 		await this.channelRepository.save(channel);
 	}
-	
+
+	async ban(
+		userId: string,
+		channelName: string,
+		otherId: string,
+		time: number,
+	) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (!channel.users.find((user: UserEntity) => user.id === otherId))
+			throw new Error(`User ${otherId} not in channel ${channelName}`);
+		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
+			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+		if (channel.owner.id === otherId || channel.adminsIds.includes(otherId))
+			throw new Error(`User ${otherId} is admin in channel ${channelName}`);
+		if (channel.bannedIds.includes(otherId))
+			throw new Error(`User ${otherId} is already banned in channel ${channelName}`);
+		channel.bannedIds.push(otherId);
+		setTimeout(() => {
+			this.unban(userId, channelName, otherId);
+		}, time);
+		await this.channelRepository.save(channel);
+	}
+
+	async unban(
+		userId: string,
+		channelName: string,
+		otherId: string
+	) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: ['users', 'owner'],
+			where: { name: channelName }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelName} does not exist`);
+		if (!channel.users.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not in channel ${channelName}`);
+		if (!channel.bannedIds.includes(otherId))
+			throw new Error(`User ${otherId} is not banned in channel ${channelName}`);
+		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
+			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+		channel.bannedIds = channel.bannedIds.filter((id: string) => id !== otherId);
+		await this.channelRepository.save(channel);
+	}
 }

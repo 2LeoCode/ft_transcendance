@@ -132,14 +132,14 @@ export default class ChannelController {
 			},
 			minItems: 3,
 			maxItems: 3,
-			description: '[channelName, userName, time]'
+			description: '[channelName, otherId, time]'
 		}
 	})
 	async mute(
 		@UserId() userId: string,
-		@Body() [channelName, userName, time]: [string, string, number]
+		@Body() [channelName, otherId, time]: [string, string, number]
 	) {
-		return this.channelService.mute(userId, channelName, userName, time);
+		return this.channelService.mute(userId, channelName, otherId, time);
 	}
 
 	@Put('kick')
@@ -178,6 +178,44 @@ export default class ChannelController {
 		@Body() [channelName, otherId]: [string, string]
 	) {
 		return this.channelService.unmute(userId, channelName, otherId);
+	}
+
+	@Put('ban')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 3,
+			maxItems: 3,
+			description: '[channelName, otherId, time]'
+		}
+	})
+	async ban(
+		@UserId() userId: string,
+		@Body() [channelName, otherId, time]: [string, string, number]
+	) {
+		return this.channelService.ban(userId, channelName, otherId, time);
+	}
+
+	@Put('unban')
+	@ApiBody({
+		schema: {
+			type: 'array',
+			items: {
+				type: 'string'
+			},
+			minItems: 2,
+			maxItems: 2,
+			description: '[channelName, otherId]'
+		}
+	})
+	async unban(
+		@UserId() userId: string,
+		@Body() [channelName, otherId]: [string, string]
+	) {
+		return this.channelService.unban(userId, channelName, otherId);
 	}
 
 	@Put('promote')
@@ -227,13 +265,13 @@ export default class ChannelController {
 			},
 			minItems: 2,
 			maxItems: 2,
-			description: '[channelName, userName]'
+			description: '[channelName, otherId]'
 		}
 	})
 	async invite(
 		@UserId() userId: string,
-		@Body() [channelName, userName]: [string, string]
+		@Body() [channelName, otherId]: [string, string]
 	) {
-		return this.channelService.invite(userId, channelName, userName);
+		return this.channelService.invite(userId, channelName, otherId);
 	}
 }
