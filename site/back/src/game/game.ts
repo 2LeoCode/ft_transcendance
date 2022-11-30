@@ -1,3 +1,5 @@
+import { User } from "./User";
+
 export let paddleWidth:number = 3, paddleHeight:number = 10, ballSize:number = 2, wallOffset:number = 5;
 
 export class Game{
@@ -46,6 +48,7 @@ export class Game{
 }
 
 export class Entity{
+    user: User;
     id:string;
     width:number;
     height:number;
@@ -53,7 +56,7 @@ export class Entity{
     y:number;
     xVel:number = 0;
     yVel:number = 0;
-    constructor(w:number, h:number, x:number, y:number){       
+    constructor(user:User, w:number, h:number, x:number, y:number){       
         this.width = w;
         this.height = h;
         this.x = x;
@@ -68,8 +71,8 @@ export class Paddle extends Entity{
     public ArrowDown:boolean = false;
     public score: number = 0;
     
-    constructor( w:number, h:number, x:number, y:number, id:string ) {
-        super(w, h, x, y);
+    constructor( user:User, w:number, h:number, x:number, y:number ) {
+        super(user, w, h, x, y);
     }
     
     update() {
@@ -98,8 +101,8 @@ export class Paddle2 extends Entity{
     public ArrowDown:boolean = false;
     public score: number = 0;
     
-    constructor( w:number,h:number,x:number,y:number, id:string ) {
-        super(w,h,x,y);
+    constructor( user:User, w:number, h:number, x:number, y:number ) {
+        super(user, w, h, x, y);
     }
     
     update() {

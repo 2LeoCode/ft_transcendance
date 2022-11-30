@@ -2,10 +2,8 @@ export enum GameState {
 	WAITING,
 	STARTING,
 	PLAYING,
-	PAUSED,
-	RESUMED,
-	PLAYERONESCORED,
-	PLAYERTWOSCORED,
+	// PLAYERONESCORED,
+	// PLAYERTWOSCORED,
 	PLAYERONEWIN,
 	PLAYERTWOWIN,
 }
@@ -28,7 +26,7 @@ export interface IPaddle {
     height: number;
 	x: number;
 	y: number;
-	goal: number;
+	score: number;
 }
 
 export interface IBall {
@@ -45,15 +43,8 @@ export interface IRoom {
 	playerTwo: IPaddle;
 	ball: IBall;
 
-	timestampStart: number;
-	goalTimestamp: number;
-	pauseTime: {pause: number, resume: number}[];
-
 	winner: string;
 	loser: string;
 
 	mode: GameMode;
-
-	timer: number;
-	gameDuration: number;
 }

@@ -1,10 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { io } from "socket.io-client"
-import { waitFor } from "@testing-library/react";
 import { Draw } from "../gameObjects/Draw";
 import { GameMode, GameState, IRoom } from "../gameObjects/GameObject";
-import { drawerClasses } from "@mui/material";
-import { request } from "https";
 
 let oldTimestamp = 0;
 const secondElapsed = 0;
