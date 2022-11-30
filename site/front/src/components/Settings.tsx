@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "../styles/Settings.css";
 import { Switch } from "@mui/material";
 //import { UserCom } from "../com/user.com";
-import { user_infos } from "../components/SignUp";
 import { useNavigate } from "react-router-dom";
 
 function Settings(props: any) {

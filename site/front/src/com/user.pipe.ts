@@ -7,6 +7,8 @@ import Score from './score.interface';
 import User from './user.interface';
 
 export default class UserPipe {
+	
+	
 	constructor(
 		private readonly comPipe: ComPipe,
 		private readonly user: User
@@ -53,7 +55,7 @@ export default class UserPipe {
 
 	set nick(newNick: Promise<string> | string) {
 		this.user.nick = (async () => {
-			await fetch(`${this.comPipe.backendHost}/update`, {
+			await fetch(`${this.comPipe.backendHost}/user/update`, {
 				method: 'POST',
 				headers: {
 					'Authorization': `Bearer ${this.comPipe.jwtToken}`,
@@ -69,7 +71,7 @@ export default class UserPipe {
 	}
 	set online(status: Promise<boolean> | boolean) {
 		this.user.online = (async () => {
-			await fetch(`${this.comPipe.backendHost}/update`, {
+			await fetch(`${this.comPipe.backendHost}/user/update`, {
 				method: 'POST',
 				headers: {
 					'Authorization': `Bearer ${this.comPipe.jwtToken}`,
@@ -88,7 +90,7 @@ export default class UserPipe {
 		// Generated with copilot
 		const formData = new FormData();
 		formData.append('avatar', avatar);
-		await fetch(`${this.comPipe.backendHost}/update`, {
+		await fetch(`${this.comPipe.backendHost}/user/update`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${this.comPipe.jwtToken}`,

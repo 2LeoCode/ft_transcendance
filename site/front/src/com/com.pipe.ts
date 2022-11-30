@@ -3,22 +3,22 @@ import UserPipe from './user.pipe';
 
 export default class ComPipe {
 
-	private readonly socket = io(this.backendHost, {
-		transports: ['websocket'],
-		upgrade: false,
-		reconnection: true,
-		reconnectionDelay: 1000,
-		reconnectionDelayMax: 5000,
-		reconnectionAttempts: Infinity
-	});
+	// private readonly socket = io(this.backendHost, {
+	// 	transports: ['websocket'],
+	// 	upgrade: false,
+	// 	reconnection: true,
+	// 	reconnectionDelay: 1000,
+	// 	reconnectionDelayMax: 5000,
+	// 	reconnectionAttempts: Infinity
+	// });
 
 	constructor(
 		readonly backendHost: string,
 		readonly jwtToken: string
 	) {
 		return (async () => {
-			this.socket.auth = { token: this.jwtToken };
-			this.socket.connect();
+			// this.socket.auth = { token: this.jwtToken };
+			// this.socket.connect();
 			await this.user;
 			await this.channels;
 			return this;
@@ -26,7 +26,7 @@ export default class ComPipe {
 	}
 
 
-	private readonly user = (async () => new UserPipe(
+	readonly user = (async () => new UserPipe(
 		this,
 		await fetch(`${this.backendHost}/user`, {
 			method: 'GET',
@@ -36,7 +36,7 @@ export default class ComPipe {
 		}).then(res => res.json())
 	))();
 
-	private readonly channels = fetch(`${this.backendHost}/channel`, {
+	readonly channels = fetch(`${this.backendHost}/channel`, {
 		method: 'GET',
 		headers: {
 			Authorization: `Bearer ${this.jwtToken}`

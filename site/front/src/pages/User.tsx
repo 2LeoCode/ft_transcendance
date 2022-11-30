@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { userPipe } from "./Pong";
 //import { UserCom } from "../com/user.com";
 import Header from "../components/Header";
 import "../styles/User.css";
+import UserPipe from "../com/user.pipe";
 
 declare var Blob: {
   prototype: Blob;
@@ -13,24 +15,21 @@ function User() {
   const [image, setImage] = useState(new Blob());
   const [uploaded, setUploaded] = useState(false);
   const [username, setUsername] = useState("");
-  const [id, setId] = useState("");
   const matches_won: number = 0;
   const matches_lost: number = 0;
 
   useEffect(() => {
-	// Get user infos from database
-    //UserCom.get({ nick: user_infos.nick }).then((res) => {
-    //  console.log(res);
-    //  setUsername(res[0].nick);
-    //  setId(res[0].id);
-    //});
+    (async () => {
+      const user = await userPipe;
+      setUsername(await user.nick)
+    })();
   }, []);
 
   return (
     <div>
       <Header />
       <div className="User">
-        {/* <h3>{user_infos.nick}</h3> */}
+        <h3>{username}</h3>
         <div className="avatar">
           {!uploaded && (
             <img src="./default-avatar.webp" alt="Avatar" width="80%" />

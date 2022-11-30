@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Channel from "../components/Channel";
 import Friend from "../components/Friend";
 import Header from "../components/Header";
-import { user_infos } from "../components/SignUp";
 import "../styles/Chat.css";
 
 async function addFriend(e: any, id: string, friends_name_tab: string[]) {
