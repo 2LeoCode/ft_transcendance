@@ -21,7 +21,8 @@ function Pong() {
 
   
   const joinQueue = (e: React.MouseEvent<HTMLButtonElement>) => {
-    socket.emit("joinQueue", e.currentTarget.value);
+    console.log("onClick joinQueue");
+    socket.emit('joinQueue', e.currentTarget.value);
   }
 
   const leaveQueue = () => {
@@ -32,8 +33,9 @@ function Pong() {
 	useEffect((): any => {
 
 
-    const socket = io("http://localhost:2000");
+    socket = io("http://localhost:2000");
 
+    // when a client arrives on page localhost:3000/pong
     socket.on("connect", () => {
       console.log("connect");
 			// Allow reconnection

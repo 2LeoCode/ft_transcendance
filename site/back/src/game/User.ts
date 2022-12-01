@@ -1,25 +1,25 @@
 import { GameMode, UserStatus } from "./Constants";
 
 export class User {
-	id: number;
-	username: string;
-	ratio?: number;
+	// id: number;
+	// username: string;
+	// ratio?: number;
 	status?: UserStatus;
-	socketId?: string;
+	socketId: string;
 	roomId?: string;
 
 	mode?: GameMode;
 
-	constructor(id: number, username: string, socketId?: string, ratio?: number) {
-		this.id = id;
-		this.username = username;
-		this.ratio = ratio;
+	constructor(socketId: string) {
+		// this.id = id;
+		// this.username = username;
+		// this.ratio = ratio;
 		this.socketId = socketId
 	}
 
-	setUsername(username: string) {
-		this.username = username;
-	}
+	// setUsername(username: string) {
+	// 	this.username = username;
+	// }
 
 	setUserStatus(status: UserStatus) {
 		this.status = status;
@@ -47,8 +47,10 @@ export class ConnectedUsers {
 	constructor(private maxUser: number = Infinity) {}
 
 	addUser(user: User) {
-		if (this.maxUser !== this.users.length)
+		if (this.maxUser !== this.users.length){
+			console.log("user in addUser id: " + user.socketId);
 			this.users.push(user);
+		}
 	}
 
 	removeUser(userRm: User) {
@@ -59,13 +61,21 @@ export class ConnectedUsers {
 
 	getUser(socketId: string): User | undefined {
 		let userIndex: number = this.users.findIndex(user => user.socketId === socketId);
+		console.log("user in getUser id: " + socketId);
 		if (userIndex === -1)
 			return undefined;
 		return this.users[userIndex];
 	}
 
-	getUserById(id: number): User | undefined {
-		let userIndex: number = this.users.findIndex(user => user.id === id);
+	// getUserById(id: number): User | undefined {
+	// 	let userIndex: number = this.users.findIndex(user => user.id === id);
+	// 	if (userIndex === -1)
+	// 		return undefined;
+	// 	return this.users[userIndex];
+	// }
+
+	getUserBySocketId(socketId: string): User | undefined {
+		let userIndex: number = this.users.findIndex(user => user.socketId === socketId);
 		if (userIndex === -1)
 			return undefined;
 		return this.users[userIndex];

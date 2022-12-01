@@ -11,25 +11,41 @@ export default class Queue {
         }
         this.storage.push(item);
     }
+
     dequeue(): User | undefined {
         return this.storage.shift();
     }
+
     size(): number {
         return this.storage.length;
     }
 
-    find(username: string): User {
-        return this.storage.find(el => el.username === username);
+    // find(username: string): User {
+    //     return this.storage.find(el => el.username === username);
+    // }
+
+    find(socketId: string): User {
+        return this.storage.find(el => el.socketId === socketId);
     }
 
+    // remove(userRm: User): void {
+    //     let userIndex: number = this.storage.findIndex(user => user.username === userRm.username);
+    //     if (userIndex !== -1)
+    //         this.storage.splice(userIndex, 1);
+    // }
+
     remove(userRm: User): void {
-        let userIndex: number = this.storage.findIndex(user => user.username === userRm.username);
+        let userIndex: number = this.storage.findIndex(user => user.socketId === userRm.socketId);
         if (userIndex !== -1)
             this.storage.splice(userIndex, 1);
     }
 
+    // isInQueue(user: User): boolean {
+    //     return (this.find(user.username) !== undefined);
+    // }
+
     isInQueue(user: User): boolean {
-        return (this.find(user.username) !== undefined);
+        return (this.find(user.socketId) !== undefined);
     }
 
     matchPlayers(): User[] {
@@ -37,10 +53,9 @@ export default class Queue {
         let firstPlayer: User = this.dequeue();
 
         let secondPlayerId: number = 0;
-        let difference: number = Math.abs(firstPlayer.ratio - this.storage[0].ratio);
 
         for (let i = 1; i < this.size(); i++) {
-            if (firstPlayer.mode === this.storage[i].mode && Math.abs(firstPlayer.ratio - this.storage[i].ratio) < difference)
+            if (firstPlayer.mode === this.storage[i].mode)
                 secondPlayerId = i;
         }
 

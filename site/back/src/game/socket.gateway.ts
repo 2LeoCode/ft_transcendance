@@ -59,7 +59,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		private readonly connectedUsers: ConnectedUsers = new ConnectedUsers();
 	
 		createNewRoom(players: User[]): void {
-			const roomId: string = `${players[0].username}&${players[1].username}`;
+			const roomId: string = `${players[0].socketId}&${players[1].socketId}`;
 			let room: Room = new Room(roomId, players, { mode: players[0].mode });
 	
 			this.server.to(players[0].socketId).emit("newRoom", room);
@@ -90,15 +90,16 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 
 		@SubscribeMessage('handleUserConnect')
 		handleConnectionToGame(@ConnectedSocket() client: Socket, @MessageBody() user: User){
+			console.log("coucou from connect users");
 			
 			// let newUser: User = this.connectedUsers.getUserById(user.id); // users when connected
-			let newUser: User;
+			let newUser: User = null;
 
 			if (newUser) {
 				newUser.setSocketId(client.id);
-				newUser.setUsername(user.username);
+				// newUser.setUsername(user.username);
 			} else {
-				newUser= new User(user.id, user.username, client.id, user.ratio);
+				newUser= new User(client.id);
 			}
 			newUser.setUserStatus(UserStatus.INHUB);
 
@@ -140,6 +141,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		//disconnection
 		handleDisconnect(@ConnectedSocket() client: Socket){
 			//console.log(`Client disconnected: ${client.id}`);
+			console.log("getUser in disconnect");
 			let user: User = this.connectedUsers.getUser(client.id);
 
 		if (user) {
@@ -169,14 +171,14 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 
 		@SubscribeMessage('joinQueue')
 		handleJoinQueue(@ConnectedSocket() client: Socket, @MessageBody() mode: string) {
+			console.log("coucou from joinQueue server");
 			const user: User = this.connectedUsers.getUser(client.id);
 			if (!user) {
-				console.log(client.id);
 				user.setSocketId(client.id);
+				console.log(user.socketId + " & " + client.id);
 			}
 
 			if (user && !this.queue.isInQueue(user)) {
-				console.log("inqueue server");
 				this.connectedUsers.changeUserStatus(client.id, UserStatus.INQUEUE);
 				this.connectedUsers.setGameMode(client.id, mode);
 				this.queue.enqueue(user);
@@ -298,17 +300,17 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		
 
 		@SubscribeMessage('keyDown')
-		async handleKeyUp(@ConnectedSocket() client: Socket, @MessageBody() data: {roomId: string, key: string, username: string}) {
+		async handleKeyUp(@ConnectedSocket() client: Socket, @MessageBody() data: {roomId: string, key: string, username: string, id: string}) {
 			const room: Room = this.rooms.get(data.roomId);
 
-			if (room && room.playerOne.user.username === data.username)
+			if (room && room.playerOne.user.socketId === data.id)
 			{
 				if (data.key === 'ArrowUp')
 					room.playerOne.ArrowUp = true;
 				if (data.key === 'ArrowDown')
 					room.playerOne.ArrowDown = true;
 			}
-			else if (room && room.playerTwo.user.username === data.username)
+			else if (room && room.playerTwo.user.socketId === data.id)
 			{
 				if (data.key === 'ArrowUp')
 					room.playerTwo.ArrowUp = true;
@@ -318,17 +320,17 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		}
 
 		@SubscribeMessage('keyUp')
-		async handleKeyDown(@ConnectedSocket() client: Socket, @MessageBody() data: {roomId: string, key: string, username: string}) {
+		async handleKeyDown(@ConnectedSocket() client: Socket, @MessageBody() data: {roomId: string, key: string, username: string, id: string}) {
 			const room: Room = this.rooms.get(data.roomId);
 
-			if (room && room.playerOne.user.username === data.username)
+			if (room && room.playerOne.user.socketId === data.id)
 			{
 				if (data.key === 'ArrowUp')
 					room.playerOne.ArrowUp = false;
 				if (data.key === 'ArrowDown')
 					room.playerOne.ArrowDown = false;
 			}
-			else if (room && room.playerTwo.user.username === data.username)
+			else if (room && room.playerTwo.user.socketId === data.id)
 			{
 				if (data.key === 'ArrowUp')
 					room.playerTwo.ArrowUp = false;

@@ -29,8 +29,8 @@ export type SerializeRoom = {
 
 	playerOne: {
 		user: {
-			id: number;
-			username: string;
+			socketId: string;
+			// username: string;
 		}
 		width: number;
 		height: number;
@@ -41,8 +41,8 @@ export type SerializeRoom = {
 
 	playerTwo: {
 		user: {
-			id: number;
-			username: string;
+			socketId: string;
+			// username: string;
 		}
 		width: number;
 		height: number;
@@ -107,7 +107,7 @@ export default class Room implements IRoom {
 	}
 
 	isAPlayer(user: User): boolean {
-		return (this.playerOne.user.username === user.username || this.playerTwo.user.username === user.username);
+		return (this.playerOne.user.socketId === user.socketId || this.playerTwo.user.socketId === user.socketId);
 	}
 
 	addUser(user: User) {
@@ -115,7 +115,7 @@ export default class Room implements IRoom {
 	}
 
 	removeUser(userRm: User) {
-		const userIndex: number = this.players.findIndex(user => user.username === userRm.username);
+		const userIndex: number = this.players.findIndex(user => user.socketId === userRm.socketId);
 		if (userIndex !== -1)
 			this.players.splice(userIndex, 1);
 	}
@@ -163,8 +163,8 @@ export default class Room implements IRoom {
 			gameState: this.gameState,
 			playerOne: {
 				user: {
-					id: this.playerOne.user.id,
-					username: this.playerOne.user.username,
+					socketId: this.playerOne.user.socketId,
+					// username: this.playerOne.user.username,
 				},
 				width: this.playerOne.width,
 				height: this.playerOne.height,
@@ -174,8 +174,8 @@ export default class Room implements IRoom {
 			},
 			playerTwo: {
 				user: {
-					id: this.playerTwo.user.id,
-					username: this.playerTwo.user.username,
+					socketId: this.playerTwo.user.socketId,
+					// username: this.playerTwo.user.username,
 				},
 				width: this.playerTwo.width,
 				height: this.playerTwo.height,
