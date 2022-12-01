@@ -88,10 +88,11 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 			//console.log(`Client connected: ${client.id}`);
 		}
 
-		@SubscribeMessage('client connected')
+		@SubscribeMessage('handleUserConnect')
 		handleConnectionToGame(@ConnectedSocket() client: Socket, @MessageBody() user: User){
 			
-			let newUser: User = this.connectedUsers.getUserById(user.id);
+			// let newUser: User = this.connectedUsers.getUserById(user.id); // users when connected
+			let newUser: User;
 
 			if (newUser) {
 				newUser.setSocketId(client.id);
@@ -169,8 +170,13 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		@SubscribeMessage('joinQueue')
 		handleJoinQueue(@ConnectedSocket() client: Socket, @MessageBody() mode: string) {
 			const user: User = this.connectedUsers.getUser(client.id);
+			if (!user) {
+				console.log(client.id);
+				user.setSocketId(client.id);
+			}
 
 			if (user && !this.queue.isInQueue(user)) {
+				console.log("inqueue server");
 				this.connectedUsers.changeUserStatus(client.id, UserStatus.INQUEUE);
 				this.connectedUsers.setGameMode(client.id, mode);
 				this.queue.enqueue(user);

@@ -165,7 +165,7 @@ export class Ball extends Entity{
     public score2:number = 0;
     
     constructor(w:number,h:number,x:number,y:number){
-        super(w,h,x,y);
+        super(null, w, h, x, y);
 		var randomDirection = Math.floor(Math.random() * 2) + 1;
         if(randomDirection % 2){
             this.xVel = 1;

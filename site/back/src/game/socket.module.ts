@@ -3,5 +3,6 @@ import { SocketEvents } from "./socket.gateway";
 
 @Module({
 	providers: [SocketEvents],
+	exports: [SocketEvents],
 })
 export class SocketModule {}
