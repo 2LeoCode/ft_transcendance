@@ -1,8 +1,8 @@
 import { io } from 'socket.io-client';
-import { EntityParser } from './entity-parser';
-import PublicChannel from './public-channel.interface';
-import PublicUser from './public-user.interface';
-import UserPipe from './user.pipe';
+import { EntityParser } from '../entity-parser';
+import PublicChannel from '../interfaces/public-channel.interface';
+import PublicUser from '../interfaces/public-user.interface';
+import UserPipe from '../user.pipe';
 
 export default class ComPipe {
 

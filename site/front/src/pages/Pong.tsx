@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import '../styles/Pong.css';
 import { io } from 'socket.io-client';
 import Game from '../components/Game';
-import ComPipe from '../com/com.pipe';
+import ComPipe from '../com/pipes/com.pipe';
 import UserPipe from '../com/user.pipe';
 
 const token: string =

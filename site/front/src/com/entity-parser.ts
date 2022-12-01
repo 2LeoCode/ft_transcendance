@@ -1,87 +1,144 @@
 import Channel from "./channel.interface";
-import ComPipe from "./com.pipe";
+import ComPipe from "./pipes/com.pipe";
 import Message from "./message.interface";
-import PublicChannel from "./public-channel.interface";
-import PublicUser from "./public-user.interface";
+import PublicChannel, { ChannelAccessibility, ChannelVisibility } from "./interfaces/public-channel.interface";
+import PublicUser from "./interfaces/public-user.interface";
 import Score from "./score.interface";
 import User from "./user.interface";
+import { atom } from "jotai";
 
-export class EntityParser {
-	constructor(
-		private readonly comPipe: ComPipe,
-	) {}
-
-	readonly publicUser = (entity: any): PublicUser => ({
+const EntityParser =  {
+	publicUser: (entity: any): PublicUser => ({
 		id: entity.id,
-		nick: entity.nick,
+		nick: atom(entity.nick as string),
 		user42: entity.user42,
-		avatarPath: entity.avatarPath,
-		online: entity.online,
-	})
+		avatarPath: atom(entity.avatarPath as string),
+		online: atom(entity.online as boolean),
+	}),
 
-	readonly publicChannel = (entity: any): PublicChannel => ({
+	publicChannel: (entity: any): PublicChannel => ({
 		id: entity.id,
-		name: entity.name,
-		password: entity.password,
-		accessibility: entity.accessibility,
-		visibility: entity.visibility
-	})
+		name: atom(entity.name as string),
+		password: atom(entity.password as string),
+		accessibility: atom(entity.accessibility as ChannelAccessibility),
+		visibility: atom(entity.visibility as ChannelVisibility)
+	}),
 
-	readonly score = (entity: any): Score => ({
+	score: (entity: any): Score => ({
 		id: entity.id,
 		playerScore: entity.playerScore,
 		enemyScore: entity.enemyScore,
 		date: entity.date,
-		user: this.publicUser(entity.user)
-	})
+		user: EntityParser.publicUser(entity.user)
+	}),
 
-	async publicUserFromId(id: string): Promise<PublicUser> {
-		return (await (await this.comPipe).publicUsers).find((user: any) => user.id == id ) as PublicUser;
-	}
-	async publicChannelFromId(id: string): Promise<PublicChannel> {
-		return (await (await this.comPipe).publicChannels).find((channel: any) => channel.id == id) as PublicChannel;
-	}
+	publicUserFromId: async (id: string): Promise<PublicUser> => {
+		return ComPipe.fetchPublicUser(id);
+	},
+	publicChannelFromId: async (id: string): Promise<PublicChannel> => {
+		return ComPipe.fetchPublicChannel(id);
+	},
 
-	async user(entity: any): Promise<User> {
+	user: async (entity: any): Promise<User> => {
 		return {
-			...this.publicUser(entity),
-			blockedBy: entity.blockedBy,
-			blocked: entity.blocked,
-			friends: entity.friends.map((friend: any) => this.publicUser(friend)),
-			friendRequests: entity.friendRequests.map((friendRequest: any) => this.publicUser(friendRequest)),
-			ownedChannels: entity.ownedChannels.map((channel: any) => this.channel(channel)),
-			channels: entity.channels.map((channel: any) => this.channel(channel)),
-			messagesIn: entity.receiver.messages.map((message: any) => this.message(message, 'user')),
-			messagesOut: entity.messages.map((message: any) => this.message(message, 'user')),
-			scores: entity.scores.map((score: any) => this.score(score))
+			...EntityParser.publicUser(entity),
+			blockedBy: atom(
+				entity.blockedBy.map(
+					(user: any) => EntityParser.publicUser(user)
+				) as PublicUser[],
+			),
+			blocked: atom(
+				entity.blocked.map(
+					(user: any) => EntityParser.publicUser(user)
+				) as PublicUser[],
+			),
+			friends: atom(
+				entity.friends.map(
+					(friend: any) => EntityParser.publicUser(friend)
+				) as PublicUser[],
+			),
+			friendRequests: atom(
+				entity.friendRequests.map(
+					(friendRequest: any) => EntityParser.publicUser(friendRequest)
+				) as PublicUser[],
+			),
+			ownedChannels: atom(
+				await Promise.all(
+					entity.ownedChannels.map(
+						async (channel: any) => EntityParser.channel(channel)
+					)
+				) as Channel[],
+			),
+			channels: atom(
+				await Promise.all(
+					entity.channels.map(
+						async (channel: any) => EntityParser.channel(channel)
+					)
+				) as Channel[],
+			),
+			messagesIn: atom(
+				await Promise.all(
+					entity.receiver.messages.map(
+						(message: any) => EntityParser.message(message, 'user')
+					)
+				) as Message[],
+			),
+			messagesOut: atom(
+				await Promise.all(
+					entity.messages.map(
+						async (message: any) => EntityParser.message(message, 'user')
+					)
+				) as Message[],
+			),
+			scores: atom(
+				entity.scores.map(
+					(score: any) => EntityParser.score(score)
+				) as Score[],
+			),
 		}
-	};
+	},
 
 	
-	async channel(entity: any): Promise<Channel> {
+	channel: async (entity: any): Promise<Channel> => {
 		return {
-			...this.publicChannel(entity),
-			owner: this.publicUser(entity.owner),
-			mutedIds: entity.mutedIds,
-			bannedIds: entity.bannedIds,
-			adminsIds: entity.adminsIds,
-			invites: entity.invites.map((invite: any) => this.publicUser(invite)),
-			messages: entity.receiver.messages.map((message: any) => this.message(message, 'channel')),
-			users: entity.users.map((user: any) => this.publicUser(user))
+			...EntityParser.publicChannel(entity),
+			owner: atom(EntityParser.publicUser(entity.owner)),
+			mutedIds: atom(entity.mutedIds as string[]),
+			bannedIds: atom(entity.bannedIds as string[]),
+			adminsIds: atom(entity.adminsIds as string[]),
+			invites: atom(
+				entity.invites.map(
+					(invite: any) => EntityParser.publicUser(invite)
+				) as PublicUser[],
+			),
+			messages: atom(
+				await Promise.all(
+					entity.receiver.messages.map(
+						async (message: any) => EntityParser.message(message, 'channel')
+					),
+				) as Message[],
+			),
+			users: atom(
+				entity.users.map(
+					async (user: any) => EntityParser.publicUser(user)
+				) as PublicUser[],
+			),
 		};
-	};
+	},
 
-	async message(entity: any, type: 'user' | 'channel'): Promise<Message> {
+	message: async (entity: any, type: 'user' | 'channel'): Promise<Message> => {
 		return {
 			id: entity.id,
-			content: entity.content,
-			createDate: entity.createDate,
-			updateDate: entity.updateDate,
-			sender: this.publicUser(entity.sender),
+			content: atom(entity.content as string),
+			createDate: atom(entity.createDate as Date),
+			updateDate: atom(entity.updateDate as Date),
+			sender: atom(EntityParser.publicUser(entity.sender)),
 			receiver:
-				type == 'channel' ?
-				await this.publicChannelFromId(entity.receiver.parentId) : 
-				await this.publicUserFromId(entity.receiver.parentId)
+				atom(
+					type == 'channel' ?
+					await EntityParser.publicChannelFromId(entity.receiver.parentId) : 
+					await EntityParser.publicUserFromId(entity.receiver.parentId)
+				)
 		};
 	};
 }

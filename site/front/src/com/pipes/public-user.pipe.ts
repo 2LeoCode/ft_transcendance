@@ -1,4 +1,4 @@
-import ComPipe from "./com.pipe";
+import ComPipe from "./pipes/com.pipe";
 import PublicUser from "./public-user.interface";
 
 export default class PublicUserPipe {
