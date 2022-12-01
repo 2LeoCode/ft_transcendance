@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-import { EntityParser } from '../entity-parser';
+import EntityParser from '../entity-parser';
 import PublicChannel from '../interfaces/public-channel.interface';
 import PublicUser from '../interfaces/public-user.interface';
 import UserPipe from '../user.pipe';
@@ -29,12 +29,10 @@ export default class ComPipe {
 		})() as any as ComPipe;
 	}
 
-	private readonly entityParser = new EntityParser(this);
-
 	readonly user = (async () => 
 		new UserPipe(
 			this,
-			await this.entityParser.user(
+			await EntityParser.user(
 				await fetch(`${this.backendHost}/user`, {
 					method: 'GET',
 					headers: {

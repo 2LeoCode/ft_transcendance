@@ -140,5 +140,7 @@ const EntityParser =  {
 					await EntityParser.publicUserFromId(entity.receiver.parentId)
 				)
 		};
-	};
+	}
 }
+
+export default EntityParser;
