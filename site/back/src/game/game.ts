@@ -48,7 +48,6 @@ export class Game{
 }
 
 export class Entity{
-    user: User;
     id:string;
     width:number;
     height:number;
@@ -56,7 +55,7 @@ export class Entity{
     y:number;
     xVel:number = 0;
     yVel:number = 0;
-    constructor(user:User, w:number, h:number, x:number, y:number){       
+    constructor(w:number, h:number, x:number, y:number){       
         this.width = w;
         this.height = h;
         this.x = x;
@@ -70,9 +69,11 @@ export class Paddle extends Entity{
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
     public score: number = 0;
+    public user: User;
     
     constructor( user:User, w:number, h:number, x:number, y:number ) {
-        super(user, w, h, x, y);
+        super(w, h, x, y);
+        this.user = user;
     }
     
     update() {
@@ -100,9 +101,11 @@ export class Paddle2 extends Entity{
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
     public score: number = 0;
+    public user: User;
     
     constructor( user:User, w:number, h:number, x:number, y:number ) {
-        super(user, w, h, x, y);
+        super(w, h, x, y);
+        this.user = user;
     }
     
     update() {
@@ -165,7 +168,7 @@ export class Ball extends Entity{
     public score2:number = 0;
     
     constructor(w:number,h:number,x:number,y:number){
-        super(null, w, h, x, y);
+        super(w, h, x, y);
 		var randomDirection = Math.floor(Math.random() * 2) + 1;
         if(randomDirection % 2){
             this.xVel = 1;

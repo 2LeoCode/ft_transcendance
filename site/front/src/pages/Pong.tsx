@@ -8,11 +8,18 @@ import { GameState, IRoom, User } from "../gameObjects/GameObject";
 
 let socket: Socket;
 
+export type onGoingGame = {
+	roomId: string;
+	playerOne: string;
+	playerTwo: string;
+};
+
 function Pong() {
   // const [isReady, setIsReady] = useState<boolean | any>(false);
   const [play, setPlay] = useState<boolean>(false);
   const [inQueue, setInQueue] = useState<boolean>(false);
-	const [room, setRoom] = useState<IRoom | null>(null);
+  const [room, setRoom] = useState<IRoom | null>(null);
+  const [currentGames, setCurrentGames] = useState<onGoingGame[]>([]);
 
 
 	let roomData: IRoom;
@@ -29,6 +36,19 @@ function Pong() {
     console.log("leave queue");
     socket.emit("leaveQueue");
   }
+
+  const updateCurrentGames = (currentGamesData: IRoom[]) => {
+		const games: onGoingGame[] = [];
+
+		for (const game of currentGamesData) {
+			games.push({
+				roomId: game.roomId,
+				playerOne: game.playerOne.user.username,
+				playerTwo: game.playerTwo.user.username,
+			});
+		}
+		setCurrentGames(games);
+	};
   
 	useEffect((): any => {
 
@@ -42,10 +62,15 @@ function Pong() {
 			socket.emit("handleUserConnect", user); // user is gonna be the user from chat if needed 
 
 			socket.emit("getCurrentGames");
-		});
+    });
+    
+    socket.on("updateCurrentGames", (currentGamesData: IRoom[]) => {
+			updateCurrentGames(currentGamesData);
+		}); 
 
 		socket.on("newRoom", (newRoomData: IRoom) => {
 			if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
+        console.log("return");
 				return ;
 			}
 			socket.emit("joinRoom", newRoomData.roomId);
@@ -69,6 +94,7 @@ function Pong() {
     });
 
 		socket.on("joinedRoom", () => {
+      console.log("joined room in front");
 			// if (chatSocket) {
 			// 	chatSocket.emit("userGameStatus", { isPlaying: true }); // user status "is playing"
 			// }
@@ -98,7 +124,7 @@ function Pong() {
     <div>
       <Header />
       <div className="Pong">
-        {inQueue && (
+        {!play && inQueue && (
           <button
             value={'colors'}
             type="button"
@@ -138,7 +164,7 @@ function Pong() {
             Colors
           </button>
         )}
-        {play && <Game />}
+        {play && <Game socketProps={socket} roomProps={room}></Game>}
       </div>
     </div>
   );

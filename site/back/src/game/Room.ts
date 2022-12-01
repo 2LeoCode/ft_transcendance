@@ -107,11 +107,13 @@ export default class Room implements IRoom {
 	}
 
 	isAPlayer(user: User): boolean {
+		if (!this.playerOne.user)
+			return false;
 		return (this.playerOne.user.socketId === user.socketId || this.playerTwo.user.socketId === user.socketId);
 	}
 
 	addUser(user: User) {
-		this.players.push(user);
+		this.players.push(user);	// push user in User[]
 	}
 
 	removeUser(userRm: User) {

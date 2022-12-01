@@ -61,6 +61,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		createNewRoom(players: User[]): void {
 			const roomId: string = `${players[0].socketId}&${players[1].socketId}`;
 			let room: Room = new Room(roomId, players, { mode: players[0].mode });
+			console.log("roomId = " + roomId);
 	
 			this.server.to(players[0].socketId).emit("newRoom", room);
 			this.server.to(players[1].socketId).emit("newRoom", room);
@@ -71,6 +72,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		}
 
 		afterInit(server: Server) {
+			console.log("when do  get here?");
 			setInterval(() => {
 				if (this.queue.size() > 1) { // && this.currentGames.length < MAX_SIMULTANEOUS_GAMES
 					let players: User[] = Array();

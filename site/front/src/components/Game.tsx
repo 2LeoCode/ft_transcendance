@@ -1,49 +1,47 @@
 import React, { useRef, useState, useEffect } from "react";
-import { io } from "socket.io-client"
+import { Socket } from "socket.io-client"
 import { Draw } from "../gameObjects/Draw";
 import { GameMode, GameState, IRoom } from "../gameObjects/GameObject";
 
-let oldTimestamp = 0;
-const secondElapsed = 0;
-let elapsed = 0;
-let timestamp = getCurrentTime();
 
-function getCurrentTime() {
-	const date: number = Date.now();
-	return date;
-}
-
-const downHandler = (event: KeyboardEvent): void => {
-  socket.emit('keyDown', event.key);
-};
-
-const upHandler = (event: KeyboardEvent): void => {
-  socket.emit('keyUp', event.key);
-};
-
-function vw_to_px(vw: number) {
-  return (window.innerWidth * vw) / 100;
-}
-
-function vh_to_px(vh: number) {
-  return (window.innerHeight * vh) / 100;
-}
-
-const socket = io("http://localhost:2000");
-socket.emit("message", "coucou");
-socket.on("message", (message) => {
-  //console.log(message);
-});
-
-function Game() {
+const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roomProps}) => {
     
+  let socket: Socket = socketProps;
+  let room: IRoom = roomProps;
   const ref = useRef(null);
   const animateRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  console.log("canva is working...");
+
   const [width, setWitdh] = useState<number | any>(vw_to_px(70));
   const [height, setHeight] = useState<number | any>(vh_to_px(50));
   let cId:string;
+  let oldTimestamp = 0;
+  const secondElapsed = 0;
+  let elapsed = 0;
+  let timestamp = getCurrentTime();
+  
+  function getCurrentTime() {
+    const date: number = Date.now();
+    return date;
+  }
+  
+  const downHandler = (event: KeyboardEvent): void => {
+    socket.emit('keyDown', event.key);
+  };
+  
+  const upHandler = (event: KeyboardEvent): void => {
+    socket.emit('keyUp', event.key);
+  };
+  
+  function vw_to_px(vw: number) {
+    return (window.innerWidth * vw) / 100;
+  }
+  
+  function vh_to_px(vh: number) {
+    return (window.innerHeight * vh) / 100;
+  }
 
   window.addEventListener("resize", () => {
     setWitdh(vw_to_px(70));
