@@ -10,12 +10,6 @@ import Watch from './Watch';
 import { useAtom } from 'jotai';
 import Database from '../com/database';
 
-const token: string =
-  document.cookie
-    .split(';')
-    .map((cookie) => cookie.split('='))
-    .find((cookie) => cookie[0] === 'token')?.[1] || '';
-
 function activate_script() {
   const script = document.createElement('script');
   script.src = './game.js';
