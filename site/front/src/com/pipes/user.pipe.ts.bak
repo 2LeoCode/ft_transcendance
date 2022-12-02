@@ -10,7 +10,7 @@ import PublicUserPipe from './public-user-pipe';
 export default class UserPipe extends PublicUserPipe {
 	constructor(
 		private readonly user: User,
-	) { super(user); }
+	) { super(user as PublicUser); }
 
 	get blockedBy(): PublicUser[] {
 		return this.user.blockedBy[0];

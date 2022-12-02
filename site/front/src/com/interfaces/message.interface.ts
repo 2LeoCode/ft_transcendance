@@ -1,6 +1,6 @@
 import { Atom } from "jotai";
-import PublicChannel from "./interfaces/public-channel.interface";
-import PublicUser from "./interfaces/public-user.interface";
+import PublicChannel from "./public-channel.interface";
+import PublicUser from "./public-user.interface";
 
 export default interface Message {
 	id: string;

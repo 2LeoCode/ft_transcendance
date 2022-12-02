@@ -1,4 +1,4 @@
-import { Atom } from "jotai";
+import { Atom } from 'jotai';
 
 export type ChannelVisibility = 'visible' | 'hidden';
 export type ChannelAccessibility = 'public' | 'private';

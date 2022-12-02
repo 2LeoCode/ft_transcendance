@@ -1,4 +1,4 @@
-import PublicUser from './interfaces/public-user.interface';
+import PublicUser from './public-user.interface';
 
 export default interface Score {
 	id: string;

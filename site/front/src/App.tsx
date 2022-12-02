@@ -28,7 +28,7 @@ function App() {
         else setIsLog(false);
       });
     } else setIsLog(false);
-  });
+  }, []);
   return (
     <BrowserRouter>
       <Routes>

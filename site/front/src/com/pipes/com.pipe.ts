@@ -2,64 +2,77 @@ import { io } from 'socket.io-client';
 import EntityParser from '../entity-parser';
 import PublicChannel from '../interfaces/public-channel.interface';
 import PublicUser from '../interfaces/public-user.interface';
-import UserPipe from '../user.pipe';
+import User from '../interfaces/user.interface';
+import { atom, Atom } from 'jotai';
 
 export default class ComPipe {
 
-	private readonly socket = io(this.backendHost, {
-		transports: ['websocket'],
-		upgrade: false,
-		reconnection: true,
-		reconnectionDelay: 1000,
-		reconnectionDelayMax: 5000,
-		reconnectionAttempts: Infinity
+	static readonly serverHost = 'http://localhost:2000';
+	static readonly jwtToken =
+		document.cookie
+			.split(';')
+			.map((cookie) => cookie.split('='))
+			.find((cookie) => cookie[0] === 'token')?.[1] || '';
+
+	static readonly socket = (() => {
+		const socket = io(this.serverHost, {
+			transports: ['websocket'],
+			upgrade: false,
+			reconnection: true,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 5000,
+			reconnectionAttempts: Infinity,
+			extraHeaders: {
+				'Authorization': `Bearer ${ComPipe.jwtToken}`,
+			}
+		});
+		socket.on('connect', () => {
+			console.log('Connected to server');
+		});
+		socket.on('clientConnected', (data: any) => {
+			console.log('Client connected', data as PublicUser);
+		});
+		socket.on('clientDisconnected', (data: any) => {
+			console.log('Client disconnected', data as PublicUser);
+		});
+
 	});
 
-	constructor(
-		readonly backendHost: string,
-		readonly jwtToken: string
-	) {
-		return (async () => {
-			this.socket.auth = { token: this.jwtToken };
-			this.socket.connect();
-			await this.user;
-			await this.publicUsers;
-			await this.publicChannels;
-			return this;
-		})() as any as ComPipe;
-	}
+	static user = (async () => 
+		EntityParser.user(
+			await fetch(`${ComPipe.serverHost}/user`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${ComPipe.jwtToken}`
+				}
+			}).then(res => res.json())
+		)
+	)() as any as User;
 
-	readonly user = (async () => 
-		new UserPipe(
-			this,
-			await EntityParser.user(
-				await fetch(`${this.backendHost}/user`, {
-					method: 'GET',
-					headers: {
-						Authorization: `Bearer ${this.jwtToken}`
-					}
-				}).then(res => res.json())
+	static visibleChannels = (async () => 
+		atom(
+			await fetch(`${ComPipe.serverHost}/channel`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${ComPipe.jwtToken}`
+				}
+			}).then(async res => (await res.json()).map((channel: any) =>
+				EntityParser.publicChannel(channel)
+			))
+		)
+	)() as any as Atom<PublicChannel[]>;
+
+	static onlineUsers = (async () =>
+		atom(
+			await fetch(`${ComPipe.serverHost}/user/public`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${ComPipe.jwtToken}`
+				}
+			}).then(async res => (await res.json()).map((channel: any) =>
+					EntityParser.publicUser(channel)
+				)
 			)
 		)
-	)();
-
-	readonly publicChannels: Promise<PublicChannel[]> = fetch(`${this.backendHost}/channel`, {
-		method: 'GET',
-		headers: {
-			Authorization: `Bearer ${this.jwtToken}`
-		}
-	}).then(async res => (await res.json()).map(async (channel: any) =>
-			this.entityParser.publicChannel(channel)
-		)
-	);
-
-	readonly publicUsers: Promise<PublicUser[]> = fetch(`${this.backendHost}/user/public`, {
-		method: 'GET',
-		headers: {
-			Authorization: `Bearer ${this.jwtToken}`
-		}
-	}).then(async res => (await res.json()).map(async (channel: any) =>
-			this.entityParser.publicUser(channel)
-		)
-	);
+	)() as any as Atom<PublicUser[]>;
 }

@@ -1,11 +1,11 @@
-import Channel from "./channel.interface";
-import ComPipe from "./pipes/com.pipe";
-import Message from "./message.interface";
-import PublicChannel, { ChannelAccessibility, ChannelVisibility } from "./interfaces/public-channel.interface";
-import PublicUser from "./interfaces/public-user.interface";
-import Score from "./score.interface";
-import User from "./user.interface";
-import { atom } from "jotai";
+import Channel from './interfaces/channel.interface';
+import ComPipe from './pipes/com.pipe';
+import Message from './interfaces/message.interface';
+import PublicChannel, { ChannelAccessibility, ChannelVisibility } from './interfaces/public-channel.interface';
+import PublicUser from './interfaces/public-user.interface';
+import Score from './interfaces/score.interface';
+import User from './interfaces/user.interface';
+import { atom } from 'jotai';
 
 const EntityParser =  {
 	publicUser: (entity: any): PublicUser => ({
