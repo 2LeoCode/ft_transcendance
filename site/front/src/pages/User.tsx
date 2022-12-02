@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import { user_infos } from "../components/SignUp";
 import "../styles/User.css";
 
-declare var Blob: {
+declare let Blob: {
   prototype: Blob;
   new (): Blob;
   new (request: any, mime: string): Blob;
@@ -15,8 +15,8 @@ function User() {
   const [uploaded, setUploaded] = useState(false);
   const [username, setUsername] = useState("");
   const [id, setId] = useState("");
-  const matches_won: number = 0;
-  const matches_lost: number = 0;
+  const matches_won = 0;
+  const matches_lost = 0;
 
   useEffect(() => {
 	// Get user infos from database

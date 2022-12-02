@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 //import { UserCom } from "../com/user.com";
 import "../styles/SignUp.css";
 
-export let user_infos = {
+export const user_infos = {
   nick: JSON.stringify(sessionStorage.getItem("username")).replace(/^"(.*)"$/, '$1'),
   mail: "abc@abc.fr",
   firstName: "bob",
@@ -15,7 +15,7 @@ function SignUp() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  let exist = false;
+  const exist = false;
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -23,8 +23,8 @@ function SignUp() {
     //  if (res.length > 0)
     //    exist = true;
     //});
-    if (exist === true)
-      return console.log("Username already taken");
+    // if (exist === true)
+    //   return console.log("Username already taken");
     sessionStorage.setItem("username", name);
     sessionStorage.setItem("password", password);
     user_infos.nick = JSON.stringify(sessionStorage.getItem("username")).replace(/^"(.*)"$/, '$1');

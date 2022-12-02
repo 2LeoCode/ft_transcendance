@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 function Settings(props: any) {
   const [newName, setNewName] = useState("");
   const navigate = useNavigate();
-  let id: string = "";
+  const id = "";
   const changeUsername = async(e: any) => {
     //e.preventDefault();
     //await UserCom.get({ nick: user_infos.nick }).then((res) => {

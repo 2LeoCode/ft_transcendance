@@ -6,8 +6,8 @@ import { GameMode, GameState, IRoom } from "../gameObjects/GameObject";
 
 const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roomProps}) => {
     
-  let socket: Socket = socketProps;
-  let room: IRoom = roomProps;
+  const socket: Socket = socketProps;
+  const room: IRoom = roomProps;
   const ref = useRef(null);
   const animateRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);

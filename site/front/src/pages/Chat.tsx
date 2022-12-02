@@ -7,7 +7,7 @@ import "../styles/Chat.css";
 
 async function addFriend(e: any, id: string, friends_name_tab: string[]) {
   e.preventDefault();
-  let friends_tab: string[] = [];
+  const friends_tab: string[] = [];
   //await UserCom.get({ nick: user_infos.nick }).then((res) => {
   //  friends_tab = res[0].friendIds;
   //});

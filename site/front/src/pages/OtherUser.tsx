@@ -4,15 +4,15 @@ import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import "../styles/User.css";
 
-declare var Blob: {
+declare let Blob: {
   prototype: Blob;
   new (): Blob;
   new (request: any, mime: string): Blob;
 };
 
 function OtherUser() {
-  const matches_won: number = 0;
-  const matches_lost: number = 0;
+  const matches_won = 0;
+  const matches_lost = 0;
   const params = useParams();
   const username = params.userName;
   //recup infos when db ok

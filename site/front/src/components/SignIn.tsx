@@ -6,9 +6,9 @@ import { user_infos } from "../components/SignUp";
 import bcrypt from "bcryptjs";
 
 async function log(password: string) {
-  let id: string = "";
-  let pass: string = "";
-  let goodpassword: boolean = false;
+  const id = "";
+  const pass = "";
+  let goodpassword = false;
   //await UserCom.get({ nick: user_infos.nick }).then((res) => {
   //  console.log(res);
   //  id = res[0].id;

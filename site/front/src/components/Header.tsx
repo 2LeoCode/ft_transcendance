@@ -7,7 +7,7 @@ import Settings from "./Settings";
 
 function Header() {
   const [settings, setSettings] = useState(false);
-  let id: string = "";
+  const id = "";
   const navigate = useNavigate();
   async function handleLogout() {
     //await UserCom.get({ nick: user_infos.nick }).then((res) => {
