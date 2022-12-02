@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import '../styles/Pong.css';
-import { io } from 'socket.io-client';
 import Game from '../components/Game';
-import ComPipe from '../com/pipes/com.pipe';
-import UserPipe from '../com/user.pipe';
+import { Route, Routes } from 'react-router-dom';
+import Chat from './Chat';
+import User from './User';
+import OtherUser from './OtherUser';
+import Watch from './Watch';
+import { useAtom } from 'jotai';
+import Database from '../com/database';
 
 const token: string =
   document.cookie
     .split(';')
     .map((cookie) => cookie.split('='))
     .find((cookie) => cookie[0] === 'token')?.[1] || '';
-
-export const infos = (async () => new ComPipe('http://localhost:2000', token))();
-export const userPipe = (async () => (await infos).user)()
 
 function activate_script() {
   const script = document.createElement('script');
@@ -29,16 +30,23 @@ function Pong() {
   //   console.log(msg);
   // });
   // console.log(infos.)
+
+  // example:
+  const [nickname, setNickname] = useAtom(Database.user.nick);
+
   useEffect(() => {
-    (async () => {
-      const user: UserPipe = await userPipe;
-      console.log(user.id);
-      user.nick = 'Joe';
-      console.log(await user.nick);
-    })();
+    console.log(`Hello, ${nickname}!`);
   }, []);
   return (
-    <div>
+    <React.Fragment>
+      <Routes>
+        <Route path="/pong" element={<Pong />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/user" element={<User />} />
+        <Route path="/other_user/:userName" element={<OtherUser />} />
+        <Route path="/watch" element={<Watch />} />
+        <Route path="*" element={<Pong />} />
+      </Routes>
       <Header />
       <div className="Pong">
         {!play && (
@@ -54,7 +62,7 @@ function Pong() {
         )}
         {play && <Game />}
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 

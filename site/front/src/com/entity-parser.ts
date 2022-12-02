@@ -1,5 +1,4 @@
 import Channel from './interfaces/channel.interface';
-import ComPipe from './pipes/com.pipe';
 import Message from './interfaces/message.interface';
 import PublicChannel, { ChannelAccessibility, ChannelVisibility } from './interfaces/public-channel.interface';
 import PublicUser from './interfaces/public-user.interface';
@@ -32,14 +31,7 @@ const EntityParser =  {
 		user: EntityParser.publicUser(entity.user)
 	}),
 
-	publicUserFromId: async (id: string): Promise<PublicUser> => {
-		return ComPipe.fetchPublicUser(id);
-	},
-	publicChannelFromId: async (id: string): Promise<PublicChannel> => {
-		return ComPipe.fetchPublicChannel(id);
-	},
-
-	user: async (entity: any): Promise<User> => {
+	user: (entity: any): User => {
 		return {
 			...EntityParser.publicUser(entity),
 			blockedBy: atom(
@@ -63,31 +55,23 @@ const EntityParser =  {
 				) as PublicUser[],
 			),
 			ownedChannels: atom(
-				await Promise.all(
-					entity.ownedChannels.map(
-						async (channel: any) => EntityParser.channel(channel)
-					)
+				entity.ownedChannels.map(
+						(channel: any) => EntityParser.channel(channel)
 				) as Channel[],
 			),
 			channels: atom(
-				await Promise.all(
-					entity.channels.map(
-						async (channel: any) => EntityParser.channel(channel)
-					)
+				entity.channels.map(
+					(channel: any) => EntityParser.channel(channel)
 				) as Channel[],
 			),
 			messagesIn: atom(
-				await Promise.all(
-					entity.receiver.messages.map(
-						(message: any) => EntityParser.message(message, 'user')
-					)
+				entity.receiver.messages.map(
+					(message: any) => EntityParser.message(message, 'user')
 				) as Message[],
 			),
 			messagesOut: atom(
-				await Promise.all(
-					entity.messages.map(
-						async (message: any) => EntityParser.message(message, 'user')
-					)
+				entity.messages.map(
+					async (message: any) => EntityParser.message(message, 'user')
 				) as Message[],
 			),
 			scores: atom(
@@ -99,10 +83,10 @@ const EntityParser =  {
 	},
 
 	
-	channel: async (entity: any): Promise<Channel> => {
+	channel: (entity: any): Channel => {
 		return {
 			...EntityParser.publicChannel(entity),
-			owner: atom(EntityParser.publicUser(entity.owner)),
+			owner: EntityParser.publicUser(entity.owner),
 			mutedIds: atom(entity.mutedIds as string[]),
 			bannedIds: atom(entity.bannedIds as string[]),
 			adminsIds: atom(entity.adminsIds as string[]),
@@ -112,10 +96,8 @@ const EntityParser =  {
 				) as PublicUser[],
 			),
 			messages: atom(
-				await Promise.all(
-					entity.receiver.messages.map(
-						async (message: any) => EntityParser.message(message, 'channel')
-					),
+				entity.receiver.messages.map(
+					async (message: any) => EntityParser.message(message, 'channel')
 				) as Message[],
 			),
 			users: atom(
@@ -126,19 +108,17 @@ const EntityParser =  {
 		};
 	},
 
-	message: async (entity: any, type: 'user' | 'channel'): Promise<Message> => {
+	message: (entity: any, type: 'user' | 'channel'): Message => {
 		return {
 			id: entity.id,
 			content: atom(entity.content as string),
-			createDate: atom(entity.createDate as Date),
+			createDate: entity.createDate as Date,
 			updateDate: atom(entity.updateDate as Date),
-			sender: atom(EntityParser.publicUser(entity.sender)),
+			sender: EntityParser.publicUser(entity.sender),
 			receiver:
-				atom(
-					type == 'channel' ?
-					await EntityParser.publicChannelFromId(entity.receiver.parentId) : 
-					await EntityParser.publicUserFromId(entity.receiver.parentId)
-				)
+				type == 'channel' ?
+				EntityParser.publicChannel(entity.receiver.parent) :
+				EntityParser.publicUser(entity.receiver.parent)
 		};
 	}
 }

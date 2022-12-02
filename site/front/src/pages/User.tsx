@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { userPipe } from "./Pong";
 //import { UserCom } from "../com/user.com";
 import Header from "../components/Header";
 import "../styles/User.css";
-import UserPipe from "../com/user.pipe";
 
 declare var Blob: {
   prototype: Blob;
@@ -18,12 +16,12 @@ function User() {
   const matches_won: number = 0;
   const matches_lost: number = 0;
 
-  useEffect(() => {
-    (async () => {
-      const user = await userPipe;
-      setUsername(await user.nick)
-    })();
-  }, []);
+  //useEffect(() => {
+  //  (async () => {
+  //    const user = await userPipe;
+  //    setUsername(await user.nick)
+  //  })();
+  //}, []);
 
   return (
     <div>

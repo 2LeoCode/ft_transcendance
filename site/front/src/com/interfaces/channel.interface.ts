@@ -1,14 +1,14 @@
 import PublicChannel from './public-channel.interface';
-import User from './interfaces/public-user.interface';
 import Message from './message.interface';
 import { Atom } from 'jotai';
+import PublicUser from './public-user.interface';
 
 export default interface Channel extends PublicChannel {
-	owner: User;
+	owner: PublicUser;
 	mutedIds: Atom<string[]>;
 	bannedIds: Atom<string[]>;
 	adminsIds: Atom<string[]>;
-	invites: Atom<User[]>;
+	invites: Atom<PublicUser[]>;
 	messages: Atom<Message[]>;
-	users: Atom<User[]>;
+	users: Atom<PublicUser[]>;
 }
