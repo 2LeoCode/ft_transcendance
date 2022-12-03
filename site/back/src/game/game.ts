@@ -18,33 +18,7 @@ export class Game{
     private ball: Ball;
 
 
-    constructor(){
-        this.now = this.getCurrentTime();
-		this.then = this.getCurrentTime();
-	}
-	getCurrentTime = (): number => {
-		const date = new Date();
-		return date.getTime();
-	}
-    update(){
-		// fps managment
-		this.now = this.getCurrentTime();
-		this.elapsed = this.now - this.then;        //maybe implement timing in gateway
-
-		if (this.elapsed < this.fps){
-			return ;
-		}
-		else
-            this.then = this.now;
-	}
-    gameLoop(){
-		if (Game.playerScore == 7 || Game.player2Score == 7){
-			console.log("it's finished!");
-		}
-		else {
-			this.update();
-        }
-    }
+    constructor(){}
 }
 
 export class Entity{

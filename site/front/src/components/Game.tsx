@@ -5,22 +5,34 @@ import { GameMode, GameState, IRoom } from "../gameObjects/GameObject";
 
 
 const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roomProps}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
     
   const socket: Socket = socketProps;
-  const room: IRoom = roomProps;
+  let room: IRoom = roomProps;
+	let   roomId: string | undefined = room?.roomId;
   const ref = useRef(null);
   const animateRef = useRef(0);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   console.log("canva is working...");
 
   const [width, setWitdh] = useState<number | any>(vw_to_px(70));
   const [height, setHeight] = useState<number | any>(vh_to_px(50));
+	const [gameEnded, setGameEnded] = useState(false);
+  
+  // here we'll need to compare room players with user ids to check if in game or not
+  let isAplayer: boolean = true; /*(room.playerOne.user.socketId == user.username || room.playerTwo.user.socketId == user.username);*/
+  
   let cId:string;
   let oldTimestamp = 0;
-  const secondElapsed = 0;
   let elapsed = 0;
   let timestamp = getCurrentTime();
+
+	const leaveRoom = () => {
+		if (room.gameState === GameState.WAITING) {
+			room.gameState = GameState.STARTING;
+		}
+		socket.emit("leaveRoom", roomId);
+	}
   
   function getCurrentTime() {
     const date: number = Date.now();
@@ -28,11 +40,11 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
   }
   
   const downHandler = (event: KeyboardEvent): void => {
-    socket.emit('keyDown', event.key);
+    socket.emit('keyDown', {roomId: roomId, key: event.key});
   };
   
   const upHandler = (event: KeyboardEvent): void => {
-    socket.emit('keyUp', event.key);
+    socket.emit('keyUp', {roomId: roomId, key: event.key});
   };
   
   function vw_to_px(vw: number) {
@@ -67,10 +79,22 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
       const draw = new Draw(canvas);
 
       //if not a spectator "if(isPlayer) {"
+		if (isAplayer) {
       window.addEventListener("keydown", downHandler);
 			window.addEventListener("keyup", upHandler);
-    socket.on('updateRoom', function(updateRoom: string) {
-      // don't know but might be useful...
+    }
+
+
+      socket.on('updateRoom', function(updatedRoom: string) {
+        room = JSON.parse(updatedRoom);
+        draw.ball.x = room.ball.x;
+        draw.ball.y = room.ball.y;
+        draw.player1.x = room.playerOne.x;
+        draw.player1.y = room.playerOne.y;
+        draw.player2.x = room.playerTwo.x;
+        draw.player2.y = room.playerTwo.y;
+        draw.playerScore = room.playerOne.score;
+        draw.player2Score = room.playerTwo.score;
     });
 
     const waitForInvitedUser = () => {
@@ -91,24 +115,24 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
         // console.log(elapsed);
 
         if (elapsed > 30) {
-          socket.emit("requestUpdate");
+          socket.emit("requestUpdate", roomId);
           oldTimestamp = timestamp;
         }
   
-        socket.on("updatedRoom", ({ x, y, paddle1x, paddle1y, paddle2x, paddle2y, score1, score2 }) => {
-          draw.ball.x = x;
-          draw.ball.y = y;
-          draw.player1.x = paddle1x;
-          draw.player1.y = paddle1y;
-          draw.player2.x = paddle2x;
-          draw.player2.y = paddle2y;
-          draw.playerScore = score1;
-          draw.player2Score = score2;
-        });
+        // socket.on("updatedRoom", ({ x, y, paddle1x, paddle1y, paddle2x, paddle2y, score1, score2 }) => {
+        //   draw.ball.x = x;
+        //   draw.ball.y = y;
+        //   draw.player1.x = paddle1x;
+        //   draw.player1.y = paddle1y;
+        //   draw.player2.x = paddle2x;
+        //   draw.player2.y = paddle2y;
+        //   draw.playerScore = score1;
+        //   draw.player2Score = score2;
+        // });
         if (draw.playerScore < 7 && draw.player2Score < 7)
           draw.draw();
         else {
-          draw.stopGame();
+          draw.stopGame(); // maybe do a endGame function to save everything in the db
           return ;
         }
 
@@ -120,10 +144,10 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
 
       return () => {
         window.cancelAnimationFrame(animationFrameId);
-        //if (true) {
-          // window.removeEventListener("keydown");
-          // window.removeEventListener("keyup", function(){});
-        //}
+        if (isAplayer) {
+          window.removeEventListener("keydown", downHandler);
+          window.removeEventListener("keyup", upHandler);
+			}
       };
   })
 

@@ -267,12 +267,12 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 						room.start();
 					}
 				}
-				if (room.gameState === GameState.STARTING
-						&& (currentTimestamp - room.timestampStart) >= this.secondToTimestamp(3.5)) {
+				if (room.gameState === GameState.STARTING) {
 					room.start();
 				}
 				else if (room.gameState === GameState.PLAYING)
 				{
+					// console.log("update back");
 					room.update(currentTimestamp);
 					if (room.isGameEnd)
 						console.log("save game ici.");	
@@ -302,17 +302,17 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		
 
 		@SubscribeMessage('keyDown')
-		async handleKeyUp(@ConnectedSocket() client: Socket, @MessageBody() data: {roomId: string, key: string, username: string, id: string}) {
+		async handleKeyUp(@ConnectedSocket() client: Socket, @MessageBody() data: {roomId: string, key: string}) {
 			const room: Room = this.rooms.get(data.roomId);
 
-			if (room && room.playerOne.user.socketId === data.id)
+			if (room && room.playerOne.user.socketId === client.id)
 			{
 				if (data.key === 'ArrowUp')
 					room.playerOne.ArrowUp = true;
 				if (data.key === 'ArrowDown')
 					room.playerOne.ArrowDown = true;
 			}
-			else if (room && room.playerTwo.user.socketId === data.id)
+			else if (room && room.playerTwo.user.socketId === client.id)
 			{
 				if (data.key === 'ArrowUp')
 					room.playerTwo.ArrowUp = true;
@@ -322,17 +322,17 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		}
 
 		@SubscribeMessage('keyUp')
-		async handleKeyDown(@ConnectedSocket() client: Socket, @MessageBody() data: {roomId: string, key: string, username: string, id: string}) {
+		async handleKeyDown(@ConnectedSocket() client: Socket, @MessageBody() data: {roomId: string, key: string}) {
 			const room: Room = this.rooms.get(data.roomId);
 
-			if (room && room.playerOne.user.socketId === data.id)
+			if (room && room.playerOne.user.socketId === client.id)
 			{
 				if (data.key === 'ArrowUp')
 					room.playerOne.ArrowUp = false;
 				if (data.key === 'ArrowDown')
 					room.playerOne.ArrowDown = false;
 			}
-			else if (room && room.playerTwo.user.socketId === data.id)
+			else if (room && room.playerTwo.user.socketId === client.id)
 			{
 				if (data.key === 'ArrowUp')
 					room.playerTwo.ArrowUp = false;

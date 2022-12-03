@@ -15,6 +15,7 @@ export enum GameMode {
 }
 
 export type User = {
+	socketId: string;
 	id: number;
 	username: string;
 	ratio?: number;
