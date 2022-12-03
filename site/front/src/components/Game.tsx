@@ -80,11 +80,11 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
       console.log(room.mode);
       draw.gameMode = room.mode;
 
-      //if not a spectator "if(isPlayer) {"
-		if (isAplayer) {
-      window.addEventListener("keydown", downHandler);
-			window.addEventListener("keyup", upHandler);
-    }
+      //if not a spectator
+      if (isAplayer) {
+        window.addEventListener("keydown", downHandler);
+        window.addEventListener("keyup", upHandler);
+      }
 
 
       socket.on('updateRoom', function(updatedRoom: string) {
@@ -120,7 +120,7 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
           socket.emit("requestUpdate", roomId);
           oldTimestamp = timestamp;
         }
-  
+
         // socket.on("updatedRoom", ({ x, y, paddle1x, paddle1y, paddle2x, paddle2y, score1, score2 }) => {
         //   draw.ball.x = x;
         //   draw.ball.y = y;

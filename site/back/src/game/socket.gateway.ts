@@ -199,6 +199,19 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 			}
 		}
 
+		@SubscribeMessage('spectateRoom')
+		handleSpectateRoom(@ConnectedSocket() client: Socket, @MessageBody() roomId: string) {
+			const room: Room = this.rooms.get(roomId);
+	
+			if (room) {
+				const user = this.connectedUsers.getUser(client.id);
+	
+				if (!room.isAPlayer(user)) {
+					this.server.to(client.id).emit("newRoom", room);
+				}
+			}
+		}
+
 		@SubscribeMessage('joinRoom')
 		handleJoinRoom(@ConnectedSocket() client: Socket, @MessageBody() roomId: string) {
 			const room: Room = this.rooms.get(roomId);

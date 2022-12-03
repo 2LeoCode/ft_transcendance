@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import Header from "../components/Header";
 import "../styles/Pong.css";
 import Game from "../components/Game";
+import Watch from "./Watch";
 import { GameState, IRoom, User } from "../gameObjects/GameObject";
 
 let socket: Socket;
@@ -17,6 +18,7 @@ export type onGoingGame = {
 function Pong() {
   // const [isReady, setIsReady] = useState<boolean | any>(false);
   const [play, setPlay] = useState<boolean>(false);
+  const [watch, setWatch] = useState<boolean>(false);
   const [inQueue, setInQueue] = useState<boolean>(false);
   const [room, setRoom] = useState<IRoom | null>(null);
   const [currentGames, setCurrentGames] = useState<onGoingGame[]>([]);
@@ -28,13 +30,17 @@ function Pong() {
 
   
   const joinQueue = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("onClick joinQueue");
     socket.emit('joinQueue', e.currentTarget.value);
   }
 
   const leaveQueue = () => {
-    console.log("leave queue");
     socket.emit("leaveQueue");
+    setWatch(false);
+  }
+
+  const handleWatch = () => {
+    console.log("handleWatch");
+    setWatch(true);
   }
 
   const updateCurrentGames = (currentGamesData: IRoom[]) => {
@@ -94,7 +100,6 @@ function Pong() {
     });
 
 		socket.on("joinedRoom", () => {
-      console.log("joined room in front");
 			// if (chatSocket) {
 			// 	chatSocket.emit("userGameStatus", { isPlaying: true }); // user status "is playing"
 			// }
@@ -124,7 +129,7 @@ function Pong() {
     <div>
       <Header />
       <div className="Pong">
-        {!play && inQueue && (
+        {!play && inQueue && !watch && (
           <button
             value={'colors'}
             type="button"
@@ -135,7 +140,7 @@ function Pong() {
           </button>
 
         )}
-        {!play && !inQueue && (
+        {!play && !inQueue && !watch && (
           <button
           value={'speed'}
             type="button"
@@ -144,7 +149,7 @@ function Pong() {
           >
             Speed
           </button>)}
-        {!play && !inQueue && (
+        {!play && !inQueue && !watch && (
           <button
             onClick={joinQueue}
             value={'classic'}
@@ -154,7 +159,7 @@ function Pong() {
             Classic
           </button>
         )}
-        {!play && !inQueue && (
+        {!play && !inQueue && !watch && (
           <button
             value={'colors'}
             type="button"
@@ -164,7 +169,18 @@ function Pong() {
             Colors
           </button>
         )}
+        {!play && !inQueue && !watch && (
+          <button
+            value={'watch'}
+            type="button"
+            className="play_button"
+            onClick={handleWatch}            // create room on the onClick
+          >
+            Watch
+          </button>
+        )}
         {play && <Game socketProps={socket} roomProps={room}></Game>}
+        {watch && !play && <Watch currentGamesProps={currentGames} socketProps={socket}></Watch>}
       </div>
     </div>
   );
