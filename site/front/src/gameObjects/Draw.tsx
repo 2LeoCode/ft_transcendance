@@ -20,7 +20,8 @@ export class Draw {
     // public static computerScore: number;
     player1: paddle;
 	player2: paddle;
-    ball: IBall;
+	ball: IBall;
+	gameMode: number;
 
 
 	constructor(canvas: HTMLCanvasElement) {
@@ -69,27 +70,39 @@ export class Draw {
 			x:200 / 2 - ballSize / 2,
 			y:100 / 2 - ballSize / 2		// pour x et y enleve peut etre et attend premiere update...			
 		};
+
+		this.gameMode = 1;
         
 	}
     drawBoardDetails(){
         
 		//draw court outline
 		if (this.gameContext){
-        this.gameContext.strokeStyle = "#fff";
-        this.gameContext.lineWidth = 5;
-        this.gameContext.strokeRect(this.gameX, this.gameY, this.gameWidth - 5 , this.gameHeight - 5);
+			if (this.gameMode === 0 || this.gameMode === 1)
+				this.gameContext.strokeStyle = "#fff";
+			else if (this.gameMode === 2)
+				this.gameContext.strokeStyle = "#540be1";
+			this.gameContext.lineWidth = 5;
+			this.gameContext.strokeRect(this.gameX, this.gameY, this.gameWidth - 5 , this.gameHeight - 5);
         
-        //draw center lines
-        for (let i = this.gameY; i + 20 < this.gameY + this.gameHeight; i += 20) {
-            this.gameContext.fillStyle = "#fff";
-            this.gameContext.fillRect(this.gameX + this.gameWidth / 2 - 10, i + 10, 15, 10);
-        }
-        
-        //draw scores
-        this.gameContext.textAlign = 'center';
-        this.gameContext.font = "30px Orbitron";
-        this.gameContext.fillText(this.playerScore.toString(), this.gameX + this.gameWidth / 4, this.gameY + this.gameHeight / 6);
-        this.gameContext.fillText(this.player2Score.toString(), this.gameX + this.gameWidth / 4 * 3, this.gameY + this.gameHeight / 6);
+			//draw center lines
+			for (let i = this.gameY; i + 20 < this.gameY + this.gameHeight; i += 20) {
+				if (this.gameMode === 0 || this.gameMode === 1)
+					this.gameContext.fillStyle = "#fff";
+				else if (this.gameMode === 2)
+					this.gameContext.fillStyle = "#d640fc";
+				this.gameContext.fillRect(this.gameX + this.gameWidth / 2 - 10, i + 10, 15, 10);
+			}
+			
+			//draw scores
+				if (this.gameMode === 0 || this.gameMode === 1)
+				this.gameContext.fillStyle = "#fff";
+			else if (this.gameMode === 2)
+				this.gameContext.fillStyle = "#1bf2a8";
+			this.gameContext.textAlign = 'center';
+			this.gameContext.font = "30px Orbitron";
+			this.gameContext.fillText(this.playerScore.toString(), this.gameX + this.gameWidth / 4, this.gameY + this.gameHeight / 6);
+			this.gameContext.fillText(this.player2Score.toString(), this.gameX + this.gameWidth / 4 * 3, this.gameY + this.gameHeight / 6);
 		}
     }
     draw(){
@@ -100,13 +113,22 @@ export class Draw {
               
 		this.drawBoardDetails();
 		
-		this.gameContext.fillStyle = "#fff";
+		if (this.gameMode === 0 || this.gameMode === 1)
+			this.gameContext.fillStyle = "#fff";
+		else if (this.gameMode === 2)
+			this.gameContext.fillStyle = "#06f85c";
         this.gameContext.fillRect(this.gameX + this.player1.x / 200 * this.gameWidth, this.gameY + this.player1.y / 100 * this.gameHeight, this.player1.width / 200 * this.gameWidth, this.player1.height / 100 * this.gameHeight);
 
-		this.gameContext.fillStyle = "#fff";
+		if (this.gameMode === 0 || this.gameMode === 1)
+			this.gameContext.fillStyle = "#fff";
+		else if (this.gameMode === 2)
+			this.gameContext.fillStyle = "#2856d4";
         this.gameContext.fillRect(this.gameX + this.player2.x / 200 * this.gameWidth, this.gameY + this.player2.y / 100 * this.gameHeight, this.player2.width / 200 * this.gameWidth, this.player2.height / 100 * this.gameHeight);
 
-		this.gameContext.fillStyle = "#fff";
+		if (this.gameMode === 0 || this.gameMode === 1)
+			this.gameContext.fillStyle = "#fff";
+		else if (this.gameMode === 2)
+			this.gameContext.fillStyle = "#a9f103";
         this.gameContext.fillRect(this.gameX + this.ball.x / 200 * this.gameWidth, this.gameY + this.ball.y / 100 * this.gameHeight, this.ball.width / 200 * this.gameWidth, this.ball.height / 100 * this.gameHeight);
 		}
 	}stopGame(){

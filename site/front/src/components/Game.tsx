@@ -77,6 +77,8 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
       let animationFrameId: number;
 
       const draw = new Draw(canvas);
+      console.log(room.mode);
+      draw.gameMode = room.mode;
 
       //if not a spectator "if(isPlayer) {"
 		if (isAplayer) {
