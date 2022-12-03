@@ -25,7 +25,7 @@ function Pong() {
 
 
 	let roomData: IRoom;
-  let roomId: string | undefined;
+  // let roomId: string | undefined;
   let user: User;
 
   
@@ -39,7 +39,7 @@ function Pong() {
   }
 
   const handleWatch = () => {
-    console.log("handleWatch");
+    // console.log("handleWatch");
     setWatch(true);
   }
 
@@ -63,7 +63,7 @@ function Pong() {
 
     // when a client arrives on page localhost:3000/pong
     socket.on("connect", () => {
-      console.log("connect");
+      // console.log("connect");
 			// Allow reconnection
 			socket.emit("handleUserConnect", user); // user is gonna be the user from chat if needed 
 
@@ -76,18 +76,18 @@ function Pong() {
 
 		socket.on("newRoom", (newRoomData: IRoom) => {
 			if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
-        console.log("return");
+        // console.log("return");
 				return ;
 			}
 			socket.emit("joinRoom", newRoomData.roomId);
 			roomData = newRoomData;
-			roomId = newRoomData.roomId;
+			// roomId = newRoomData.roomId;
 			setRoom(roomData);
 			setInQueue(false);
 		});
 
     socket.on("joinedQueue", () => {
-      console.log("joinQueue");
+      // console.log("joinQueue");
       setInQueue(true);
     });
 
@@ -110,7 +110,7 @@ function Pong() {
 			// if (chatSocket) {
 			// 	chatSocket.emit("userGameStatus", { isPlaying: false }); // user status "not playing"
 			// }
-			roomId = undefined;
+			// roomId = undefined;
 			setPlay(false);
 			setRoom(null);
 		});

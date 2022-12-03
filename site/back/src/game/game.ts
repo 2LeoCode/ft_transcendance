@@ -174,8 +174,8 @@ export class Ball extends Entity{
             this.score2 += 1;
 
             if (player.gameMode === GameMode.SPEED && player2.gameMode === GameMode.SPEED) {
-                this.speed *= 1.1;
-                console.log("gameMode in ball");
+                this.speed *= 1.3;
+                // console.log("gameMode in ball");
             }
         }
         
@@ -185,8 +185,8 @@ export class Ball extends Entity{
             this.score1 += 1;
 
             if (player.gameMode === GameMode.SPEED && player2.gameMode === GameMode.SPEED) {
-                this.speed *= 1.1;
-                console.log("gameMode in ball");
+                this.speed *= 1.3;
+                // console.log("gameMode in ball");
             }
         }
         

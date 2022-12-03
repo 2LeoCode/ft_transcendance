@@ -61,7 +61,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		createNewRoom(players: User[]): void {
 			const roomId: string = `${players[0].socketId}&${players[1].socketId}`;
 			let room: Room = new Room(roomId, players, { mode: players[0].mode });
-			console.log("roomId = " + roomId);
+			// console.log("roomId = " + roomId);
 	
 			this.server.to(players[0].socketId).emit("newRoom", room);
 			this.server.to(players[1].socketId).emit("newRoom", room);
@@ -72,7 +72,6 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		}
 
 		afterInit(server: Server) {
-			console.log("when do  get here?");
 			setInterval(() => {
 				if (this.queue.size() > 1) { // && this.currentGames.length < MAX_SIMULTANEOUS_GAMES
 					let players: User[] = Array();
@@ -92,14 +91,14 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 
 		@SubscribeMessage('handleUserConnect')
 		handleConnectionToGame(@ConnectedSocket() client: Socket, @MessageBody() user: User){
-			console.log("coucou from connect users");
+			// console.log("coucou from connect users");
 			
 			// let newUser: User = this.connectedUsers.getUserById(user.id); // users when connected
 			let newUser: User = null;
 
 			if (newUser) {
 				newUser.setSocketId(client.id);
-				// newUser.setUsername(user.username);
+				// newUser.setUsername(user.username);	// user
 			} else {
 				newUser= new User(client.id);
 			}
@@ -117,33 +116,12 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 			});
 			this.connectedUsers.addUser(newUser);
 
-			// if (numConnected < 2) {
-			// 	if (previousId === null) {
-			// 		paddle1.id = client.id;
-			// 		numConnected = numConnected + 1;
-			// 		previousId = client.id;
-			// 	} else if (client.id !== previousId) {
-			// 		paddle2.id = client.id;
-			// 		numConnected = numConnected + 1;
-			// 		previousId = client.id;
-			// 	}
-			// 	if (numConnected === 2) {
-			// 		console.log("2 playersssss");
-					
-			// 		this.server.emit('2 players', client.id);
-			// 	}
-
-			// 	this.server.socketsJoin("room1");
-			// 	this.server.emit('room joined', client.id);
-			// }
-
 
 		}
 
 		//disconnection
 		handleDisconnect(@ConnectedSocket() client: Socket){
 			//console.log(`Client disconnected: ${client.id}`);
-			console.log("getUser in disconnect");
 			let user: User = this.connectedUsers.getUser(client.id);
 
 		if (user) {
@@ -173,11 +151,11 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 
 		@SubscribeMessage('joinQueue')
 		handleJoinQueue(@ConnectedSocket() client: Socket, @MessageBody() mode: string) {
-			console.log("coucou from joinQueue server");
+			// console.log("coucou from joinQueue server");
 			const user: User = this.connectedUsers.getUser(client.id);
 			if (!user) {
 				user.setSocketId(client.id);
-				console.log(user.socketId + " & " + client.id);
+				// console.log(user.socketId + " & " + client.id);
 			}
 
 			if (user && !this.queue.isInQueue(user)) {
@@ -274,7 +252,6 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 				const currentTimestamp: number = Date.now();
 	
 				if (room.gameState === GameState.WAITING) {
-					console.log("first client waiting...");
 					if (room.players.length === 2) {
 						room.gameState = GameState.STARTING;
 						room.start();
@@ -285,10 +262,9 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 				}
 				else if (room.gameState === GameState.PLAYING)
 				{
-					// console.log("update back");
 					room.update(currentTimestamp);
-					if (room.isGameEnd)
-						console.log("save game ici.");	
+					// if (room.isGameEnd)	// maybe make another socket.on to save everything in db
+						// console.log("save game ici.");	
 						// this.saveGame(room, currentTimestamp);
 				}
 

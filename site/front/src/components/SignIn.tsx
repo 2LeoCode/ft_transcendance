@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../styles/SignIn.css";
 import { useNavigate } from "react-router-dom";
 //import { UserCom } from "../com/user.com";
@@ -20,7 +20,7 @@ async function log(password: string) {
       goodpassword = res;
     });
     if (goodpassword === false) {
-      console.log("Bad password");
+      // console.log("Bad password");
       return 2;
     } else {
       //await UserCom.update(id, { online: true }).then((res) => {
@@ -29,7 +29,7 @@ async function log(password: string) {
       return 0;
     }
   } else {
-    console.log("Account doesn't exist");
+    // console.log("Account doesn't exist");
     return 1;
   }
 }

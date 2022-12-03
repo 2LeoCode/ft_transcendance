@@ -2,7 +2,7 @@ import { GameMode, UserStatus } from "./Constants";
 
 export class User {
 	// id: number;
-	// username: string;
+	// username: string;	// user
 	// ratio?: number;
 	status?: UserStatus;
 	socketId: string;
@@ -50,7 +50,7 @@ export class ConnectedUsers {
 
 	addUser(user: User) {
 		if (this.maxUser !== this.users.length){
-			console.log("user in addUser id: " + user.socketId);
+			// console.log("user in addUser id: " + user.socketId);
 			this.users.push(user);
 		}
 	}
@@ -63,7 +63,7 @@ export class ConnectedUsers {
 
 	getUser(socketId: string): User | undefined {
 		let userIndex: number = this.users.findIndex(user => user.socketId === socketId);
-		console.log("user in getUser id: " + socketId);
+		// console.log("user in getUser id: " + socketId);
 		if (userIndex === -1)
 			return undefined;
 		return this.users[userIndex];
@@ -90,7 +90,7 @@ export class ConnectedUsers {
 
 	setGameMode(socketId: string, mode: string) {
 		let user: User = this.getUser(socketId);
-		console.log("in connected user " + mode);
+		// console.log("in connected user " + mode);
 		user.setMode(mode);
 	}
 
