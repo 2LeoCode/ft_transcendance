@@ -21,6 +21,6 @@ export enum UserStatus {
 
 export enum GameMode {
 	DEFAULT,
-	TIMER,
-	LIFE
+	SPEED,
+	COLOR
 }

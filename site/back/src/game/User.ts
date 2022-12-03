@@ -34,8 +34,10 @@ export class User {
 	}
 
 	setMode(mode: string) {
-		if (mode === "timer")
-			this.mode = GameMode.TIMER;
+		if (mode === "speed")
+			this.mode = GameMode.SPEED;
+		else if (mode === "colors")
+			this.mode = GameMode.COLOR;
 		else
 			this.mode = GameMode.DEFAULT;
 	}
@@ -88,6 +90,7 @@ export class ConnectedUsers {
 
 	setGameMode(socketId: string, mode: string) {
 		let user: User = this.getUser(socketId);
+		console.log("in connected user " + mode);
 		user.setMode(mode);
 	}
 

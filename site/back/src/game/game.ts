@@ -1,4 +1,5 @@
 import { User } from "./User";
+import { GameMode } from "./Constants";
 
 export let paddleWidth:number = 3, paddleHeight:number = 10, ballSize:number = 2, wallOffset:number = 5;
 
@@ -39,6 +40,7 @@ export class Entity{
 
 export class Paddle extends Entity{
     
+    public gameMode: GameMode;
     private speed:number = 1;
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
@@ -71,6 +73,7 @@ export class Paddle extends Entity{
 
 export class Paddle2 extends Entity{
     
+    public gameMode: GameMode;
     private speed:number = 1;
     public ArrowUp:boolean = false;
     public ArrowDown:boolean = false;
@@ -169,12 +172,22 @@ export class Ball extends Entity{
         if(this.x <= 0){  
             this.x = 200 / 2 - this.width / 2;
             this.score2 += 1;
+
+            if (player.gameMode === GameMode.SPEED && player2.gameMode === GameMode.SPEED) {
+                this.speed *= 1.1;
+                console.log("gameMode in ball");
+            }
         }
         
         //check right canvas bounds
         if(this.x + this.width >= 200){
             this.x = 200 / 2 - this.width / 2;
             this.score1 += 1;
+
+            if (player.gameMode === GameMode.SPEED && player2.gameMode === GameMode.SPEED) {
+                this.speed *= 1.1;
+                console.log("gameMode in ball");
+            }
         }
         
         
