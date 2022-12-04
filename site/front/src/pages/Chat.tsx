@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { io, Socket } from 'socket.io-client';
 //import { UserCom } from "../com/user.com";
 import Friend from "../components/Friend";
 import Header from "../components/Header";
 import { user_infos } from "../components/SignUp";
 import "../styles/Chat.css";
+
+let socket: Socket;
 
 async function addFriend(e: any, id: string, friends_name_tab: string[]) {
   e.preventDefault();
@@ -39,12 +42,35 @@ function Chat() {
     //  }
     //});
   };
-  if (!mounted) {
-    initFriends();
-  }
+
+  let cId: string;
+  
+  
+  useEffect((): any => {
+
+
+    socket = io("http://localhost:2000");
+
+    // when a client arrives on page localhost:3000/chat
+    socket.on("connect", () => {
+      console.log("connect in front");
+      socket.emit("updateChatUser");
+    });
+
+    setMounted(true);
+  }, []);
+
+	
+
+  // if (!mounted) {
+  //   initFriends();
+  // }
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
+
   return (
     <div>
       <Header />
@@ -85,6 +111,7 @@ function Chat() {
           <h4 className="create_channel">Create Channel</h4>
         </div>
         <ul className="main">
+          <div className="header"><h2>name of chat</h2></div>
           <li className="own_message">Message 1</li>
           <li className="other_message">Message 2</li>
           <li className="own_message">Message 3</li>
