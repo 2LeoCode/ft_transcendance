@@ -43,11 +43,9 @@ function Chat() {
     //});
   };
 
-  let cId: string;
-  
+	let cId: Array<string> = new Array();
   
   useEffect((): any => {
-
 
     socket = io("http://localhost:2000");
 
@@ -56,6 +54,11 @@ function Chat() {
       console.log("connect in front");
       socket.emit("updateChatUser");
     });
+
+    socket.on('getUserId', (clientId: string)=> {
+      cId[0] = clientId;
+      console.log(cId);
+    })
 
     setMounted(true);
   }, []);
@@ -95,7 +98,15 @@ function Chat() {
             <li>
               <div className="status online"></div>
               <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-              Member 1
+              {cId.map((socketId) => (
+					<div
+						key={socketId}
+						// onClick={() => {
+						// 	handleSelect(friend)
+					>
+          {socketId}
+          </div>
+						))}
             </li>
             <li>
               <div className="status online"></div>

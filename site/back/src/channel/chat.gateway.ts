@@ -68,7 +68,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 			let user = new ChatUser(client.id);
 
 			user.setUserStatus(UserStatus.ONLINE);
-			this.chatUsers.addUser(user);
+            this.chatUsers.addUser(user);
+            
+            this.server.emit('getUserId', client.id);
 		// } else {
 		// 	user.setSocketId(client.id);
 		// 	// user.setUsername(newUser.username);
