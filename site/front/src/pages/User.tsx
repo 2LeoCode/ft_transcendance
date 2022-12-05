@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import "../styles/User.css";
 import UserPipe from "../com/user.pipe";
 
-declare var Blob: {
+declare let Blob: {
   prototype: Blob;
   new (): Blob;
   new (request: any, mime: string): Blob;

@@ -1,0 +1,26 @@
+export enum GameState {
+	WAITING,
+	STARTING,
+	PLAYING,
+	// PAUSED,
+	// RESUMED,
+	// PLAYERONESCORED,
+	// PLAYERTWOSCORED,
+	PLAYERONEWIN,
+	PLAYERTWOWIN
+}
+
+export enum UserStatus {
+	INHUB,
+	INQUEUE,
+	OFFLINE,
+	ONLINE,
+	PLAYING,
+	SPECTATING,
+}
+
+export enum GameMode {
+	DEFAULT,
+	SPEED,
+	COLOR
+}

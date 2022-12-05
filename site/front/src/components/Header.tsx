@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 //import { UserCom } from "../com/user.com";
 import "../styles/Header.css";
 import Settings from "./Settings";
 
 function Header() {
   const [settings, setSettings] = useState(false);
-  let id: string = "";
+  const id = '';
   const navigate = useNavigate();
   async function handleLogout() {
     //await UserCom.get({ nick: user_infos.nick }).then((res) => {
@@ -17,7 +17,7 @@ function Header() {
     //  console.log(res);
     //});
     localStorage.clear();
-    navigate("/");
+    navigate('/');
   }
 
   return (
@@ -26,38 +26,27 @@ function Header() {
         <img height="50%" src="./default-avatar.webp" alt="avatar" />
         {/* <p>{user_infos.nick}</p> */}
       </NavLink>
-      <NavLink to="/watch">
-        <p className="watch">Watch</p>
-      </NavLink>
+      <p
+        className='settings'
+        onClick={() => {
+          setSettings(true);
+        }}>
+        Settings
+      </p>
       <NavLink to="/pong">
         <h1>FIGHT PONG</h1>
       </NavLink>
       <NavLink to="/chat">
         <p className="chat">Chat</p>
       </NavLink>
-      <div className="dropdown">
-        <button className="dropbtn">Menu</button>
-        <div className="dropdown-content">
-          <button
-            type="button"
-            onClick={() => {
-              setSettings(true);
-            }}
-          >
-            Settings
-          </button>
-          <button>Link 2</button>
-          <button
-            type="button"
-            onClick={() => {
-              handleLogout();
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-      {settings && <Settings isOn={setSettings}/>}
+      <p
+        className='logout'
+        onClick={() => {
+          handleLogout();
+        }}>
+        Logout
+      </p>
+      {settings && <Settings isOn={setSettings} />}
     </div>
   );
 }

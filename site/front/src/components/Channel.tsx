@@ -1,35 +1,28 @@
-import React, { useState } from "react";
-import "../styles/Chat.css";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Socket } from 'socket.io-client';
+import '../styles/Chat.css';
+import '../styles/Friend.css';
 
 function Channel(props: any) {
+  const socket: Socket = props.socket;
+
+  socket.on('openCreatedChannel', (client: Socket) => {
+    console.log('created channel');
+  });
+
   return (
-    <div className="channel">
-      <h3>Admins</h3>
-      <ul className="admins">
-        <li>
-          <div className="status online"></div>
-          <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-          Admin 1
-        </li>
-      </ul>
-      <h3>Members</h3>
-      <ul className="members">
-        <li>
-          <div className="status online"></div>
-          <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-          Member 1
-        </li>
-        <li>
-          <div className="status online"></div>
-          <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-          Member 2
-        </li>
-        <li>
-          <div className="status online"></div>
-          <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-          Member 3
-        </li>
-      </ul>
+    <div className="DirectMessage">
+      <div className="header">
+        <h2>name of chat</h2>
+      </div>
+      <li className="own_message">Coucou from channel</li>
+      <li className="other_message">Message 2</li>
+      <li className="own_message">Message 3</li>
+      <li className="other_message">Message plus long 4</li>
+      <li className="other_message">
+        Message beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaucoup plus long 5
+      </li>
     </div>
   );
 }
