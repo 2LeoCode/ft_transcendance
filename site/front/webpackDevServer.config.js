@@ -109,6 +109,7 @@ module.exports = function (proxy, allowedHost) {
     },
     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
     proxy,
+    // this change is needed to fix the warning from webpack
     setupMiddlewares: (middlewares, devServer) => {
 	  if (!devServer) {
 	    throw new Error('webpack-dev-server is not defined')

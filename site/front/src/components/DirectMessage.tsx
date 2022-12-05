@@ -1,6 +1,8 @@
+import { useAtom } from 'jotai';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
+import { Database } from '../com/database';
 import '../styles/Chat.css';
 import '../styles/Friend.css';
 
@@ -17,7 +19,6 @@ function DirectMessage(props: any) {
   const [messages, setMessages] = useState<message[]>([]);
   const [clientId, setClientId] = useState('');
 useEffect( () => {
-
     socket.on('NewCreatedDm', (message: string, own:boolean) => {
     console.log('created dm ' + message);
     // setClientId(client.id);

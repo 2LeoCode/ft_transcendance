@@ -1,50 +1,43 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/App.css';
-import Log from './pages/Log';
-import Pong from './pages/Pong';
+import Log, { ConnectedAtom } from './pages/Log';
+import { useAtom } from 'jotai';
 import Chat from './pages/Chat';
 import User from './pages/User';
-import Watch from './pages/Watch';
 import OtherUser from './pages/OtherUser';
-
-export const token: string =
-  document.cookie
-    .split(';')
-    .map((cookie) => cookie.split('='))
-    .find((cookie) => cookie[0] === 'token')?.[1] || '';
+import Watch from './pages/Watch';
+import Pong from './pages/Pong';
+import Loader, { SyncAtom } from './components/Loader';
 
 function App() {
-  const [isLog, setIsLog] = useState(false);
-  useEffect(() => {
-    if (token) {
-      fetch('http://localhost:2000/ping', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }).then((res) => {
-        if (res.ok) setIsLog(true);
-        else setIsLog(false);
-      });
-    } else setIsLog(false);
-  });
+  const [sync] = useAtom(SyncAtom);
+  const [connected] = useAtom(ConnectedAtom);
+  //const [isLog, setIsLog] = useState(false);
+  //useEffect(() => {
+  //  if (token) {
+  //    fetch('http://localhost:2000/ping', {
+  //      method: 'GET',
+  //      headers: {
+  //        Authorization: `Bearer ${token}`
+  //      }
+  //    }).then((res) => {
+  //      if (res.ok) setIsLog(true);
+  //      else setIsLog(false);
+  //    });
+  //  } else setIsLog(false);
+  //}, []);
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Log />} />
-        <Route path="/log" element={<Log />} />
-        {isLog && (
-          <React.Fragment>
-            <Route path="/pong" element={<Pong />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/user" element={<User />} />
-            <Route path="/other_user/:userName" element={<OtherUser />} />
-            <Route path="*" element={<Pong />} />
-          </React.Fragment>
-        )}
-        {!isLog && <Route path="*" element={<Log />} />}
-      </Routes>
+      {sync ? (
+        <Routes>
+          {/*<Route path="/pong" element={<Pong />} />*/}
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/other_user/:userName" element={<OtherUser />} />
+          <Route path="*" element={<Pong />} />
+        </Routes>
+      ) : connected ? <Loader /> : <Log />}
     </BrowserRouter>
   );
 }

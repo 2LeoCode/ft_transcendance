@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-//import { UserCom } from "../com/user.com";
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import Settings from "./Settings";
 

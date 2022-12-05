@@ -1,9 +1,9 @@
+import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
-import { userPipe } from "./Pong";
 //import { UserCom } from "../com/user.com";
+import { Database } from '../com/database';
 import Header from "../components/Header";
 import "../styles/User.css";
-import UserPipe from "../com/user.pipe";
 
 declare let Blob: {
   prototype: Blob;
@@ -14,16 +14,9 @@ declare let Blob: {
 function User() {
   const [image, setImage] = useState(new Blob());
   const [uploaded, setUploaded] = useState(false);
-  const [username, setUsername] = useState("");
+  const [username] = useAtom(Database.user.nick);
   const matches_won: number = 0;
   const matches_lost: number = 0;
-
-  useEffect(() => {
-    (async () => {
-      const user = await userPipe;
-      setUsername(await user.nick)
-    })();
-  }, []);
 
   return (
     <div>

@@ -126,7 +126,7 @@ function Pong() {
   }, []);
 
   return (
-    <div>
+    <React.Fragment>
       <Header />
       <div className="Pong">
         {!play && inQueue && !watch && (
@@ -182,7 +182,7 @@ function Pong() {
         {play && <Game socketProps={socket} roomProps={room}></Game>}
         {watch && !play && <Watch currentGamesProps={currentGames} socketProps={socket}></Watch>}
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 

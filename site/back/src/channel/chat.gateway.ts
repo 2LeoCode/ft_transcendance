@@ -63,7 +63,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     if (userIndex !== -1) {
       this.currentUsers.splice(userIndex, 1);
     }
-    this.server.emit('disconnect', this.currentUsers);
+    // this.server.emit('disconnect', this.currentUsers);
 
     console.log('disconnected client');
 
