@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import Room from '../game/Room';
+import Room from '../../game/Room';
 import {
   ConnectedSocket,
   MessageBody,
@@ -11,17 +11,19 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { User } from 'src/game/User';
-import { ChatUser, ChatUsers } from './class/ChatUsers';
+import { ChatUser, ChatUsers } from '../../channel/class/ChatUsers';
 import { UserStatus } from 'src/game/Constants';
+import EventsGateway from './events.gateway';
 
 @WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
+  namespace: 'events',
+  //cors: {
+  //  origin: '*',
+  //},
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
-  @WebSocketServer()
-  server: Server;
+  //@WebSocketServer()
+  //server: Server;
 
   private readonly chatUsers: ChatUsers = new ChatUsers();
   private readonly currentUsers: Array<User> = new Array();
@@ -29,20 +31,22 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   private readonly rooms: Map<string, Room> = new Map();
   private tmpMessage:string;
 
-  constructor() {}
+  constructor(
+    private readonly eventsGateway: EventsGateway
+  ) {}
 
   // createNewRoomDm(own: string, other: string): void {
   // 	const roomId: string = `${own}&${other}`;
   // 	let room: Room = new Room(roomId, null);
   // 	// console.log("roomId = " + roomId);
 
-  // 	this.server.to(own).emit("newRoom", room);
+  // 	this.eventsGateway.server.to(own).emit("newRoom", room);
   // 	if (other)
-  // 		this.server.to(other).emit("newRoom", room);
+  // 		this.eventsGateway.server.to(other).emit("newRoom", room);
   // 	this.rooms.set(roomId, room);
   // 	this.currentChannel.push(room);
 
-  // 	this.server.emit("updatecurrentChannel", this.currentChannel);
+  // 	this.eventsGateway.server.emit("updatecurrentChannel", this.currentChannel);
   // }
 
   afterInit(server: Server) {
@@ -53,7 +57,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     console.log(`Client connected: ${client.id}`);
   }
 
-  @SubscribeMessage('disconnect')
+  //@SubscribeMessage('disconnect')
   async handleDisconnect(@ConnectedSocket() client: Socket) {
     // let user = this.chatUsers.getUser(client.id);
 
@@ -63,12 +67,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     if (userIndex !== -1) {
       this.currentUsers.splice(userIndex, 1);
     }
-    // this.server.emit('disconnect', this.currentUsers);
+    // this.eventsGateway.server.emit('disconnect', this.currentUsers);
 
     console.log('disconnected client');
 
     // if (user) {
-    // this.server.emit('updateUserStatus', {
+    // this.eventsGateway.server.emit('updateUserStatus', {
     // 	userId: user.id,
     // 	status: UserStatus[UserStatus.OFFLINE]
     // });
@@ -87,21 +91,21 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     console.log('coucou a toi ' + client.id);
 
     if (!user) {
-      user = new ChatUser(client.id);
+      user = new ChatUser(client.id, this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
 
       // user.setUserStatus(UserStatus.ONLINE);
       this.chatUsers.addUser(user);
 
       this.currentUsers.push(user);
-      this.server.emit('updateCurrentUsers', this.currentUsers);
+      this.eventsGateway.server.emit('updateCurrentUsers', this.currentUsers);
 
-      this.server.emit('getUserId', client.id);
+      this.eventsGateway.server.emit('getUserId', client.id);
     }
     // } else {
     // 	user.setSocketId(client.id);
     // 	// user.setUsername(newUser.username);
     // }
-    // this.server.emit('updateUserStatus', {
+    // this.eventsGateway.server.emit('updateUserStatus', {
     // 	userId: user.socketId,
     // 	status: UserStatus[user.status]
     // });
@@ -120,7 +124,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   // 	 for (const dm of dms) {
   // 		 this.userJoinRoom(client.id, `dm_${dm.id}`);
   // 	 }
-  // 	 this.server.to(client.id).emit('updateUserDms', (dms));
+  // 	 this.eventsGateway.server.to(client.id).emit('updateUserDms', (dms));
   //  }
 
   //  @SubscribeMessage('getDmData')
@@ -132,17 +136,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   // 	 const roomId = `dm_${dm.id}`;
 
   // 	 this.userJoinRoom(client.id, roomId);
-  // 	 this.server.to(client.id).emit('updateDm', (dm));
+  // 	 this.eventsGateway.server.to(client.id).emit('updateDm', (dm));
   //  }
 
   // userJoinRoom(socketId: string, roomId: string) {
   // 	this.chatUsers.addRoomToUser(socketId, roomId);
-  // 	this.server.in(socketId).socketsJoin(roomId);
+  // 	this.eventsGateway.server.in(socketId).socketsJoin(roomId);
   // }
 
   // userLeaveRoom(socketId: string, roomId: string) {
   // 	this.chatUsers.addRoomToUser(socketId, roomId);
-  // 	this.server.in(socketId).socketsLeave(roomId);
+  // 	this.eventsGateway.server.in(socketId).socketsLeave(roomId);
   // }
 
    @SubscribeMessage('DmRoom')
@@ -152,7 +156,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
    ) {
 		// load old db messages here
   		// this.createNewRoomDm(client.id, otherId);
-  		//  this.server.to(client.id).emit('openCreatedDm', client);
+  		//  this.eventsGateway.server.to(client.id).emit('openCreatedDm', client);
    }
 
   @SubscribeMessage('submitMessage')
@@ -161,10 +165,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     @MessageBody() other: string,
     // @MessageBody() message: string,
   ) {
-	console.log("other = " + other);
+	// console.log("other = " + other);
 //     // -> faire appel a la db pour stocker le message
-    this.server.to(client.id).emit('NewCreatedDm', this.tmpMessage, true);
-    this.server.to(other).emit('NewCreatedDm', this.tmpMessage, false);
+    this.eventsGateway.server.to(client.id).emit('NewCreatedDm', this.tmpMessage, true);
+    this.eventsGateway.server.to(other).emit('NewCreatedDm', this.tmpMessage, false);
   }
 
   @SubscribeMessage('tmpMessageStock')
@@ -191,10 +195,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   // 		 try {
   // 			 const message = await this.chatService.addMessageToDm(data);
 
-  // 			 this.server.to(`dm_${message.dm.id}`).emit('newDm', { message });
+  // 			 this.eventsGateway.server.to(`dm_${message.dm.id}`).emit('newDm', { message });
   // 			 this.logger.log(`New message in DM [${message.dm.id}]`);
   // 		 } catch (e) {
-  // 			 this.server.to(client.id).emit('chatError', e.message);
+  // 			 this.eventsGateway.server.to(client.id).emit('chatError', e.message);
   // 		 }
   // 	 }
   //  }

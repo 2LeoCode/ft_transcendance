@@ -131,7 +131,7 @@ export class Draw {
 			this.gameContext.fillStyle = "#a9f103";
         this.gameContext.fillRect(this.gameX + this.ball.x / 200 * this.gameWidth, this.gameY + this.ball.y / 100 * this.gameHeight, this.ball.width / 200 * this.gameWidth, this.ball.height / 100 * this.gameHeight);
 		}
-	}stopGame(){
+	}stopGame(winner: string){
 		// ending page.
 		
 		if (this.gameCanvas.width > this.gameCanvas.height * 2){
@@ -157,9 +157,9 @@ export class Draw {
         // this.gameContext.font = 'ufc';
 		this.gameContext.textAlign = 'center';
 		if (this.playerScore == 7)
-		this.gameContext.fillText("Left wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
+		this.gameContext.fillText(`${winner} wins!`, this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
 		if (this.player2Score == 7)
-		this.gameContext.fillText("Right wins!", this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
+		this.gameContext.fillText(`${winner} wins!`, this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
 		}
 	}
     

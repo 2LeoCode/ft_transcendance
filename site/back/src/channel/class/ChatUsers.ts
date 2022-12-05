@@ -6,11 +6,11 @@ export class ChatUser extends User {
 
 	constructor(
 		// id: number,
-		// username: string,
-		socketId: string
+		socketId: string,
+		username: string
 	) {
 		// super(id, username, socketId);
-		super(socketId);
+		super(socketId, username);
 		this.joinedRooms = [];
 	}
 

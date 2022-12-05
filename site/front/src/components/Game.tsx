@@ -11,7 +11,7 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
   let room: IRoom = roomProps;
 	const roomId: string | undefined = room?.roomId;
 
-  // console.log("canva is working...");
+  console.log("canva is working...");
 
   const [width, setWitdh] = useState<number>(vw_to_px(70));
   const [height, setHeight] = useState<number>(vh_to_px(50));
@@ -103,6 +103,7 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
 
 
       const gameLoop = () => {
+        // console.log("gameLoop");
 
         timestamp = getCurrentTime();
         elapsed = (timestamp - oldTimestamp);
@@ -116,7 +117,7 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
         if (draw.playerScore < 7 && draw.player2Score < 7)
           draw.draw();
         else {
-          draw.stopGame(); // maybe do a endGame function to save everything in the db
+          draw.stopGame(room.playerOne.user.username); // maybe do a endGame function to save everything in the db
           return ;
         }
 

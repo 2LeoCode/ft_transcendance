@@ -14,6 +14,8 @@ import {
 	WebSocketServer
 } from "@nestjs/websockets";
 import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSize, wallOffset } from './game';
+import UserService from 'src/nest/services/user.service';
+import EventsGateway from 'src/nest/gateways/events.gateway';
 
 
 
@@ -42,16 +44,20 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 	// }
 
 	@WebSocketGateway({
-		cors: {
-			origin: '*',
-		},
+		namespace: 'events',
+		//cors: {
+		//	origin: '*',
+		//},
 	})
 	export class SocketEvents implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{	
 		
-		constructor() {}
+		constructor(
+			private readonly userService: UserService,
+			private readonly eventsGateway: EventsGateway
+		) {}
 
-		@WebSocketServer()
-		server: Server;
+		//@WebSocketServer()
+		//server: Server;
 		
 		private readonly queue: Queue = new Queue();
 		private readonly rooms: Map<string, Room> = new Map();
@@ -59,16 +65,16 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 		private readonly connectedUsers: ConnectedUsers = new ConnectedUsers();
 	
 		createNewRoom(players: User[]): void {
-			const roomId: string = `${players[0].socketId}&${players[1].socketId}`;
+			const roomId: string = `${players[0].username}&${players[1].username}`;
 			let room: Room = new Room(roomId, players, { mode: players[0].mode });
 			// console.log("roomId = " + roomId);
-	
-			this.server.to(players[0].socketId).emit("newRoom", room);
-			this.server.to(players[1].socketId).emit("newRoom", room);
+
+			this.eventsGateway.server.to(players[0].socketId).emit("newRoom", room);
+			this.eventsGateway.server.to(players[1].socketId).emit("newRoom", room);
 			this.rooms.set(roomId, room);
 			this.currentGames.push(room);
 	
-			this.server.emit("updateCurrentGames", this.currentGames);
+			this.eventsGateway.server.emit("updateCurrentGames", this.currentGames);
 		}
 
 		afterInit(server: Server) {
@@ -86,12 +92,14 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 
 		//connection
 		async handleConnection(client: Socket){
+
 			//console.log(`Client connected: ${client.id}`);
 		}
 
 		@SubscribeMessage('handleUserConnect')
-		handleConnectionToGame(@ConnectedSocket() client: Socket, @MessageBody() user: User){
+		handleConnectionToGame(@ConnectedSocket() client: Socket){
 			// console.log("coucou from connect users");
+			
 			
 			// let newUser: User = this.connectedUsers.getUserById(user.id); // users when connected
 			let newUser: User = null;
@@ -100,7 +108,8 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 				newUser.setSocketId(client.id);
 				// newUser.setUsername(user.username);	// user
 			} else {
-				newUser= new User(client.id);
+				newUser= new User(client.id, this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
+				console.log(`new user ${this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username}`)
 			}
 			newUser.setUserStatus(UserStatus.INHUB);
 
@@ -110,7 +119,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 					newUser.setUserStatus(UserStatus.PLAYING);
 					newUser.setRoomId(room.roomId);
 
-					this.server.to(client.id).emit("newRoom", room);
+					this.eventsGateway.server.to(client.id).emit("newRoom", room);
 					return ;
 				}
 			});
@@ -136,7 +145,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 						if (roomIndex !== -1) {
 							this.currentGames.splice(roomIndex, 1);
 						}
-						this.server.emit("updateCurrentGames", this.currentGames);
+						this.eventsGateway.server.emit("updateCurrentGames", this.currentGames);
 					} 
 					client.leave(room.roomId);
 					return ;
@@ -163,7 +172,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 				this.connectedUsers.setGameMode(client.id, mode);
 				this.queue.enqueue(user);
 
-				this.server.to(client.id).emit('joinedQueue');
+				this.eventsGateway.server.to(client.id).emit('joinedQueue');
 			}
 		}
 
@@ -173,7 +182,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 	
 			if (user && this.queue.isInQueue(user)) {
 				this.queue.remove(user);
-				this.server.to(client.id).emit('leavedQueue');
+				this.eventsGateway.server.to(client.id).emit('leavedQueue');
 			}
 		}
 
@@ -185,7 +194,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 				const user = this.connectedUsers.getUser(client.id);
 	
 				if (!room.isAPlayer(user)) {
-					this.server.to(client.id).emit("newRoom", room);
+					this.eventsGateway.server.to(client.id).emit("newRoom", room);
 				}
 			}
 		}
@@ -204,8 +213,8 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 					room.addUser(user);
 				}
 	
-				this.server.to(client.id).emit("joinedRoom");
-				this.server.to(client.id).emit("updateRoom", JSON.stringify(room.serialize()));
+				this.eventsGateway.server.to(client.id).emit("joinedRoom");
+				this.eventsGateway.server.to(client.id).emit("updateRoom", JSON.stringify(room.serialize()));
 			}
 		}
 
@@ -224,20 +233,20 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 					if (roomIndex !== -1) {
 						this.currentGames.splice(roomIndex, 1);
 					}
-					this.server.emit("updateCurrentGames", this.currentGames);
+					this.eventsGateway.server.emit("updateCurrentGames", this.currentGames);
 				}
 	
 				client.leave(room.roomId);
 				this.connectedUsers.changeUserStatus(client.id, UserStatus.INHUB);
 			}
-			this.server.to(client.id).emit("leavedRoom");
+			this.eventsGateway.server.to(client.id).emit("leavedRoom");
 		}
 
 		//receive an event
 		// @SubscribeMessage('message')
 		// handleEvent(@MessageBody() data: string, @ConnectedSocket() client: Socket){
 		// 	//send an event
-		// 	this.server.emit('message', client.id, data);
+		// 	this.eventsGateway.server.emit('message', client.id, data);
 		// }
 
 		secondToTimestamp(second: number): number{
@@ -262,6 +271,8 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 				}
 				else if (room.gameState === GameState.PLAYING)
 				{
+
+
 					room.update(currentTimestamp);
 					// if (room.isGameEnd)	// maybe make another socket.on to save everything in db
 						// console.log("save game ici.");	
@@ -270,7 +281,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 
 				//ici insert game modes
 
-				this.server.to(room.roomId).emit("updateRoom", JSON.stringify(room.serialize()));
+				this.eventsGateway.server.to(room.roomId).emit("updateRoom", JSON.stringify(room.serialize()));
 			}
 
 
@@ -286,7 +297,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 			// 	score1: paddle1.score,
 			// 	score2: paddle2.score,
 			// }
-			// this.server.emit("updatedRoom", payload);
+			// this.eventsGateway.server.emit("updatedRoom", payload);
 		}
 		
 
@@ -332,7 +343,7 @@ import { Entity, Paddle, Paddle2, Ball, Game, paddleWidth, paddleHeight, ballSiz
 
 		@SubscribeMessage('getCurrentGames')
 		handleCurrentGames(@ConnectedSocket() client: Socket) {
-			this.server.to(client.id).emit("updateCurrentGames", (this.currentGames));
+			this.eventsGateway.server.to(client.id).emit("updateCurrentGames", (this.currentGames));
 		}
 
 	}

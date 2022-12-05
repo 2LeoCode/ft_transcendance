@@ -6,6 +6,7 @@ import "../styles/Pong.css";
 import Game from "../components/Game";
 import Watch from "./Watch";
 import { GameState, IRoom, User } from "../gameObjects/GameObject";
+import ClientSocket from "../com/client-socket";
 
 let socket: Socket;
 
@@ -59,16 +60,11 @@ function Pong() {
 	useEffect((): any => {
 
 
-    socket = io("http://localhost:2000");
+    socket = ClientSocket;
 
-    // when a client arrives on page localhost:3000/pong
-    socket.on("connect", () => {
-      // console.log("connect");
-			// Allow reconnection
-			socket.emit("handleUserConnect", user); // user is gonna be the user from chat if needed 
+    socket.emit("handleUserConnect", user); // user is gonna be the user from chat if needed 
 
-			socket.emit("getCurrentGames");
-    });
+    socket.emit("getCurrentGames");
     
     socket.on("updateCurrentGames", (currentGamesData: IRoom[]) => {
 			updateCurrentGames(currentGamesData);
@@ -76,7 +72,7 @@ function Pong() {
 
 		socket.on("newRoom", (newRoomData: IRoom) => {
 			if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
-        // console.log("return");
+        console.log("return");
 				return ;
 			}
 			socket.emit("joinRoom", newRoomData.roomId);
@@ -96,15 +92,9 @@ function Pong() {
     });
 
     socket.on("joinedRoom", () => {
+      console.log("joined room");
       setPlay(true);
     });
-
-		socket.on("joinedRoom", () => {
-			// if (chatSocket) {
-			// 	chatSocket.emit("userGameStatus", { isPlaying: true }); // user status "is playing"
-			// }
-			setPlay(true);
-		});
 
 		socket.on("leavedRoom", () => {
 			// if (chatSocket) {
@@ -114,15 +104,15 @@ function Pong() {
 			setPlay(false);
 			setRoom(null);
 		});
-
-    return () => {
-        // if (chatSocket) {
-        //   chatSocket.emit("userGameStatus", { isPlaying: false }); // user status
-        // }
-        if (socket) {
-          socket.disconnect();
-        }
-      }
+  //  return () => {
+  //      // if (chatSocket) {
+  //      //   chatSocket.emit("userGameStatus", { isPlaying: false }); // user status
+  //      // }
+  //      if (socket) {
+  //        console.log('err')
+  //        socket.disconnect();
+  //      }
+  //    }
   }, []);
 
   return (

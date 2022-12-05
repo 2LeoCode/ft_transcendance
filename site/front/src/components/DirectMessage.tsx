@@ -9,15 +9,17 @@ import '../styles/Friend.css';
 export type message = {
   content: string;
   author: string;
-  index: number;
   className: string;
 };
 
 function DirectMessage(props: any) {
   const socket: Socket = props.socket;
-//   const messages: message[] = [];
+  // const messages: message[] = [];
   const [messages, setMessages] = useState<message[]>([]);
+  const [messagesIn, setMessagesIn] = useAtom(Database.user.messagesIn);
   const [clientId, setClientId] = useState('');
+  // const messagesFromUser = messagesIn.filter(msg => msg.receiver.id == props.name);
+
 useEffect( () => {
     socket.on('NewCreatedDm', (message: string, own:boolean) => {
     console.log('created dm ' + message);
@@ -26,14 +28,12 @@ useEffect( () => {
         setMessages(current => [...current, {
             content: message,
             author: 'tototest',
-            index: 0,
             className: 'own_message'
         }]);
     } else {
         setMessages(current => [...current, {
             content: message,
             author: 'tototest',
-            index: 0,
             className: 'other_message'
           }]);
     }

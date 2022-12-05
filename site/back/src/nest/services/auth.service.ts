@@ -26,4 +26,8 @@ export default class AuthService {
 	async verify(token: string): Promise<UserEntity> {
 		return this.jwtService.verifyAsync(token);
 	}
+
+	async decode(token: string) {
+		return this.jwtService.decode(token);
+	}
 }

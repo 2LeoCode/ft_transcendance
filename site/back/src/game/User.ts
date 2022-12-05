@@ -2,7 +2,7 @@ import { GameMode, UserStatus } from "./Constants";
 
 export class User {
 	// id: number;
-	// username: string;	// user
+	username: string;	// user
 	// ratio?: number;
 	status?: UserStatus;
 	socketId: string;
@@ -10,16 +10,16 @@ export class User {
 
 	mode?: GameMode;
 
-	constructor(socketId: string) {
+	constructor(socketId: string, username: string) {
 		// this.id = id;
-		// this.username = username;
+		this.username = username;
 		// this.ratio = ratio;
 		this.socketId = socketId
 	}
 
-	// setUsername(username: string) {
-	// 	this.username = username;
-	// }
+	setUsername(username: string) {
+		this.username = username;
+	}
 
 	setUserStatus(status: UserStatus) {
 		this.status = status;

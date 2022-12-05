@@ -14,6 +14,7 @@ const Log = () => {
   useEffect(() => {
     (async () => {
       ClientSocket.on('disconnect', () => {
+        console.log('error');
         window.location.replace('http://localhost:2000/auth/login');
       });
       ClientSocket.on('connect', () => {

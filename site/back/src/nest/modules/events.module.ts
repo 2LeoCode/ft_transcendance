@@ -5,8 +5,7 @@ import AuthModule from "./auth.module";
 @Module({
 	imports: [AuthModule],
 	controllers: [],
-	providers: [
-		EventsGateway
-	],
+	providers: [EventsGateway],
+	exports: [EventsGateway]
 })
 export default class EventsModule {}

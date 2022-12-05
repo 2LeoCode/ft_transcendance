@@ -7,7 +7,6 @@ export const SyncAtom = atom(false);
 const Loader = () => {
   const [sync, setSync] = useAtom(SyncAtom);
 
-  console.log('Loader!');
   useEffect(() => {
     (async () => {
 	  const db = require('../com/database');

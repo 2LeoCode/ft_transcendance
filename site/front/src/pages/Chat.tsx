@@ -9,6 +9,7 @@ import { useResolvedPath } from 'react-router-dom';
 import DirectMessage from '../components/DirectMessage';
 import Channel from '../components/Channel';
 import Members from '../components/Members';
+import ClientSocket from '../com/client-socket';
 
 let socket: Socket;
 
@@ -94,13 +95,9 @@ function Chat() {
   // });
 
   useEffect((): any => {
-    socket = io('http://localhost:2000');
-
-    // when a client arrives on page localhost:3000/chat
-    socket.on('connect', () => {
-      console.log('connect in front ' + socket.id);
-      socket.emit('updateChatUser');
-    });
+    socket = ClientSocket;
+    
+    socket.emit('updateChatUser');
 
     // socket.on('disconnect', (currentGamesUsers: User[]) => {
     //   // updateCurrentUsers(currentGamesUsers);

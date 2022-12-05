@@ -9,7 +9,7 @@ import ScoreModule from './score.module';
 import AuthModule from './auth.module';
 import EventsModule from './events.module';
 import { SocketModule } from '../../game/socket.module';
-import { ChatModule } from '../../channel/chat.module';
+import { ChatModule } from './chat.module';
 
 @Module({
   imports: [
