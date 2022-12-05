@@ -1,51 +1,39 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Socket } from "socket.io-client"
-import { IRoom } from "../gameObjects/GameObject";
+import React, { useEffect, useState } from "react";
+import { Socket } from 'socket.io-client';
+import "../styles/Watch.css";
+import { IRoom, User } from "../gameObjects/GameObject";
 
+// export type currentUserConnected = {
+// 	roomId: string;
+// 	playerOne: string;
+// 	playerTwo: string;
+// };
 
+const Members: React.FC<{currentUsers: User[], socketProps: Socket}> = ({currentUsers, socketProps}) => {
+  const users: User[] = currentUsers;
 
-// maybe try to make a components to print active members..
-const Members: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roomProps}) => {
+  const goDm = (e: React.MouseEvent<HTMLDivElement>) => {
+      // socketProps.emit("spectateRoom", e.currentTarget.value);
+    console.log("goDm to " + e.currentTarget);
+    }
+  return (
+    <div>
+      <h3>Members</h3>
+      <div className="Members">
+      {users.map((user) => {
+        return (
+          <div
+            key={user.socketId}
+            onClick={goDm}
+          >
+            {user.socketId}
+          </div>
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-    
-  const socket: Socket = socketProps;
-  let room: IRoom = roomProps;
-	const roomId: string | undefined = room?.roomId;
-
-  // console.log("canva is working...");
-
-  
-
-  socket.emit('client connected');
-  
-  let cId: Array<string> = new Array();
-
-  useEffect(() => {
-
-
-    socket.on('getUserId', (clientId: string)=> {
-        cId[0] = clientId;
-        console.log(cId);
-    })
-    
-    return cId;
-
-    })
-
-  return    <li>
-                <div className="status online"></div>
-                <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-                {cId.map((socketId) => (
-                    <div
-                        key={socketId}
-                        // onClick={() => {
-                        // 	handleSelect(friend)
-                    >
-                {socketId}
-                </div>
-                        ))}
-            </li>;
+        )}
+      )}
+      </div>
+    </div>
+  );
 }
 
 export default Members;

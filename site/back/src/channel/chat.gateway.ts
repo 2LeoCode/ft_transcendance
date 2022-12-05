@@ -26,6 +26,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 		server: Server;
 
 	private readonly chatUsers: ChatUsers = new ChatUsers();
+	private readonly currentUsers: Array<User> = new Array();
     
     constructor() {}
 
@@ -41,6 +42,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 	@SubscribeMessage('disconnect')
 	async handleDisconnect(@ConnectedSocket() client: Socket) {
 		// let user = this.chatUsers.getUser(client.id);
+
+		const userIndex: number = this.currentUsers.findIndex((toRemove) => toRemove.socketId === client.id);
+		if (userIndex !== -1) {
+			this.currentUsers.splice(userIndex, 1);
+		}
+		this.server.emit("updatecurrentUsers", this.currentUsers);
 
         console.log("disconnected client");
 
@@ -60,17 +67,21 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 		@MessageBody() newUser: ChatUser
 	) {
 
-        // let user = this.chatUsers.getUserById(newUser.socketId);
+        let user = this.chatUsers.getUserById(client.id);
         
         console.log("coucou a toi " + client.id);
 
-		// if (!user) {
-			let user = new ChatUser(client.id);
+		if (!user) {
+			user = new ChatUser(client.id);
 
-			user.setUserStatus(UserStatus.ONLINE);
+			// user.setUserStatus(UserStatus.ONLINE);
             this.chatUsers.addUser(user);
+
+			this.currentUsers.push(user);
+			this.server.emit("updateCurrentUsers", this.currentUsers);
             
             this.server.emit('getUserId', client.id);
+		}
 		// } else {
 		// 	user.setSocketId(client.id);
 		// 	// user.setUsername(newUser.username);

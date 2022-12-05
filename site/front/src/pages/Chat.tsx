@@ -5,6 +5,9 @@ import Friend from "../components/Friend";
 import Header from "../components/Header";
 import { user_infos } from "../components/SignUp";
 import "../styles/Chat.css";
+import { GameState, IRoom, User } from "../gameObjects/GameObject";
+import Members from "../components/Members";
+import { useResolvedPath } from "react-router-dom";
 
 let socket: Socket;
 
@@ -24,8 +27,15 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
 }
 
 function Chat() {
+  const tmpUser: User = {
+    socketId: "nobody",
+    id: 0,
+    username: "default",
+  };
   const [id, setId] = useState("");
-  const [friends_id_tab, setFriends_id_tab] = useState([]);
+  const [previousId, setPreviousId] = useState<string>();
+  const [currentUsers, setCurrentUsers] = useState<User[]>([tmpUser]);
+  const [friends_id_tab, setFriends_id_tab] = useState(["nobody"]);
   const [friends_name_tab, setFriends_name_tab] = useState<any[] | any[]>([]);
   const [mounted, setMounted] = useState(false);
   const initFriends = async () => {
@@ -43,7 +53,22 @@ function Chat() {
     //});
   };
 
-	let cId: Array<string> = new Array();
+  let user: User[];
+  // user[0].socketId = "0";
+  
+  const updateCurrentUsers = (currentGamesUsers: User[]) => {
+		const users: User[] = [];
+
+		for (const user of currentGamesUsers) {
+      console.log("push user");
+			users.push({
+				socketId: user.socketId,
+				id: 0,
+				username: "default",
+			});
+		}
+		setCurrentUsers(users);
+	};
   
   useEffect((): any => {
 
@@ -55,9 +80,23 @@ function Chat() {
       socket.emit("updateChatUser");
     });
 
+    socket.on("updateCurrentUsers", (currentGamesUsers: User[]) => {
+			updateCurrentUsers(currentGamesUsers);
+		}); 
+
     socket.on('getUserId', (clientId: string)=> {
-      cId[0] = clientId;
-      console.log(cId);
+      // user.push(socketId = clientId);
+      if (clientId !== previousId) {
+        if (friends_id_tab[0] === "nobody") {
+          setFriends_id_tab([clientId]);
+          console.log("this is " + friends_id_tab);
+        }
+        else {
+          setFriends_id_tab(current => [...current, clientId]);
+          console.log("this is " + friends_id_tab);
+        }
+          setPreviousId(clientId);
+      }
     })
 
     setMounted(true);
@@ -93,32 +132,7 @@ function Chat() {
               Admin 1
             </li>
           </ul>
-          <h3>Members</h3>
-          <ul className="members">
-            <li>
-              <div className="status online"></div>
-              <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-              {cId.map((socketId) => (
-					<div
-						key={socketId}
-						// onClick={() => {
-						// 	handleSelect(friend)
-					>
-          {socketId}
-          </div>
-						))}
-            </li>
-            <li>
-              <div className="status online"></div>
-              <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-              Member 2
-            </li>
-            <li>
-              <div className="status online"></div>
-              <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-              Member 3
-            </li>
-          </ul>
+          {<Members currentUsers={currentUsers} socketProps={socket}/>}
           <h4 className="create_channel">Create Channel</h4>
         </div>
         <ul className="main">
