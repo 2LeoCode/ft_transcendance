@@ -1,4 +1,5 @@
 import { Server, Socket } from 'socket.io';
+import Room from '../game/Room';
 import {
 	ConnectedSocket,
 	MessageBody,
@@ -27,8 +28,23 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 
 	private readonly chatUsers: ChatUsers = new ChatUsers();
 	private readonly currentUsers: Array<User> = new Array();
+	private readonly currentChannel: Array<Room> = new Array();
+	private readonly rooms: Map<string, Room> = new Map();
     
     constructor() {}
+	
+	createNewRoom(users: User[]): void {
+		const roomId: string = `${users[0].socketId}&${users[1].socketId}`;
+		let room: Room = new Room(roomId, users);
+		// console.log("roomId = " + roomId);
+
+		this.server.to(users[0].socketId).emit("newRoom", room);
+		this.server.to(users[1].socketId).emit("newRoom", room);
+		this.rooms.set(roomId, room);
+		this.currentChannel.push(room);
+
+		this.server.emit("updateCurrentGames", this.currentChannel);
+	}
 
 
 	afterInit(server: Server) {
@@ -91,6 +107,97 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 		// 	status: UserStatus[user.status]
 		// });
     }
+
+
+	/**
+	 * Direct Messages
+	 */
+	//  @SubscribeMessage('getUserDms')
+	//  async handleUserDms(
+	// 	 @ConnectedSocket() client: Socket,
+	// 	 @MessageBody() { userId }: { userId: number }
+	//  ) {
+	// 	 const dms = await this.chatService.getUserDms(userId);
+ 
+	// 	 for (const dm of dms) {
+	// 		 this.userJoinRoom(client.id, `dm_${dm.id}`);
+	// 	 }
+	// 	 this.server.to(client.id).emit('updateUserDms', (dms));
+	//  }
+ 
+	//  @SubscribeMessage('getDmData')
+	//  async handleDmData(
+	// 	 @ConnectedSocket() client: Socket,
+	// 	 @MessageBody() { dmId }: { dmId: number }
+	//  ) {
+	// 	 const dm = await this.chatService.getDmData(dmId);
+	// 	 const roomId = `dm_${dm.id}`;
+ 
+	// 	 this.userJoinRoom(client.id, roomId);
+	// 	 this.server.to(client.id).emit('updateDm', (dm));
+	//  }
+
+	userJoinRoom(socketId: string, roomId: string) {
+		this.chatUsers.addRoomToUser(socketId, roomId);
+		this.server.in(socketId).socketsJoin(roomId);
+	}
+
+	userLeaveRoom(socketId: string, roomId: string) {
+		this.chatUsers.addRoomToUser(socketId, roomId);
+		this.server.in(socketId).socketsLeave(roomId);
+	}
+ 
+	//  @UseFilters(new BadRequestTransformationFilter())
+// 	 @SubscribeMessage('DmRoom')
+// 	 async handleCreateDm(
+// 		 @ConnectedSocket() client: Socket,
+// 		 @MessageBody() data: User
+// 	 ) {
+// 		 try {
+// 			//  let dm = await this.chatService.checkIfDmExists(
+// 			// 	 data.users[0].id.toString(),
+// 			// 	 data.users[1].id.toString()
+// 			//  );
+ 
+// 			//  if (!dm) {
+// 				//  let dm = await this.chatService.createDm(data);
+ 
+// 				 const user = this.chatUsers.getUser(client.id);
+// 				//  const friend = data.users.find((dmUser) => dmUser.id !== user.id);
+// 				//  const friendUser = this.chatUsers.getUserById(friend.id.toString());
+ 
+// 				//  if (friendUser) {
+// 				// 	 this.userJoinRoom(friendUser.socketId, `dm_${dm.id}`);
+// 				// 	 this.server.to(friendUser.socketId).emit('dmCreated');
+// 				//  }
+// 			//  }
+// 			 this.userJoinRoom(client.id, `dm_${dm.id}`);
+// 			 this.server.to(client.id).emit('openCreatedDm', (dm));
+// 		 } catch (e) {
+// 			 this.server.to(client.id).emit('chatError', e.message);
+// 		 }
+// 	 }
+ 
+// 	 /* Save a new DM message */
+// 	 @UseFilters(new BadRequestTransformationFilter())
+// 	 @SubscribeMessage('dmSubmit')
+// 	 async handleDmSubmit(
+// 		 @ConnectedSocket() client: Socket,
+// 		 @MessageBody() data: CreateDmMessageDto
+// 	 ) {
+// 		 if (data.type || data.roomId) {
+// 			 throw new WsException('Unauthorized operation.');
+// 		 }
+// 		 try {
+// 			 const message = await this.chatService.addMessageToDm(data);
+ 
+// 			 this.server.to(`dm_${message.dm.id}`).emit('newDm', { message });
+// 			 this.logger.log(`New message in DM [${message.dm.id}]`);
+// 		 } catch (e) {
+// 			 this.server.to(client.id).emit('chatError', e.message);
+// 		 }
+// 	 }
+//  }
 
 
 }

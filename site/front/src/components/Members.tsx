@@ -11,25 +11,38 @@ import { IRoom, User } from "../gameObjects/GameObject";
 
 const Members: React.FC<{currentUsers: User[], socketProps: Socket}> = ({currentUsers, socketProps}) => {
   const users: User[] = currentUsers;
+  const socket: Socket = socketProps;
 
-  const goDm = (e: React.MouseEvent<HTMLDivElement>) => {
-      // socketProps.emit("spectateRoom", e.currentTarget.value);
-    console.log("goDm to " + e.currentTarget);
-    }
+  const goDm = (e: React.MouseEvent<HTMLButtonElement>) => {
+    socketProps.emit("DmRoom", e.currentTarget.value); // load dm room with e.currentTarget.value and socketProps.socketId
+    console.log("goDm to " + e.currentTarget.value);
+  }
+
   return (
     <div>
       <h3>Members</h3>
       <div className="Members">
       {users.map((user) => {
+        if (socket && socket.id === user.socketId) {
         return (
-          <div
+          <button
             key={user.socketId}
-            onClick={goDm}
+            value={user.socketId}
           >
-            {user.socketId}
-          </div>
+            You: {user.socketId}
+          </button>)
+        } else {
+          return (
+            <button
+              key={user.socketId}
+              value={user.socketId}
+              onClick={goDm}
+            >
+              {user.socketId}
+            </button>)
+        }
 
-        )}
+        }
       )}
       </div>
     </div>

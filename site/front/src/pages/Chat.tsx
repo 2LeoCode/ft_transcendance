@@ -33,6 +33,7 @@ function Chat() {
     username: "default",
   };
   const [id, setId] = useState("");
+  const [isChannel, setIsChannel] = useState(false);
   const [previousId, setPreviousId] = useState<string>();
   const [currentUsers, setCurrentUsers] = useState<User[]>([tmpUser]);
   const [friends_id_tab, setFriends_id_tab] = useState(["nobody"]);
@@ -124,7 +125,10 @@ function Chat() {
             <li>Channel 2</li>
             <li>Channel 3</li>
           </ul>
+          {isChannel && (
           <h3>Admins</h3>
+          )}
+          {isChannel && (
           <ul className="admins">
             <li>
               <div className="status online"></div>
@@ -132,6 +136,7 @@ function Chat() {
               Admin 1
             </li>
           </ul>
+          )}
           {<Members currentUsers={currentUsers} socketProps={socket}/>}
           <h4 className="create_channel">Create Channel</h4>
         </div>
