@@ -9,18 +9,18 @@ import { atom } from 'jotai';
 const EntityParser =  {
 	publicUser: (entity: any): PublicUser => ({
 		id: entity.id,
-		nick: atom(entity.nick as string),
+		nick: atom(entity.nick),
 		user42: entity.user42,
-		avatarPath: atom(entity.avatarPath as string),
-		online: atom(entity.online as boolean),
+		avatarPath: atom(entity.avatarPath),
+		online: atom(entity.online),
 	}),
 
 	publicChannel: (entity: any): PublicChannel => ({
 		id: entity.id,
-		name: atom(entity.name as string),
-		password: atom(entity.password as string),
-		accessibility: atom(entity.accessibility as ChannelAccessibility),
-		visibility: atom(entity.visibility as ChannelVisibility)
+		name: atom(entity.name),
+		password: atom(entity.password),
+		accessibility: atom(entity.accessibility),
+		visibility: atom(entity.visibility),
 	}),
 
 	score: (entity: any): Score => ({
@@ -37,49 +37,49 @@ const EntityParser =  {
 			blockedBy: atom(
 				entity.blockedBy.map(
 					(user: any) => EntityParser.publicUser(user)
-				) as PublicUser[],
+				),
 			),
 			blocked: atom(
 				entity.blocked.map(
 					(user: any) => EntityParser.publicUser(user)
-				) as PublicUser[],
+				),
 			),
 			friends: atom(
 				entity.friends.map(
 					(friend: any) => EntityParser.publicUser(friend)
-				) as PublicUser[],
+				),
 			),
 			friendRequests: atom(
 				entity.friendRequests.map(
 					(friendRequest: any) => EntityParser.publicUser(friendRequest)
-				) as PublicUser[],
+				),
 			),
 			ownedChannels: atom(
 				entity.ownedChannels.map(
 						(channel: any) => EntityParser.channel(channel)
-				) as Channel[],
+				),
 			),
 			channels: atom(
 				entity.channels.map(
 					(channel: any) => EntityParser.channel(channel)
-				) as Channel[],
+				),
 			),
 			messagesIn: atom(
 				entity.receiver.messages.map(
 					(message: any) => EntityParser.message(message, 'user')
-				) as Message[],
+				),
 			),
 			messagesOut: atom(
 				entity.messages.map(
 					async (message: any) => EntityParser.message(message, 'user')
-				) as Message[],
+				),
 			),
 			scores: atom(
 				entity.scores.map(
 					(score: any) => EntityParser.score(score)
-				) as Score[],
+				),
 			),
-		}
+		};
 	},
 
 	
@@ -116,9 +116,9 @@ const EntityParser =  {
 			updateDate: atom(entity.updateDate as Date),
 			sender: EntityParser.publicUser(entity.sender),
 			receiver:
-				type == 'channel' ?
-				EntityParser.publicChannel(entity.receiver.parent) :
-				EntityParser.publicUser(entity.receiver.parent)
+				type === 'channel' ?
+				EntityParser.publicChannel(entity.receiver.parentChannel) :
+				EntityParser.publicUser(entity.receiver.parentUser)
 		};
 	}
 }

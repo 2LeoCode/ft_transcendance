@@ -8,7 +8,7 @@ import User from './User';
 import OtherUser from './OtherUser';
 import Watch from './Watch';
 import { useAtom } from 'jotai';
-import Database from '../com/database';
+import { Database } from '../com/database';
 
 function activate_script() {
   const script = document.createElement('script');
@@ -18,6 +18,8 @@ function activate_script() {
 }
 
 function Pong() {
+  //const Database = require('../com/database').Database;
+
   const [play, setPlay] = useState<boolean | any>(false);
   // const socket = io("http://localhost:2000");
   // socket.on("message", (msg) => {
@@ -25,22 +27,15 @@ function Pong() {
   // });
   // console.log(infos.)
 
+  //console.log('Hello dude');
   // example:
-  const [nickname, setNickname] = useAtom(Database.user.nick);
+  const [nickname] = useAtom(Database.user.nick);
 
   useEffect(() => {
-    console.log(`Hello, ${nickname}!`);
+	console.log(`Hello ${nickname}!`);
   }, []);
   return (
     <React.Fragment>
-      <Routes>
-        <Route path="/pong" element={<Pong />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/user" element={<User />} />
-        <Route path="/other_user/:userName" element={<OtherUser />} />
-        <Route path="/watch" element={<Watch />} />
-        <Route path="*" element={<Pong />} />
-      </Routes>
       <Header />
       <div className="Pong">
         {!play && (

@@ -1,15 +1,18 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/App.css';
-import Log from './pages/Log';
-
-export const token: string =
-  document.cookie
-    .split(';')
-    .map((cookie) => cookie.split('='))
-    .find((cookie) => cookie[0] === 'token')?.[1] || '';
+import Log, { ConnectedAtom } from './pages/Log';
+import { useAtom } from 'jotai';
+import Chat from './pages/Chat';
+import User from './pages/User';
+import OtherUser from './pages/OtherUser';
+import Watch from './pages/Watch';
+import Pong from './pages/Pong';
+import Loader, { SyncAtom } from './components/Loader';
 
 function App() {
+  const [sync] = useAtom(SyncAtom);
+  const [connected] = useAtom(ConnectedAtom);
   //const [isLog, setIsLog] = useState(false);
   //useEffect(() => {
   //  if (token) {
@@ -26,7 +29,16 @@ function App() {
   //}, []);
   return (
     <BrowserRouter>
-      <Log />
+      {sync ? (
+        <Routes>
+          {/*<Route path="/pong" element={<Pong />} />*/}
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/other_user/:userName" element={<OtherUser />} />
+          <Route path="/watch" element={<Watch />} />
+          <Route path="*" element={<Pong />} />
+        </Routes>
+      ) : connected ? <Loader /> : <Log />}
     </BrowserRouter>
   );
 }

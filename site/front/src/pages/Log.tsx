@@ -1,41 +1,43 @@
-import React, { useEffect, useState } from "react";
-import Database from "../com/database";
+import { Fragment, useEffect, useState } from "react";
 import Loader from "../components/Loader";
+import ClientSocket from "../com/client-socket";
 import "../styles/Log.css";
+import { atom, useAtom } from "jotai";
+
+export const ConnectedAtom = atom(false);
+export const ClickedAtom = atom(false);
 
 const Log = () => {
-  const [logged, setLogged] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [clicked, setClicked] = useState(false);
+  const [connected, setConnected] = useAtom(ConnectedAtom);
+  const [clicked, setClicked] = useAtom(ClickedAtom);
 
   useEffect(() => {
     (async () => {
-      Database.socket.emit('ping');
-      Database.socket.on('pong', () => {
-        setLogged(true);
-        setLoaded(true);
+      ClientSocket.on('disconnect', () => {
+        window.location.replace('http://localhost:2000/auth/login');
       });
-      Database.socket.on('error', () => {
-        setLoaded(true);
+      ClientSocket.on('connect', () => {
+        setConnected(true);
       });
+	    //ClientSocket.on('pong', () => {
+		  //console.log('received pong');
+	    //  setLogged(true);
+	    //});
+      //ClientSocket.emit('ping');
     })();
   }, []);
 
-  return (
-    clicked ? <Loader /> : loaded ? (
-      <div className="Log">
-        <h1>Fight Pong</h1>
-        <button type="button" onClick={() => {
-          if (!logged)
-            window.location.replace('http://localhost:2000/auth/login');
-          setClicked(true);
-        }}>
-          Sign In
-        </button>
-      </div>
-    ) : (
-      <React.Fragment>Loading...</React.Fragment>
-    )
+  return clicked ? (
+    connected ? (
+      <Loader />
+    ) : <Fragment>Connecting...</Fragment>
+  ) : (
+    <div className="Log">
+      <h1>Fight Pong</h1>
+      <button type="button" onClick={() => setClicked(true)}>
+        Sign In
+      </button>
+    </div>
   );
 }
 

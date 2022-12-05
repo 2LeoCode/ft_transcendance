@@ -1,16 +1,21 @@
+import { atom, useAtom } from "jotai";
 import { Fragment, useEffect, useState } from "react";
 import Pong from "../pages/Pong";
 
-const Loader = () => {
-	const [sync, setSync] = useState(false);
+export const SyncAtom = atom(false);
 
-	useEffect(() => {
-		(async () => {
-			await require('../com/database').syncServerData();
-			setSync(true);
-		})();
-	}, []);
-	return sync ? <Pong /> : <Fragment>Loading...</Fragment>;
+const Loader = () => {
+  const [sync, setSync] = useAtom(SyncAtom);
+
+  console.log('Loader!');
+  useEffect(() => {
+    (async () => {
+	  const db = require('../com/database');
+      await db.syncDatabase();
+      setSync(true);
+    })();
+  }, []);
+  return sync ? <Pong /> : <Fragment>Loading...</Fragment>;
 };
 
 export default Loader;
