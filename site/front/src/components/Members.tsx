@@ -28,6 +28,8 @@ const Members: React.FC<{socketProps: Socket, name:string, setName:any, setter:a
     setName(socketId);
   }
 
+
+  if (socket.id !== socketId) {
   return (
     <li>
       <div onClick={() => printInfos(name)}>
@@ -47,6 +49,27 @@ const Members: React.FC<{socketProps: Socket, name:string, setName:any, setter:a
       </div>
     </li>
   );
+    } else {
+        return (
+          <li>
+            <div onClick={() => printInfos(name)}>
+              <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+              You: {socketId}
+            </div>
+            <div className="infos" id={name}>
+              <button value={socketProps.id} onClick={(e) => { goDm(e); setter(true); }}>Chat</button>
+              <br />
+              <button>Play</button>
+              <br />
+              <Link to={`/other_user/${name}`}>
+                <button>View profile</button>
+              </Link>
+              <br />
+              <button onClick={() => closeInfos(name)}>Close</button>
+            </div>
+          </li>
+        );
+    }
 }
 
 export default Members;

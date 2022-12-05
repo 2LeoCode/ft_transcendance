@@ -15,24 +15,30 @@ function DirectMessage(props: any) {
   const socket: Socket = props.socket;
 //   const messages: message[] = [];
   const [messages, setMessages] = useState<message[]>([]);
-//   messages[0] = {
-//     content: 'premier message',
-//     author: 'tototest',
-//     index: 0,
-//     className: 'other_message'
-//   };
   const [clientId, setClientId] = useState('');
-useEffect( () =>
-  {socket.on('NewCreatedDm', (message: string) => {
+useEffect( () => {
+
+    socket.on('NewCreatedDm', (message: string, own:boolean) => {
     console.log('created dm ' + message);
     // setClientId(client.id);
-    setMessages(current => [...current, {
-        content: message,
-        author: 'tototest',
-        index: 0,
-        className: 'other_message'
-      }]);
-  });}, [])
+    if (own === true) {
+        setMessages(current => [...current, {
+            content: message,
+            author: 'tototest',
+            index: 0,
+            className: 'own_message'
+        }]);
+    } else {
+        setMessages(current => [...current, {
+            content: message,
+            author: 'tototest',
+            index: 0,
+            className: 'other_message'
+          }]);
+    }
+  });
+
+}, [])
 
   
 

@@ -10,6 +10,7 @@ import { useResolvedPath } from 'react-router-dom';
 import DirectMessage from '../components/DirectMessage';
 import Channel from '../components/Channel';
 import Members from '../components/Members';
+import { updateCommaList } from 'typescript';
 
 let socket: Socket;
 
@@ -98,6 +99,11 @@ function Chat() {
       console.log('connect in front ' + socket.id);
       socket.emit('updateChatUser');
     });
+
+    // socket.on('disconnect', (currentGamesUsers: User[]) => {
+    //   // updateCurrentUsers(currentGamesUsers);
+      
+    // });
 
     socket.on('updateCurrentUsers', (currentGamesUsers: User[]) => {
       updateCurrentUsers(currentGamesUsers);

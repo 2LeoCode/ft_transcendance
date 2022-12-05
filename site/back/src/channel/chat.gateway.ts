@@ -63,7 +63,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     if (userIndex !== -1) {
       this.currentUsers.splice(userIndex, 1);
     }
-    this.server.emit('updatecurrentUsers', this.currentUsers);
+    this.server.emit('disconnect', this.currentUsers);
 
     console.log('disconnected client');
 
@@ -163,8 +163,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   ) {
 	console.log("other = " + other);
 //     // -> faire appel a la db pour stocker le message
-    this.server.to(client.id).emit('NewCreatedDm', this.tmpMessage);
-    this.server.to(other).emit('NewCreatedDm', this.tmpMessage);
+    this.server.to(client.id).emit('NewCreatedDm', this.tmpMessage, true);
+    this.server.to(other).emit('NewCreatedDm', this.tmpMessage, false);
   }
 
   @SubscribeMessage('tmpMessageStock')
