@@ -14,8 +14,7 @@ function OtherUser() {
   const matches_lost = 0;
   const params = useParams();
   const username = params.userName;
-  //recup infos when db ok
-  //UserCom.get({nick: username}).then((res) => (console.log(res)));
+  
   return (
     <div>
       <Header />

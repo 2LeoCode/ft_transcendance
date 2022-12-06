@@ -28,9 +28,7 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
   window.location.reload();
 }
 
-async function createChannel(e: any) {
-  
-}
+async function createChannel(e: any) {}
 
 function Chat() {
   const [id, setId] = useState('');
@@ -85,23 +83,23 @@ function Chat() {
 
   const submitMessage = (e: any) => {
     e.preventDefault();
-    console.log("name " + name);
-    socket.emit("tmpMessageStock", name);
-    socket.emit("submitMessage", DmName);
+    console.log('name ' + name);
+    socket.emit('tmpMessageStock', name);
+    socket.emit('submitMessage', DmName);
   };
-  
+
   // socket.on("newRoom", (newRoomData: IRoom) => {
   //   socket.emit("joinRoom", newRoomData.roomId);
   // });
 
   useEffect((): any => {
     socket = ClientSocket;
-    
+
     socket.emit('updateChatUser');
 
     // socket.on('disconnect', (currentGamesUsers: User[]) => {
     //   // updateCurrentUsers(currentGamesUsers);
-      
+
     // });
 
     socket.on('updateCurrentUsers', (currentGamesUsers: User[]) => {
@@ -152,15 +150,17 @@ function Chat() {
             <li>Channel 2</li>
             <li>Channel 3</li> */}
           </ul>
-          {isChannel && <h3>Admins</h3>}
           {isChannel && (
-            <ul className="admins">
-              <li>
-                <div className="status online"></div>
-                <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-                Admin 1
-              </li>
-            </ul>
+            <div>
+              <h3>Admins</h3>
+              <ul className="admins">
+                <li>
+                  <div className="status online"></div>
+                  <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+                  Admin 1
+                </li>
+              </ul>
+            </div>
           )}
           <h3>Members</h3>
           {currentUsers.map((user, index) => {

@@ -1,24 +1,29 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { io, Socket } from 'socket.io-client';
-import "../styles/Chat.css";
-import "../styles/Friend.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Socket } from 'socket.io-client';
+import '../styles/Chat.css';
+import '../styles/Friend.css';
 
-const Members: React.FC<{socketProps: Socket, name:string, setName:any, setter:any, socketId: string}> = ({socketProps, name, setName, setter, socketId}) => {
-// function Members(props:{
-//     socket:Socket,
-//     name:string,
-//     setName:any,
-//     setter:any
-// }) {
-    
-    const socket = socketProps;
+const Members: React.FC<{
+  socketProps: Socket;
+  name: string;
+  setName: any;
+  setter: any;
+  socketId: string;
+}> = ({ socketProps, name, setName, setter, socketId }) => {
+  // function Members(props:{
+  //     socket:Socket,
+  //     name:string,
+  //     setName:any,
+  //     setter:any
+  // }) {
+
+  const socket = socketProps;
   function printInfos(name: string) {
-    document.getElementById(name)!.style.display = "block";
-  }
-
-  function closeInfos(name: string) {
-    document.getElementById(name)!.style.display = "none";
+    let css = document.getElementById(name)?.style;
+    if (css?.length === 0) css.display = 'block';
+    else if (css?.display === 'block') css.display = 'none';
+    else if (css?.display === 'none') css.display = 'block';
   }
 
   function goDm(e: React.MouseEvent<HTMLButtonElement>) {
@@ -28,48 +33,59 @@ const Members: React.FC<{socketProps: Socket, name:string, setName:any, setter:a
     setName(socketId);
   }
 
-
   if (socket.id !== socketId) {
-  return (
-    <li>
-      <div onClick={() => printInfos(name)}>
-        <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-        {socketId}
-      </div>
-      <div className="infos" id={name}>
-        <button value={socketProps.id} onClick={(e) => { goDm(e); setter(true); }}>Chat</button>
-        <br />
-        <button>Play</button>
-        <br />
-        <Link to={`/other_user/${name}`}>
-          <button>View profile</button>
-        </Link>
-        <br />
-        <button onClick={() => closeInfos(name)}>Close</button>
-      </div>
-    </li>
-  );
-    } else {
-        return (
-          <li>
-            <div onClick={() => printInfos(name)}>
-              <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-              You: {socketId}
-            </div>
-            <div className="infos" id={name}>
-              <button value={socketProps.id} onClick={(e) => { goDm(e); setter(true); }}>Chat</button>
-              <br />
-              <button>Play</button>
-              <br />
-              <Link to={`/other_user/${name}`}>
-                <button>View profile</button>
-              </Link>
-              <br />
-              <button onClick={() => closeInfos(name)}>Close</button>
-            </div>
-          </li>
-        );
-    }
-}
+    return (
+      <li>
+        <div onClick={() => printInfos(name)}>
+          <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+          {socketId}
+        </div>
+        <div className="infos" id={name}>
+          <button
+            value={socketProps.id}
+            onClick={(e) => {
+              goDm(e);
+              setter(true);
+            }}>
+            Chat
+          </button>
+          <br />
+          <button>Play</button>
+          <br />
+          <Link to={`/other_user/${name}`}>
+            <button>View profile</button>
+          </Link>
+          <br />
+        </div>
+      </li>
+    );
+  } else {
+    return (
+      <li>
+        <div onClick={() => printInfos(name)}>
+          <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+          You: {socketId}
+        </div>
+        <div className="infos" id={name}>
+          <button
+            value={socketProps.id}
+            onClick={(e) => {
+              goDm(e);
+              setter(true);
+            }}>
+            Chat
+          </button>
+          <br />
+          <button>Play</button>
+          <br />
+          <Link to={`/other_user/${name}`}>
+            <button>View profile</button>
+          </Link>
+          <br />
+        </div>
+      </li>
+    );
+  }
+};
 
 export default Members;
