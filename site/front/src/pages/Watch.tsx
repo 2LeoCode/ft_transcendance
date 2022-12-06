@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Socket } from 'socket.io-client';
-import Header from "../components/Header";
 import "../styles/Watch.css";
 import { onGoingGame } from '../pages/Pong';
 

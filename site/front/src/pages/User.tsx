@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
-import React, { useState, useEffect } from "react";
-//import { UserCom } from "../com/user.com";
+import React, { useState } from "react";
 import { Database } from '../com/database';
 import Header from "../components/Header";
 import "../styles/User.css";

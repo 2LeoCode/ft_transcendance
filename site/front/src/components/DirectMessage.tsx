@@ -1,6 +1,5 @@
 import { useAtom } from 'jotai';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
 import { Database } from '../com/database';
 import '../styles/Chat.css';

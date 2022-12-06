@@ -6,7 +6,6 @@ import { useAtom } from 'jotai';
 import Chat from './pages/Chat';
 import User from './pages/User';
 import OtherUser from './pages/OtherUser';
-import Watch from './pages/Watch';
 import Pong from './pages/Pong';
 import Loader, { SyncAtom } from './components/Loader';
 
