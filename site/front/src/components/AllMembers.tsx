@@ -1,0 +1,94 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Socket } from 'socket.io-client';
+import '../styles/Chat.css';
+import '../styles/Friend.css';
+
+const AllMembers: React.FC<{
+  socketProps: Socket;
+  name: string;
+  setName: any;
+  setIsDm: any;
+  setIsChannel: any;
+  socketId: string;
+}> = ({ socketProps, name, setName, setIsDm, setIsChannel, socketId }) => {
+  // function Members(props:{
+  //     socket:Socket,
+  //     name:string,
+  //     setName:any,
+  //     setter:any
+  // }) {
+
+  const socket = socketProps;
+  function printInfos(name: string) {
+    let css = document.getElementById(name)?.style;
+    if (css?.length === 0) css.display = 'block';
+    else if (css?.display === 'block') css.display = 'none';
+    else if (css?.display === 'none') css.display = 'block';
+  }
+
+  function goDm(e: React.MouseEvent<HTMLButtonElement>) {
+    console.log(socketId);
+    // socket.emit('DmRoom', socketId); // load dm room with e.currentTarget.value and socketProps.socketId
+    console.log('goDm to ' + socketId);
+    setName(name);
+  }
+
+  if (socket.id !== socketId) { // it will be usefull when we'll have the socket ids of every user.
+    return (
+      <li>
+        <div onClick={() => printInfos(name)}>
+          <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+          {name}
+        </div>
+        <div className="infos" id={name}>
+          <button
+            value={socketProps.id}
+            onClick={(e) => {
+              goDm(e);
+              setIsDm(true);
+              setIsChannel(false);
+            }}>
+            Chat
+          </button>
+          <br />
+          <button>Play</button>
+          <br />
+          <Link to={`/other_user/${name}`}>
+            <button>View profile</button>
+          </Link>
+          <br />
+        </div>
+      </li>
+    );
+  } else {
+    return (
+      <li>
+        <div onClick={() => printInfos(name)}>
+          <img src="./default-avatar.webp" alt="Avatar" width="20px" />
+          You: {name}
+        </div>
+        <div className="infos" id={name}>
+          <button
+            value={socketProps.id}
+            onClick={(e) => {
+              goDm(e);
+              setIsDm(true);
+              setIsChannel(false);
+            }}>
+            Chat
+          </button>
+          <br />
+          <button>Play</button>
+          <br />
+          <Link to={`/other_user/${name}`}>
+            <button>View profile</button>
+          </Link>
+          <br />
+        </div>
+      </li>
+    );
+  }
+};
+
+export default AllMembers;

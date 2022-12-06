@@ -84,13 +84,25 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   }
 
   @SubscribeMessage('updateChatUser')
-  handleNewUser(
+  async handleNewUser(
     @ConnectedSocket() client: Socket,
     @MessageBody() newUser: ChatUser,
   ) {
     let user = this.chatUsers.getUserById(client.id);
 
-    console.log('coucou a toi ' + client.id);
+    // console.log('coucou a toi ' + client.id);
+
+    // get all users in db
+    let usernames: string[] = [];
+    let socketIds: string[] = [];
+    const tmpAllUsers = await this.userService.getPublic({online : true});
+    console.log(JSON.stringify(this.eventsGateway.connectedUsers))
+    for ( let i = 0; tmpAllUsers[i]; i++ ){
+    usernames[i] = tmpAllUsers[i].nick;
+    socketIds[i] = tmpAllUsers[i].id; // TODO WE NEED THE SOCKET IDS HERE
+    console.log("coucou " + usernames[i] + " " + socketIds[i]);
+    //console.log("connectedUsers " + this.eventsGateway.connectedUsers[i].username);
+    }
 
     if (!user) {
       user = new ChatUser(client.id, this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
@@ -102,6 +114,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
       // this.eventsGateway.server.emit('ChannelCreated', this.currentUsers);
 
       this.eventsGateway.server.emit('getUserId', client.id);
+      this.eventsGateway.server.emit('toAllMembers', usernames, socketIds);
     }
     // } else {
     // 	user.setSocketId(client.id);

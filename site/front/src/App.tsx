@@ -9,6 +9,7 @@ import OtherUser from './pages/OtherUser';
 import Pong from './pages/Pong';
 import Loader, { SyncAtom } from './components/Loader';
 import ClientSocket from './com/client-socket';
+import Constants from './com/constants';
 
 export const StatusAtom = atom<'connected' | 'disconnected' | 'connecting'>('connecting');
 
