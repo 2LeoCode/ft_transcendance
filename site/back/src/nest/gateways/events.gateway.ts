@@ -23,14 +23,16 @@ export default class EventsGateway implements OnGatewayConnection {
 		client: Socket
 	) {
 		const token = client.handshake.headers.cookie?.split('token=')[1]?.split(';')[0]?.trim() || '';
+		console.log('token=', token);
 		try {
 			await this.authService.verify(token);
 			const payload: any = await this.authService.decode(token);
-			console.log(payload);
+			//console.log(payload);
 			this.connectedUsers.push({ socketId: client.id, username: payload.username });
-			console.log(this.connectedUsers);
+			//console.log(this.connectedUsers);
 			//client.emit('onConnection', payload);
 		} catch (e) {
+			console.log('bad token');
 			client.disconnect(true);
 		}
 		console.log('Client good!');

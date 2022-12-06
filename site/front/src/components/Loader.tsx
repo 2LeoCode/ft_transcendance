@@ -8,6 +8,7 @@ const Loader = () => {
   const [sync, setSync] = useAtom(SyncAtom);
 
   useEffect(() => {
+	console.log('in loader');
     (async () => {
 	  const db = require('../com/database');
       await db.syncDatabase();

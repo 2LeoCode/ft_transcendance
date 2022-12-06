@@ -2,21 +2,29 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import Settings from "./Settings";
+import { useAtom } from "jotai";
+import { ConnectedAtom, LoggedAtom } from "../pages/Log";
+import { SyncAtom } from "./Loader";
 
 function Header() {
   const [settings, setSettings] = useState(false);
-  const id = '';
+  const [_, setLogged] = useAtom(LoggedAtom);
+
+//  const id = '';
   const navigate = useNavigate();
   async function handleLogout() {
-    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
-    //  id = res[0].id;
-    //  console.log(res);
-    //});
-    //await UserCom.update(id, { online: false }).then((res) => {
-    //  console.log(res);
-    //});
-    localStorage.clear();
-    navigate('/');
+//    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
+//    //  id = res[0].id;
+//    //  console.log(res);
+//    //});
+//    //await UserCom.update(id, { online: false }).then((res) => {
+//    //  console.log(res);
+//    //});
+//    //localStorage.clear();//
+//    //navigate("/auth/login")
+	setLogged(false);
+	window.location.reload();
+	navigate('/');
   }
 
   return (
@@ -40,9 +48,7 @@ function Header() {
       </NavLink>
       <p
         className='logout'
-        onClick={() => {
-          handleLogout();
-        }}>
+        onClick={() => handleLogout()}>
         Logout
       </p>
       {settings && <Settings isOn={setSettings} />}

@@ -61,8 +61,7 @@ export default class UserController {
 	async getCurrentUser(
 		@UserId() userId: string
 	) {
-		const user = this.userService.getOne(userId)
-		return user;
+		return this.userService.getOne(userId);
 	}
 
 	@Post('update')

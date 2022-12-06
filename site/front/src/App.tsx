@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/App.css';
-import Log, { ConnectedAtom } from './pages/Log';
+import Log, { ConnectedAtom, LoggedAtom } from './pages/Log';
 import { useAtom } from 'jotai';
 import Chat from './pages/Chat';
 import User from './pages/User';
@@ -13,6 +13,8 @@ import Loader, { SyncAtom } from './components/Loader';
 function App() {
   const [sync] = useAtom(SyncAtom);
   const [connected] = useAtom(ConnectedAtom);
+  console.log(document.cookie);
+  console.log(sync, connected);
   //const [isLog, setIsLog] = useState(false);
   //useEffect(() => {
   //  if (token) {
@@ -37,7 +39,7 @@ function App() {
           <Route path="/other_user/:userName" element={<OtherUser />} />
           <Route path="*" element={<Pong />} />
         </Routes>
-      ) : connected ? <Loader /> : <Log />}
+      ) : <Log />}
     </BrowserRouter>
   );
 }
