@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import "../styles/Settings.css";
 import { Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { atom, useAtom } from "jotai";
-import { Database } from "../com/database";
+
 
 
 function Settings(props: any) {

@@ -4,7 +4,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Database } from "../com/database";
 import "../styles/Header.css";
 import Settings from "./Settings";
-import { useAtom } from "jotai";
 import { ConnectedAtom, LoggedAtom } from "../pages/Log";
 import { SyncAtom } from "./Loader";
 
@@ -22,7 +21,6 @@ function Header() {
 //    //});
 //    //localStorage.clear();//
 //    //navigate("/auth/login")
-	setLogged(false);
 	window.location.reload();
 	navigate('/');
   }

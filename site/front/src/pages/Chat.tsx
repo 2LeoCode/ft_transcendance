@@ -12,6 +12,7 @@ import Members from '../components/Members';
 import ClientSocket from '../com/client-socket';
 import ChannelsList from '../components/ChannelsList';
 import { create } from '@mui/material/styles/createTransitions';
+import CreateChannel from '../components/CreateChannel';
 
 let socket: Socket;
 
@@ -30,8 +31,6 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
   window.location.reload();
 }
 
-async function createChannel(e: any) {}
-
 function Chat() {
   const [id, setId] = useState('');
   const [isChannel, setIsChannel] = useState(false);
@@ -43,8 +42,8 @@ function Chat() {
   const [friends_name_tab, setFriends_name_tab] = useState<any[] | any[]>([]);
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
-  const [nameChannel, setNameChannel] = useState('');
   const [channelName, setChannelName] = useState('');
+  const [createChannelButton, setCreateChannelButton] = useState(false);
   const [emitMessageTo, setEmitMessageTo] = useState('');
   const initFriends = async () => {
     //await UserCom.get({ nick: user_infos.nick }).then((res) => {
@@ -76,20 +75,12 @@ function Chat() {
   //   setCurrentUsers(users);
   // };
 
-  const createChannel = (e: any) => {
-    e.preventDefault();
-    socket.emit('ChannelRoom', nameChannel); // load dm room with e.currentTarget.value and socketProps.socketId
-    console.log('Channel created ' + nameChannel);
-  };
-
   const submitMessage = (e: any) => {
     e.preventDefault();
     socket.emit('tmpMessageStock', name);
 
-    if (isChannel === true)
-      socket.emit("submitMessageChannel", emitMessageTo);
-    else if (isDm === true)
-      socket.emit('submitMessage', DmName);
+    if (isChannel === true) socket.emit('submitMessageChannel', emitMessageTo);
+    else if (isDm === true) socket.emit('submitMessage', DmName);
   };
 
   // socket.on("newRoom", (newRoomData: IRoom) => {
@@ -112,8 +103,8 @@ function Chat() {
 
     socket.on('ChannelCreated', (currentChannels: IRoom, channelName: string) => {
       if (currentChannels) {
-        console.log("coucou " + currentChannels.roomId);
-        setCurrentChannels(current => [...current, channelName]);
+        console.log('coucou ' + currentChannels.roomId);
+        setCurrentChannels((current) => [...current, channelName]);
         createdChannels.set(channelName, currentChannels);
       } else {
         setCurrentChannels([channelName]);
@@ -150,25 +141,25 @@ function Chat() {
   //   setMounted(true);
   // }, []);
 
-
   return (
     <div>
       <Header />
+      {createChannelButton && <CreateChannel socket={socket} isOn={setCreateChannelButton} />}
       <div className="Chat">
         <div className="left-pannel">
           <h3>Channels</h3>
           <ul className="channels_list">
             {currentChannels.map((channel, index) => {
-                return (
-                  <ChannelsList
-                    key={index}
-                    socketProps={socket}
-                    name={channel}
-                    setter={setIsChannel}
-                    setIsDm={setIsDm}
-                  />
-                );
-              })}
+              return (
+                <ChannelsList
+                  key={index}
+                  socketProps={socket}
+                  name={channel}
+                  setter={setIsChannel}
+                  setIsDm={setIsDm}
+                />
+              );
+            })}
           </ul>
           {isChannel && (
             <div>
@@ -205,18 +196,7 @@ function Chat() {
             // }
           })}
           <br />
-          <div className="create_channel">
-            <form onSubmit={createChannel}>
-              <input
-                type="text"
-                placeholder="Channel Name"
-                onChange={(e) => {
-                  setNameChannel(e.target.value);
-                }}
-              />
-              <button>Create Channel</button>
-            </form>
-          </div>
+          <button className="create_channel" onClick={() => setCreateChannelButton(true)}>Create Channel</button>
         </div>
         <ul className="main">
           {!isDm && !isChannel && (
