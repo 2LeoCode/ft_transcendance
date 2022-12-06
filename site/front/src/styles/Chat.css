@@ -86,3 +86,7 @@
 	height: 35px;
 }
 
+.create_channel input {
+	margin: auto;
+	width: 80%;
+}

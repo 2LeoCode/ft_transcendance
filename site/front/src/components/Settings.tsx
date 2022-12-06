@@ -8,8 +8,7 @@ import { Database } from "../com/database";
 
 function Settings(props: any) {
   const [newName, setNewName] = useState("");
-  // const nameAtom = atom(Database.user.nick);
-  // const [name, setName] = useAtom(nameAtom);
+  // const [name, setName] = useAtom<string | undefined>(Database.user.nick);
   const navigate = useNavigate();
   const changeUsername = async(e: any) => {
     e.preventDefault();

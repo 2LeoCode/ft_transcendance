@@ -9,8 +9,9 @@ const Members: React.FC<{
   name: string;
   setName: any;
   setter: any;
+  setIsChannel: any;
   socketId: string;
-}> = ({ socketProps, name, setName, setter, socketId }) => {
+}> = ({ socketProps, name, setName, setter, setIsChannel, socketId }) => {
   // function Members(props:{
   //     socket:Socket,
   //     name:string,
@@ -28,7 +29,7 @@ const Members: React.FC<{
 
   function goDm(e: React.MouseEvent<HTMLButtonElement>) {
     console.log(socketId);
-    socket.emit('DmRoom', socketId); // load dm room with e.currentTarget.value and socketProps.socketId
+    // socket.emit('DmRoom', socketId); // load dm room with e.currentTarget.value and socketProps.socketId
     console.log('goDm to ' + socketId);
     setName(socketId);
   }
@@ -46,6 +47,7 @@ const Members: React.FC<{
             onClick={(e) => {
               goDm(e);
               setter(true);
+              setIsChannel(false);
             }}>
             Chat
           </button>

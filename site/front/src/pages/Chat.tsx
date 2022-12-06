@@ -10,6 +10,8 @@ import DirectMessage from '../components/DirectMessage';
 import Channel from '../components/Channel';
 import Members from '../components/Members';
 import ClientSocket from '../com/client-socket';
+import ChannelsList from '../components/ChannelsList';
+import { create } from '@mui/material/styles/createTransitions';
 
 let socket: Socket;
 
@@ -36,11 +38,14 @@ function Chat() {
   const [isDm, setIsDm] = useState(false);
   const [DmName, setDmName] = useState<string>();
   const [currentUsers, setCurrentUsers] = useState<User[]>([]);
-  const [createdChannels, setCreatedChannels] = useState<string[]>(['general', 'pong']);
+  const [currentChannels, setCurrentChannels] = useState<string[]>([]);
   const [friends_id_tab, setFriends_id_tab] = useState([]);
   const [friends_name_tab, setFriends_name_tab] = useState<any[] | any[]>([]);
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
+  const [nameChannel, setNameChannel] = useState('');
+  const [channelName, setChannelName] = useState('');
+  const [emitMessageTo, setEmitMessageTo] = useState('');
   const initFriends = async () => {
     //await UserCom.get({ nick: user_infos.nick }).then((res) => {
     //  setId(res[0].id);
@@ -56,36 +61,35 @@ function Chat() {
     //});
   };
 
-  const updateCurrentUsers = (currentGamesUsers: User[]) => {
-    const users: User[] = [];
+  let createdChannels: Map<string, IRoom> = new Map();
 
-    for (const user of currentGamesUsers) {
-      users.push({
-        socketId: user.socketId,
-        id: 0,
-        username: 'default'
-      });
-    }
-    setCurrentUsers(users);
-  };
+  // const updateCurrentUsers = (currentGamesUsers: User[]) => {
+  //   const users: User[] = [];
 
-  const goChannel = (e: React.MouseEvent<HTMLButtonElement>) => {
-    socket.emit('ChannelRoom', e.currentTarget.value); // load dm room with e.currentTarget.value and socketProps.socketId
-    console.log('goDm to ' + e.currentTarget.value);
-    setIsDm(false);
-    setIsChannel(true);
-  };
+  //   for (const user of currentGamesUsers) {
+  //     users.push({
+  //       socketId: user.socketId,
+  //       id: 0,
+  //       username: 'default'
+  //     });
+  //   }
+  //   setCurrentUsers(users);
+  // };
 
-  const createChannel = (e: React.MouseEvent<HTMLButtonElement>) => {
-    socket.emit('CreateChannel', e.currentTarget.value); // load dm room with e.currentTarget.value and socketProps.socketId
-    console.log('goDm to ' + e.currentTarget.value);
+  const createChannel = (e: any) => {
+    e.preventDefault();
+    socket.emit('ChannelRoom', nameChannel); // load dm room with e.currentTarget.value and socketProps.socketId
+    console.log('Channel created ' + nameChannel);
   };
 
   const submitMessage = (e: any) => {
     e.preventDefault();
-    console.log('name ' + name);
     socket.emit('tmpMessageStock', name);
-    socket.emit('submitMessage', DmName);
+
+    if (isChannel === true)
+      socket.emit("submitMessageChannel", emitMessageTo);
+    else if (isDm === true)
+      socket.emit('submitMessage', DmName);
   };
 
   // socket.on("newRoom", (newRoomData: IRoom) => {
@@ -102,8 +106,23 @@ function Chat() {
 
     // });
 
-    socket.on('updateCurrentUsers', (currentGamesUsers: User[]) => {
-      updateCurrentUsers(currentGamesUsers);
+    // socket.on('updateCurrentUsers', (currentGamesUsers: User[]) => {
+    //   updateCurrentUsers(currentGamesUsers);
+    // });
+
+    socket.on('ChannelCreated', (currentChannels: IRoom, channelName: string) => {
+      if (currentChannels) {
+        console.log("coucou " + currentChannels.roomId);
+        setCurrentChannels(current => [...current, channelName]);
+        createdChannels.set(channelName, currentChannels);
+      } else {
+        setCurrentChannels([channelName]);
+        createdChannels.set(channelName, currentChannels);
+      }
+    });
+
+    socket.on('joinedChannelRoom', (roomId: string) => {
+      setEmitMessageTo(roomId);
     });
 
     socket.on('getUserId', (clientId: string) => {
@@ -121,16 +140,16 @@ function Chat() {
       // }
     });
 
-    setMounted(true);
+    // setMounted(true);
   }, []);
 
   // if (!mounted) {
   //   initFriends();
   // }
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <div>
@@ -139,16 +158,17 @@ function Chat() {
         <div className="left-pannel">
           <h3>Channels</h3>
           <ul className="channels_list">
-            {createdChannels.map((channel) => {
-              return (
-                <button key={channel} value={channel} onClick={goChannel}>
-                  {channel}
-                </button>
-              );
-            })}
-            {/* <li>Channel 1</li>
-            <li>Channel 2</li>
-            <li>Channel 3</li> */}
+            {currentChannels.map((channel, index) => {
+                return (
+                  <ChannelsList
+                    key={index}
+                    socketProps={socket}
+                    name={channel}
+                    setter={setIsChannel}
+                    setIsDm={setIsDm}
+                  />
+                );
+              })}
           </ul>
           {isChannel && (
             <div>
@@ -178,15 +198,25 @@ function Chat() {
                 socketProps={socket}
                 name={`toto${index}`}
                 setter={setIsDm}
+                setIsChannel={setIsChannel}
                 setName={setDmName}
               />
             );
             // }
           })}
-          <h4>Create Channel</h4>
-          <button className="create_channel" onClick={createChannel}>
-            Create Channel
-          </button>
+          <br />
+          <div className="create_channel">
+            <form onSubmit={createChannel}>
+              <input
+                type="text"
+                placeholder="Channel Name"
+                onChange={(e) => {
+                  setNameChannel(e.target.value);
+                }}
+              />
+              <button>Create Channel</button>
+            </form>
+          </div>
         </div>
         <ul className="main">
           {!isDm && !isChannel && (
@@ -204,8 +234,8 @@ function Chat() {
               </li>
             </div>
           )}
-          {isDm && <DirectMessage socket={socket} name={DmName} />}
-          {isChannel && !isDm && <Channel socket={socket} />}
+          {isDm && !isChannel && <DirectMessage socket={socket} name={DmName} />}
+          {isChannel && !isDm && <Channel socket={socket} channelName={channelName} />}
         </ul>
         <div className="write_msg">
           <form onSubmit={submitMessage}>

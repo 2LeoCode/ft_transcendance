@@ -1,0 +1,42 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Socket } from 'socket.io-client';
+import { IRoom } from '../gameObjects/GameObject';
+import '../styles/Chat.css';
+import '../styles/Friend.css';
+
+const ChannelsList: React.FC<{
+  socketProps: Socket;
+  name: string;
+  setter: any;
+  setIsDm: any;
+}> = ({ socketProps, name, setter, setIsDm }) => {
+  // function ChannelsList(props:{
+  //     socket:Socket,
+  //     name:string,
+  //     setName:any,
+  //     setter:any
+  // }) {
+
+  const socket = socketProps;
+
+
+
+  const goChannel = (e: React.MouseEvent<HTMLButtonElement>) => {
+    socket.emit('ChannelRoom', e.currentTarget.value); // load dm room with e.currentTarget.value and socketProps.socketId
+    console.log('goChannel to ' + e.currentTarget.value + " to ");
+
+    setter(true);
+	setIsDm(false);
+  }; 
+
+    return (
+      <li>
+        <button onClick={goChannel} value={name}>
+          {name}
+        </button>
+      </li>
+    );
+};
+
+export default ChannelsList;
