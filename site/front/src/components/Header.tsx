@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { Database } from "../com/database";
 import "../styles/Header.css";
 import Settings from "./Settings";
 import { useAtom } from "jotai";
@@ -8,9 +10,7 @@ import { SyncAtom } from "./Loader";
 
 function Header() {
   const [settings, setSettings] = useState(false);
-  const [_, setLogged] = useAtom(LoggedAtom);
-
-//  const id = '';
+  const [username] = useAtom(Database.user.nick);
   const navigate = useNavigate();
   async function handleLogout() {
 //    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
@@ -31,7 +31,7 @@ function Header() {
     <div className="Header">
       <NavLink to="/user" className="infos_user">
         <img height="50%" src="./default-avatar.webp" alt="avatar" />
-        {/* <p>{user_infos.nick}</p> */}
+        {username}
       </NavLink>
       <p
         className='settings'

@@ -1,6 +1,5 @@
-import { useAtom } from "jotai";
-import React, { useState, useEffect } from "react";
-//import { UserCom } from "../com/user.com";
+import { atom, useAtom } from "jotai";
+import React, { useState } from "react";
 import { Database } from '../com/database';
 import Header from "../components/Header";
 import "../styles/User.css";
@@ -15,6 +14,7 @@ function User() {
   const [image, setImage] = useState(new Blob());
   const [uploaded, setUploaded] = useState(false);
   const [username] = useAtom(Database.user.nick);
+  const [scores] = useAtom(Database.user.scores);
   const matches_won: number = 0;
   const matches_lost: number = 0;
 
@@ -51,7 +51,12 @@ function User() {
         </div>
         <div className="match_history">
           <h4>History</h4>
-          <p>No match history yet</p>
+          {scores.map((score) => {
+            return (
+              <p>{score.playerScore} - {score.enemyScore}</p>
+            )
+          })}
+          {/* <p>No match history yet</p> */}
         </div>
       </div>
     </div>

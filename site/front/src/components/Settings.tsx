@@ -1,32 +1,19 @@
 import React, { useState } from "react";
 import "../styles/Settings.css";
 import { Switch } from "@mui/material";
-//import { UserCom } from "../com/user.com";
 import { useNavigate } from "react-router-dom";
+import { atom, useAtom } from "jotai";
+import { Database } from "../com/database";
+
 
 function Settings(props: any) {
   const [newName, setNewName] = useState("");
+  // const [name, setName] = useAtom<string | undefined>(Database.user.nick);
   const navigate = useNavigate();
-  const id = "";
   const changeUsername = async(e: any) => {
-    //e.preventDefault();
-    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
-    //  id = res[0].id;
-    //});
-    //await UserCom.update(id, { nick: newName }).then((res) => {
-    //  console.log(res);
-    //});
-    //localStorage.setItem("username", newName);
-    //user_infos.nick = JSON.stringify(localStorage.getItem("username")).replace(/^"(.*)"$/, '$1');
-  };
-  const deleteAccount = async (e: any) => {
-    //e.preventDefault();
-    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
-    //  id = res[0].id;
-    //});
-    //await UserCom.remove(id).then(() => {});
-    //localStorage.clear();
-    navigate("/");
+    e.preventDefault();
+    // setName(e.target.value);
+    // console.log(name);
   };
   return (
     <div className="Settings">
@@ -44,10 +31,6 @@ function Settings(props: any) {
       </form>
       <br />
       <button type="button">Change Avatar</button>
-      <br />
-      <button type="button" onClick={deleteAccount}>
-        Delete Account
-      </button>
       <br />
       <p>Activate 2FA</p>
       <Switch color="error" />

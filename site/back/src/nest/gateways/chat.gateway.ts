@@ -14,6 +14,7 @@ import { User } from 'src/game/User';
 import { ChatUser, ChatUsers } from '../../channel/class/ChatUsers';
 import { UserStatus } from 'src/game/Constants';
 import EventsGateway from './events.gateway';
+import { channel } from 'diagnostics_channel';
 
 @WebSocketGateway({
   namespace: 'events',
@@ -27,7 +28,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 
   private readonly chatUsers: ChatUsers = new ChatUsers();
   private readonly currentUsers: Array<User> = new Array();
-  private readonly currentChannel: Array<Room> = new Array();
+  private readonly currentChannels: Array<Room> = new Array();
   private readonly rooms: Map<string, Room> = new Map();
   private tmpMessage:string;
 
@@ -35,19 +36,18 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     private readonly eventsGateway: EventsGateway
   ) {}
 
-  // createNewRoomDm(own: string, other: string): void {
-  // 	const roomId: string = `${own}&${other}`;
-  // 	let room: Room = new Room(roomId, null);
-  // 	// console.log("roomId = " + roomId);
+    createNewRoomChannel( players: User[], channelName: string ): void {
+        const roomId: string = `${channelName}`; // TODO remplacer toto par channel name
+        let room: Room = new Room(roomId, players);
+        console.log("roomId = " + roomId);
 
-  // 	this.eventsGateway.server.to(own).emit("newRoom", room);
-  // 	if (other)
-  // 		this.eventsGateway.server.to(other).emit("newRoom", room);
-  // 	this.rooms.set(roomId, room);
-  // 	this.currentChannel.push(room);
-
-  // 	this.eventsGateway.server.emit("updatecurrentChannel", this.currentChannel);
-  // }
+        this.eventsGateway.server.to(players[0].socketId).emit("newRoomChannel", room);
+        // this.eventsGateway.server.to(players[1].socketId).emit("newRoom", room);
+        this.rooms.set(roomId, room);
+        this.currentChannels.push(room);
+    
+        this.eventsGateway.server.emit("ChannelCreated", this.currentChannels.find(usr => usr.roomId == roomId), channelName);
+    }
 
   afterInit(server: Server) {
     console.log('[+] Init Chat Gateway');
@@ -97,7 +97,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
       this.chatUsers.addUser(user);
 
       this.currentUsers.push(user);
-      this.eventsGateway.server.emit('updateCurrentUsers', this.currentUsers);
+      // this.eventsGateway.server.emit('ChannelCreated', this.currentUsers);
 
       this.eventsGateway.server.emit('getUserId', client.id);
     }
@@ -149,26 +149,60 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   // 	this.eventsGateway.server.in(socketId).socketsLeave(roomId);
   // }
 
-   @SubscribeMessage('DmRoom')
-   async handleCreateDm(
+  //  @SubscribeMessage('DmRoom')
+  //  async handleCreateDm(
+  // 	 @ConnectedSocket() client: Socket,
+  // 	 @MessageBody() otherId: string
+  //  ) {
+	// 	// load old db messages here
+  // 		// this.createNewRoomDm(client.id, otherId);
+  // 		//  this.eventsGateway.server.to(client.id).emit('openCreatedDm', client);
+  //  }
+   
+   @SubscribeMessage('ChannelRoom')
+   async handleChannelRoom(
   	 @ConnectedSocket() client: Socket,
-  	 @MessageBody() otherId: string
+  	 @MessageBody() channelName: string
    ) {
-		// load old db messages here
-  		// this.createNewRoomDm(client.id, otherId);
-  		//  this.eventsGateway.server.to(client.id).emit('openCreatedDm', client);
+      const newUser= new User(client.id, this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
+      let users: User[] = [];
+      users.push(newUser);
+      console.log("channel room")
+
+
+      // load old db messages here
+      const tmpRoomId = this.currentChannels.find(usr => usr.roomId == `${channelName}`);
+      if (tmpRoomId) {
+        console.log("client: " + client.id + " joined room: " + tmpRoomId.roomId);
+				client.join(tmpRoomId.roomId);
+        this.eventsGateway.server.emit("joinedChannelRoom", tmpRoomId.roomId);
+      } else {
+        this.createNewRoomChannel(users, channelName);
+      }
+        //  this.eventsGateway.server.to(client.id).emit('openCreatedDm', client);
    }
 
-  @SubscribeMessage('submitMessage')
-  handleMessages(
+//   @SubscribeMessage('submitMessageDm')
+//   handleMessages(
+//     @ConnectedSocket() client: Socket,
+//     @MessageBody() other: string,
+//     // @MessageBody() message: string,
+//   ) {
+// 	// console.log("other = " + other);
+// //     // -> faire appel a la db pour stocker le message
+//     this.eventsGateway.server.to(client.id).emit('NewCreatedDm', this.tmpMessage, true);
+//     this.eventsGateway.server.to(other).emit('NewCreatedDm', this.tmpMessage, false);
+//   }
+
+  @SubscribeMessage('submitMessageChannel')
+  handleMessagesChannel(
     @ConnectedSocket() client: Socket,
-    @MessageBody() other: string,
+    @MessageBody() roomId: string,
     // @MessageBody() message: string,
   ) {
 	// console.log("other = " + other);
-//     // -> faire appel a la db pour stocker le message
-    this.eventsGateway.server.to(client.id).emit('NewCreatedDm', this.tmpMessage, true);
-    this.eventsGateway.server.to(other).emit('NewCreatedDm', this.tmpMessage, false);
+     // -> faire appel a la db pour stocker le message
+    this.eventsGateway.server.to(roomId).emit('NewCreatedChannelMessage', this.tmpMessage, false);
   }
 
   @SubscribeMessage('tmpMessageStock')
