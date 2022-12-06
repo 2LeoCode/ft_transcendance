@@ -1,7 +1,8 @@
 import { useAtom } from 'jotai';
 import React, { useState, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
-import { Database } from '../com/database';
+import useDatabase from '../com/use-database';
+//import { Database } from '../com/database';
 import '../styles/Chat.css';
 import '../styles/Friend.css';
 
@@ -12,10 +13,12 @@ export type message = {
 };
 
 function DirectMessage(props: any) {
+  const Database = useDatabase();
+
   const socket: Socket = props.socket;
   // const messages: message[] = [];
   const [messages, setMessages] = useState<message[]>([]);
-  const [messagesIn, setMessagesIn] = useAtom(Database.user.messagesIn);
+  //const [messagesIn, setMessagesIn] = useAtom(Database.user.messagesIn);
   const [clientId, setClientId] = useState('');
   // const messagesFromUser = messagesIn.filter(msg => msg.receiver.id == props.name);
 

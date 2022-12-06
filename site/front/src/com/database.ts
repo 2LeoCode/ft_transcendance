@@ -1,6 +1,6 @@
-import EntityParser from './entity-parser';
-import { atom } from 'jotai';
-import Constants from './constants';
+import { atom } from "jotai";
+import Constants from "./constants";
+import EntityParser from "./entity-parser";
 
 const DatabaseLoader = (async () => Object.seal({
 
@@ -49,10 +49,10 @@ const DatabaseLoader = (async () => Object.seal({
 
 }))();
 
-let Database: Awaited<typeof DatabaseLoader>;
+export let Database: Awaited<typeof DatabaseLoader>;
+
+export type DatabaseType = typeof Database;
 
 export const syncDatabase = async () => {
 	Database = await DatabaseLoader;
-}
-
-export { Database };
+};

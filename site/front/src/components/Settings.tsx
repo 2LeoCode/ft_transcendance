@@ -2,16 +2,20 @@ import React, { useState } from "react";
 import "../styles/Settings.css";
 import { Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { atom, useAtom } from "jotai";
-import { Database } from "../com/database";
+import { useAtom } from "jotai";
+import useDatabase from "../com/use-database";
+//import { Database } from "../com/database";
 
 
 function Settings(props: any) {
+  const Database = useDatabase();
+  const [, setNick] = useAtom(Database.user.nickAtom);
   const [newName, setNewName] = useState("");
   // const [name, setName] = useAtom<string | undefined>(Database.user.nick);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const changeUsername = async(e: any) => {
     e.preventDefault();
+    setNick(newName);
     // setName(e.target.value);
     // console.log(name);
   };

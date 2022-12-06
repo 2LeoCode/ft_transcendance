@@ -1,6 +1,8 @@
 import { atom, useAtom } from "jotai";
 import React, { useState } from "react";
-import { Database } from '../com/database';
+import { useLocation, Location } from "react-router-dom";
+import useDatabase from "../com/use-database";
+//import { Database } from '../com/database';
 import Header from "../components/Header";
 import "../styles/User.css";
 
@@ -11,18 +13,22 @@ declare let Blob: {
 };
 
 function User() {
+  const Database = useDatabase();
+  const location = useLocation();
+
   const [image, setImage] = useState(new Blob());
   const [uploaded, setUploaded] = useState(false);
-  const [username] = useAtom(Database.user.nick);
-  const [scores] = useAtom(Database.user.scores);
+  const [nick] = useAtom(Database.user.nickAtom);
+  const [scores] = useAtom(Database.user.scoresAtom);
   const matches_won: number = 0;
   const matches_lost: number = 0;
+  console.log(Database.user.nick);
 
   return (
     <div>
       <Header />
       <div className="User">
-        <h3>{username}</h3>
+        <h3>{nick}</h3>
         <div className="avatar">
           {!uploaded && (
             <img src="./default-avatar.webp" alt="Avatar" width="80%" />

@@ -31,11 +31,11 @@ export default class EventsGateway implements OnGatewayConnection {
 			this.connectedUsers.push({ socketId: client.id, username: payload.username });
 			//console.log(this.connectedUsers);
 			//client.emit('onConnection', payload);
+			console.log('Client good!');
 		} catch (e) {
 			console.log('bad token');
 			client.disconnect(true);
 		}
-		console.log('Client good!');
 	}
 
 	async handleDisconnection(

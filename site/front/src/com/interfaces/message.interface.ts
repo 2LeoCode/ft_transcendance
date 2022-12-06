@@ -1,12 +1,15 @@
-import { Atom } from "jotai";
+import { Atom } from '../types/atom.type';
 import PublicChannel from "./public-channel.interface";
 import PublicUser from "./public-user.interface";
 
 export default interface Message {
 	id: string;
-	content: Atom<string>;
+	content: string;
 	createDate: Date;
-	updateDate: Atom<Date>;
+	updateDate: Date;
 	sender: PublicUser;
 	receiver: PublicUser | PublicChannel;
+
+	contentAtom: Atom<string>;
+	updateDateAtom: Atom<Date>;
 }

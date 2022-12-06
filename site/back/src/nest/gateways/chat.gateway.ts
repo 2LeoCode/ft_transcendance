@@ -15,6 +15,7 @@ import { ChatUser, ChatUsers } from '../../channel/class/ChatUsers';
 import { UserStatus } from 'src/game/Constants';
 import EventsGateway from './events.gateway';
 import { channel } from 'diagnostics_channel';
+import UserService from '../services/user.service';
 
 @WebSocketGateway({
   namespace: 'events',
@@ -33,7 +34,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   private tmpMessage:string;
 
   constructor(
-    private readonly eventsGateway: EventsGateway
+    private readonly eventsGateway: EventsGateway,
+    private readonly userService: UserService,
   ) {}
 
     createNewRoomChannel( players: User[], channelName: string ): void {

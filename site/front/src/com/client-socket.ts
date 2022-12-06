@@ -4,18 +4,17 @@ const ClientSocket = io(`ws://localhost:2000/events`, {
 	transports: ['websocket'],
 	upgrade: false,
 	reconnection: false,
-	reconnectionAttempts: Infinity
+	reconnectionAttempts: Infinity,
+	autoConnect: false
 });
-
-ClientSocket.connect();
 
 window.onbeforeunload = () => {
 	ClientSocket.close();
 }
 
-ClientSocket.on('error', (err) => {
+ClientSocket.on('error', (err: any) => {
 	console.log(err);
-})
+});
 
 ClientSocket.on('clientConnected', (user: any) => {
 	console.log('Client connected', user);
