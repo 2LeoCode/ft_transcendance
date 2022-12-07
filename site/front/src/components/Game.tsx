@@ -92,6 +92,10 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
         draw.player2Score = room.playerTwo.score;
     });
 
+    socket.on("winner", (username: string) => {
+      draw.stopGame(username); 
+    })
+
     // const waitForInvitedUser = () => {
     //   //same. We'll see
 		// 	// draw.drawLoading();
@@ -119,7 +123,8 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
         if (draw.playerScore < 7 && draw.player2Score < 7)
           draw.draw();
         else {
-          draw.stopGame(room.playerOne.user.username); // maybe do a endGame function to save everything in the db
+          socket.emit("endGame", roomId);
+          socket.emit("requestUpdate", roomId);
           return ;
         }
 

@@ -3,25 +3,19 @@
 
 CHAT
 
+// Leo en cours
 - Create channels -> private, password
         |-> the creator of the channel is the owner of a channel and can kick, ban, mute other users and the channel administrators
         |-> a user who is an administrator of a channel can kick, ban mute other users, but not the channel owners.
         |-> users can join/leave channels via a button and password if needed.
-
-
-// Leo en cours
 - Directs messages
 
 
 - Block users -> the messages from the blocked person must be hidden
 
 
-- invite pong interfac-> The user can access the user profile of other players
-from the chat e and also invite them for a Pong duel
-
-
+// tiphaine en cours
 - Add friends
-
 
 
 AUTH
