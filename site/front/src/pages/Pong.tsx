@@ -7,6 +7,9 @@ import Game from "../components/Game";
 import Watch from "./Watch";
 import { GameState, IRoom, User } from "../gameObjects/GameObject";
 import ClientSocket from "../com/client-socket";
+import useDatabase from "../com/use-database";
+import { useAtom } from "jotai";
+import EntityParser from "../com/entity-parser";
 
 let socket: Socket;
 
@@ -17,13 +20,14 @@ export type onGoingGame = {
 };
 
 function Pong() {
+  const db = useDatabase();
   // const [isReady, setIsReady] = useState<boolean | any>(false);
   const [play, setPlay] = useState<boolean>(false);
   const [watch, setWatch] = useState<boolean>(false);
   const [inQueue, setInQueue] = useState<boolean>(false);
   const [room, setRoom] = useState<IRoom | null>(null);
   const [currentGames, setCurrentGames] = useState<onGoingGame[]>([]);
-
+  const [onlineUsers, setOnlineUsers] = useAtom(db.onlineUsersAtom);
 
 	let roomData: IRoom;
   // let roomId: string | undefined;
@@ -104,6 +108,25 @@ function Pong() {
 			setPlay(false);
 			setRoom(null);
 		});
+    socket.on('clientDisconnected', ({
+      socketId,
+      username,
+      userId,
+    }) => {
+      console.log('client disconnected');
+      setOnlineUsers(onlineUsers.filter((user) => user.id !== userId));
+      // if (chatSocket) {
+      //   chatSocket.emit("userGameStatus", { isPlaying: false }); // user status "not playing"
+      // }
+      // roomId = undefined;
+
+      //setPlay(false);
+      //setRoom(null);
+    })
+    socket.on('clientConnected', (entity: any) => {
+      console.log('client connected');
+      setOnlineUsers([...onlineUsers, EntityParser.publicUser(entity)]);
+    })
   //  return () => {
   //      // if (chatSocket) {
   //      //   chatSocket.emit("userGameStatus", { isPlaying: false }); // user status

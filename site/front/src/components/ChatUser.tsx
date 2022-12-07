@@ -1,0 +1,57 @@
+import { Fragment, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Conversation, IsDmAtom } from "../pages/Chat";
+import Message from "../com/interfaces/message.interface";
+import { atom, useAtom } from "jotai";
+
+export const DmReceiptAtom = atom('');
+
+const ChatUser = ({ conv }: { conv: Conversation }) => {
+	const [, setIsDm] = useAtom(IsDmAtom);
+	const [_, setDmReceipt] = useAtom(DmReceiptAtom);
+	function printInfos(name: string) {
+
+    let css = document.getElementById(name)?.style;
+    if (css?.length === 0) css.display = 'block';
+    else if (css?.display === 'block') css.display = 'none';
+    else if (css?.display === 'none') css.display = 'block';
+  }
+	//const goDm = (e: React.MouseEvent<HTMLButtonElement>) => {
+	//	console.log('goDm to ' + conv.user);
+	//}
+
+	//useEffect(() => {
+	//	console.log(user.messages);
+	//}, [user.messages]);
+	return (
+		<Fragment>
+			<li className='chat_user'>
+				<div onClick={() => printInfos(conv.user)}>
+				<img src="./default-avatar.webp" alt="Avatar" width="20px" />
+					{conv.user}
+				</div>
+			</li>
+			<div className="infos" id={conv.user}>
+				<Fragment>
+					<button
+						onClick={
+							(e) => {
+								setIsDm(true);
+								setDmReceipt(conv.user);
+							}
+						}>
+						Chat
+					</button>
+					<br />
+					<button>Play</button>
+					<br />
+					<Link to={`/other_user/${conv.user}`}>
+						<button>View profile</button>
+					</Link>
+				</Fragment>
+			</div>
+		</Fragment>
+	);
+}
+
+export default ChatUser;

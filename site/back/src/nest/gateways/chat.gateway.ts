@@ -83,6 +83,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     // }
   }
 
+
   @SubscribeMessage('updateChatUser')
   async handleNewUser(
     @ConnectedSocket() client: Socket,
@@ -191,17 +192,29 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
         //  this.eventsGateway.server.to(client.id).emit('openCreatedDm', client);
    }
 
-//   @SubscribeMessage('submitMessageDm')
-//   handleMessages(
-//     @ConnectedSocket() client: Socket,
-//     @MessageBody() other: string,
-//     // @MessageBody() message: string,
-//   ) {
-// 	// console.log("other = " + other);
-// //     // -> faire appel a la db pour stocker le message
-//     this.eventsGateway.server.to(client.id).emit('NewCreatedDm', this.tmpMessage, true);
-//     this.eventsGateway.server.to(other).emit('NewCreatedDm', this.tmpMessage, false);
-//   }
+   @SubscribeMessage('submitMessageDm')
+   async handleMessages(
+     @ConnectedSocket() client: Socket,
+     @MessageBody() other: string,
+     @MessageBody() message: string,
+   ) {
+      console.log('submitting: ' + message);
+      console.log(this.eventsGateway.connectedUsers);
+      console.log(this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id))
+      const sender = this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id);
+      const receiver = this.eventsGateway.connectedUsers.find(usr => usr.socketId == other);
+
+      console.log(other);
+      // console.log("other = " + other);
+ //     // -> faire appel a la db pour stocker le message
+      try {
+        const msg = await this.userService.sendPrivMsg(sender.userId, receiver.userId, message);
+      } catch (error) {
+        client.emit('FailedToCreateDm', error);
+      }
+      this.eventsGateway.server.to(client.id).emit('NewSentDm', message, true);
+      this.eventsGateway.server.to(other).emit('NewReceivedDm', message, false);
+   }
 
   @SubscribeMessage('submitMessageChannel')
   handleMessagesChannel(

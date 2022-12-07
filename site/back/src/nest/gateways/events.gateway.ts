@@ -19,20 +19,30 @@ export default class EventsGateway implements OnGatewayConnection {
 	@WebSocketServer()
 	server: Server;
 
-	readonly connectedUsers: { socketId: string, username: string }[] = [];
+	readonly connectedUsers: {
+		socketId: string,
+		username: string,
+		userId: string,
+	}[] = [];
 
 	async handleConnection(
 		client: Socket
 	) {
-		console.log(client.handshake.query);
-		const token = client.handshake.headers.cookie?.split('token=')[1]?.split(';')[0]?.trim() || '';
+		const token = client.handshake.auth.token;
 		// console.log('token=', token);
 		try {
 			await this.authService.verify(token);
 			const payload: any = await this.authService.decode(token);
-			console.log('payload', payload);
-			console.log(this.connectedUsers);
-			this.connectedUsers.push({ socketId: client.id, username: payload.username });
+
+			const dbUser = await this.userService.getOnePublic({
+				user42: payload.username
+			})
+
+			this.connectedUsers.push({
+				socketId: client.id,
+				username: payload.username,
+				userId: dbUser.id
+			});
 			console.log(this.connectedUsers);
 			//client.emit('onConnection', payload);
 			this.userService.updateByName(
@@ -40,6 +50,8 @@ export default class EventsGateway implements OnGatewayConnection {
 				{ online: true }
 			);
 			console.log('Client good!');
+			dbUser.online = true;
+			this.server.emit('userConnected', dbUser);
 		} catch (e) {
 			console.log('bad token');
 			client.disconnect(true);
@@ -50,7 +62,15 @@ export default class EventsGateway implements OnGatewayConnection {
 		client: Socket
 	) {
 		console.log('goodbye');
-		this.connectedUsers.splice(this.connectedUsers.findIndex(usr => usr.socketId == client.id), 1)
+		const user = this.connectedUsers.find(usr => usr.socketId == client.id);
+		if (!user) return;
+		this.userService.updateByName(
+			user.username,
+			{ online: false }
+		);
+		const index = this.connectedUsers.findIndex(usr => usr.socketId == client.id);
+		this.server.emit('userDisconnected', this.connectedUsers[index].username);
+		this.connectedUsers.splice(index, 1);
 	}
 	@SubscribeMessage('ping')
 	ping(client: Socket) {

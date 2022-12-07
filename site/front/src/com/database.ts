@@ -59,5 +59,6 @@ export type DatabaseType = typeof Database;
 
 export const syncDatabase = async () => {
 	Database = await DatabaseLoader;
+	console.log(Database.onlineUsers);
 	console.log("Database synced")
 };

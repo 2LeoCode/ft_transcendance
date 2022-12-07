@@ -1,5 +1,5 @@
 import Channel from './interfaces/channel.interface';
-import Message from './interfaces/message.interface';
+import Message, { ReceiverType } from './interfaces/message.interface';
 import PublicChannel, { ChannelAccessibility, ChannelVisibility } from './interfaces/public-channel.interface';
 import PublicUser from './interfaces/public-user.interface';
 import Score from './interfaces/score.interface';
@@ -72,10 +72,10 @@ const EntityParser = {
 				(channel: any) => EntityParser.channel(channel)
 			),
 			messagesIn: entity.receiver.messages.map(
-				(message: any) => EntityParser.message(message, 'user')
+				(message: any) => EntityParser.message(message)
 			),
 			messagesOut: entity.messages.map(
-				(message: any) => EntityParser.message(message, 'user')
+				(message: any) => EntityParser.message(message)
 			),
 			scores: entity.scores.map(
 				(score: any) => EntityParser.score(score)
@@ -89,9 +89,9 @@ const EntityParser = {
 			friendsAtom: atom(userNoAtom.friends),
 			friendRequestsAtom: atom(userNoAtom.friendRequests),
 			ownedChannelsAtom: atom(userNoAtom.ownedChannels),
-			channelsAtom: atom(userNoAtom.channels),
-			messagesInAtom: atom(userNoAtom.messagesIn),
-			messagesOutAtom: atom(userNoAtom.messagesOut),
+			channelsAtom: atom(userNoAtom.channels as Channel[]),
+			messagesInAtom: atom(userNoAtom.messagesIn as Message[]),
+			messagesOutAtom: atom(userNoAtom.messagesOut as Message[]),
 			scoresAtom: atom(userNoAtom.scores)
 		};
 	},
@@ -108,7 +108,7 @@ const EntityParser = {
 				(invite: any) => EntityParser.publicUser(invite)
 			),
 			messages: entity.receiver.messages.map(
-				(message: any) => EntityParser.message(message, 'channel')
+				(message: any) => EntityParser.message(message)
 			),
 			users: entity.users.map(
 				(user: any) => EntityParser.publicUser(user)
@@ -126,7 +126,7 @@ const EntityParser = {
 		}
 	},
 
-	message: (entity: any, type: 'user' | 'channel'): Message => {
+	message: (entity: any): Message => {
 		const messageNoAtom = {
 			id: entity.id,
 			content: entity.content as string,
@@ -134,9 +134,10 @@ const EntityParser = {
 			updateDate: entity.updateDate as Date,
 			sender: EntityParser.publicUser(entity.sender),
 			receiver:
-				type === 'channel' ?
-				EntityParser.publicChannel(entity.receiver.parentChannel) :
-				EntityParser.publicUser(entity.receiver.parentUser)
+				entity.receiver.type === 'Channel' ?
+					EntityParser.publicChannel(entity.receiver.parentChannel) :
+					EntityParser.publicUser(entity.receiver.parentUser),
+			receiverType: entity.receiver.type as ReceiverType
 		};
 
 		return {

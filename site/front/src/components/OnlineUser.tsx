@@ -4,13 +4,12 @@ import { Link } from "react-router-dom";
 import { Socket } from "socket.io-client";
 import ClientSocket from "../com/client-socket";
 import useDatabase from "../com/use-database";
-import { DmNameAtom, IsChannelAtom, IsDmAtom } from "../pages/Chat";
+import { DmContentAtom, IsChannelAtom, IsDmAtom } from "../pages/Chat";
 import { SocketUser } from "../pages/Chat";
 
 const OnlineUser: React.FC<{ name: string; }> = (props) => {
 	const db = useDatabase();
 	//const [name, setName] = useAtom(DmNameAtom);
-	const [users] = useAtom(db.onlineUsersAtom);
 	const [, setIsDm] = useAtom(IsDmAtom);
 	const [, setIsChannel] = useAtom(IsChannelAtom);
 
@@ -21,12 +20,12 @@ const OnlineUser: React.FC<{ name: string; }> = (props) => {
     else if (css?.display === 'none') css.display = 'block';
   }
 
-	function goDm(e: React.MouseEvent<HTMLButtonElement>) {
-    ClientSocket.emit('DmRoom');
-		// load dm room with e.currentTarget.value and socketprops.user.socketId
-    console.log('goDm to ' + props.name);
-    //setName(name);
-  }
+	//function goDm(e: React.MouseEvent<HTMLButtonElement>) {
+  //  //ClientSocket.emit('DmRoom');
+	//	// load dm room with e.currentTarget.value and socketprops.user.socketId
+  //  console.log('goDm to ' + props.name);
+  //  //setName(name);
+  //}
 
 	return (
       <li>
@@ -41,7 +40,6 @@ const OnlineUser: React.FC<{ name: string; }> = (props) => {
 								<button
             			value={ClientSocket.id}
             			onClick={(e) => {
-            			  goDm(e);
             			  setIsDm(true);
             			  setIsChannel(false);
             			}}>

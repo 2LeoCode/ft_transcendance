@@ -6,17 +6,19 @@ import Header from '../components/Header';
 import '../styles/Chat.css';
 import { GameState, IRoom, User } from '../gameObjects/GameObject';
 import { useResolvedPath } from 'react-router-dom';
-import DirectMessage from '../components/DirectMessage';
 import Channel from '../components/Channel';
 import Members from '../components/Members';
 import ClientSocket from '../com/client-socket';
 import ChannelsList from '../components/ChannelsList';
 import { create } from '@mui/material/styles/createTransitions';
-import AllMembers from '../components/AllMembers';
+//import AllMembers from '../components/AllMembers';
 import { atom, useAtom } from 'jotai';
 import OnlineUser from '../components/OnlineUser';
 import useDatabase from '../com/use-database';
 import PublicUser from '../com/interfaces/public-user.interface';
+import Conversations from '../components/Conversations';
+import PrivateMessages from '../components/PrivateMessages';
+import { DmReceiptAtom } from '../components/ChatUser';
 
 let socket: Socket;
 
@@ -38,27 +40,37 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
 async function createChannel(e: any) {}
 
 export type SocketUser = { socketId: string; username: string };
+export type Conversation = {
+  user: string,
+  messages: {
+    content: string,
+    isOwn: boolean
+  }[]
+};
 
-export const DmNameAtom = atom('');
+export const DmContentAtom = atom('');
 export const IsDmAtom = atom(false);
 export const IsChannelAtom = atom(false);
+export const ConversationsAtom = atom<Conversation[]>([]);
 
 function Chat() {
   const Database = useDatabase();
   const [id, setId] = useState('');
   const [isChannel, setIsChannel] = useState(false);
   const [isDm, setIsDm] = useAtom(IsDmAtom);
-  const [DmName, setDmName] = useAtom(DmNameAtom);
+  const [DmContent, setDmContent] = useAtom(DmContentAtom);
   const [currentUsers, setCurrentUsers] = useState<User[]>([]);
   const [allUsers] = useAtom(Database.onlineUsersAtom);
   const [currentChannels, setCurrentChannels] = useState<string[]>([]);
   const [friends_id_tab, setFriends_id_tab] = useState([]);
   const [friends_name_tab, setFriends_name_tab] = useState<any[] | any[]>([]);
   const [mounted, setMounted] = useState(false);
-  const [name, setName] = useState('');
+  const [DmData, setDmData] = useState<string>('');
+  //const [name, setName] = useState('');
   const [nameChannel, setNameChannel] = useState('');
   const [channelName, setChannelName] = useState('');
   const [emitMessageTo, setEmitMessageTo] = useState('');
+  const [DmReceipt] = useAtom(DmReceiptAtom);
   const initFriends = async () => {
     //await UserCom.get({ nick: user_infos.nick }).then((res) => {
     //  setId(res[0].id);
@@ -97,12 +109,14 @@ function Chat() {
 
   const submitMessage = (e: any) => {
     e.preventDefault();
-    socket.emit('tmpMessageStock', name);
-
+    //socket.emit('tmpMessageStock', name);
+    console.log('submitMessage');
+    setDmContent(DmData);
+    console.log(DmContent);
     if (isChannel === true)
       socket.emit("submitMessageChannel", emitMessageTo);
     else if (isDm === true)
-      socket.emit('submitMessage', DmName);
+      socket.emit('submitMessageDm', DmContent);
   };
 
   // socket.on("newRoom", (newRoomData: IRoom) => {
@@ -110,9 +124,14 @@ function Chat() {
   // });
 
   useEffect((): any => {
-    console.log('useEffect');
+    console.log(allUsers);
+  
     socket = ClientSocket;
 
+
+    socket.on('NewCreatedDm', (message: string) => {
+
+    })
     socket.emit('updateChatUser');
 
     // socket.on('disconnect', (currentGamesUsers: User[]) => {
@@ -159,7 +178,7 @@ function Chat() {
     });
 
     // setMounted(true);
-  }, []);
+  }, [allUsers]);
 
   // if (!mounted) {
   //   initFriends();
@@ -217,7 +236,7 @@ function Chat() {
                 name={`toto${index}`}
                 setter={setIsDm}
                 setIsChannel={setIsChannel}
-                setName={setDmName}
+                setName={setDmData}
               />
             );
             // }
@@ -235,6 +254,7 @@ function Chat() {
               <button>Create Channel</button>
             </form>
           </div>
+          <Conversations />
         </div>
         <ul className="main">
           {!isDm && !isChannel && (
@@ -252,7 +272,7 @@ function Chat() {
               </li>
             </div>
           )}
-          {isDm && !isChannel && <DirectMessage socket={socket} name={DmName} />}
+          {isDm && !isChannel && <PrivateMessages DmContent={DmContent} DmReceipt={DmReceipt} />}
           {isChannel && !isDm && <Channel socket={socket} channelName={channelName} />}
         </ul>
         <div className="write_msg">
@@ -261,7 +281,7 @@ function Chat() {
               type="text"
               placeholder="Message..."
               onChange={(e) => {
-                setName(e.target.value);
+                setDmData(e.target.value);
               }}
             />
             <button type="submit">Send</button>

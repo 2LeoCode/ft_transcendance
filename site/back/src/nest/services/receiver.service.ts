@@ -25,14 +25,13 @@ export default class ReceiverService {
 	}
 
 	async add(type: ReceiverType, parent: UserEntity | ChannelEntity): Promise<ReceiverEntity> {
-		const receiverLoader = {
-			type: type
-		} as any;
-		Object.defineProperty
-	
 		const receiver = this.receiverRepository.create({
 			type: type,
 		});
+		if (type === 'User')
+			receiver.parentUser = parent as UserEntity;
+		else
+			receiver.parentChannel = parent as ChannelEntity;
 		return this.receiverRepository.save(receiver);
 	}
 
