@@ -11,7 +11,7 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
   let room: IRoom = roomProps;
 	const roomId: string | undefined = room?.roomId;
 
-  console.log("canva is working...");
+  // console.log("canva is working... " + client.id);
 
   const [width, setWitdh] = useState<number>(vw_to_px(70));
   const [height, setHeight] = useState<number>(vh_to_px(50));
@@ -62,6 +62,7 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
   useEffect(() => {
 
       const canvas = canvasRef.current;
+      console.log("canvaref = " + canvas);
       if (!canvas) {
         return ;
       }
@@ -69,7 +70,7 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
       let animationFrameId: number;
 
       const draw = new Draw(canvas);
-      // console.log(room.mode);
+      // console.log("room mode" + room.mode);
       draw.gameMode = room.mode;
 
       //if not a spectator
@@ -91,6 +92,10 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
         draw.player2Score = room.playerTwo.score;
     });
 
+    socket.on("winner", (username: string) => {
+      draw.stopGame(username); 
+    })
+
     // const waitForInvitedUser = () => {
     //   //same. We'll see
 		// 	// draw.drawLoading();
@@ -110,6 +115,7 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
         // console.log(elapsed);
 
         if (elapsed > 30) {
+          // console.log(roomId);
           socket.emit("requestUpdate", roomId);
           oldTimestamp = timestamp;
         }
@@ -117,7 +123,8 @@ const Game: React.FC<{socketProps: Socket, roomProps: any}> = ({socketProps, roo
         if (draw.playerScore < 7 && draw.player2Score < 7)
           draw.draw();
         else {
-          draw.stopGame(room.playerOne.user.username); // maybe do a endGame function to save everything in the db
+          socket.emit("endGame", roomId);
+          socket.emit("requestUpdate", roomId);
           return ;
         }
 

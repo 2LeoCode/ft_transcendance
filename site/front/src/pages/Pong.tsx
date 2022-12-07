@@ -75,11 +75,17 @@ function Pong() {
 		}); 
 
 		socket.on("newRoom", (newRoomData: IRoom) => {
+<<<<<<< HEAD
 			if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
         //console.log("return");
+=======
+			if (newRoomData.gameState === GameState.WAITING && user.id !== newRoomData.playerOne.user.id) {
+        console.log("return");
+>>>>>>> 674424362ef4f52afeb866b1cd936bd9e5beb4f2
 				return ;
 			}
 			socket.emit("joinRoom", newRoomData.roomId);
+      console.log("emit joinRoom");
 			roomData = newRoomData;
 			// roomId = newRoomData.roomId;
 			setRoom(roomData);
