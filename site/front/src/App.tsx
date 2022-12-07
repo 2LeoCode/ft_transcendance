@@ -1,19 +1,26 @@
-import React from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/App.css';
-import Log, { ConnectedAtom, LoggedAtom } from './pages/Log';
-import { useAtom } from 'jotai';
+import Log from './pages/Log';
+import { useAtom, atom } from 'jotai';
 import Chat from './pages/Chat';
 import User from './pages/User';
 import OtherUser from './pages/OtherUser';
 import Pong from './pages/Pong';
 import Loader, { SyncAtom } from './components/Loader';
+import ClientSocket from './com/client-socket';
+import Constants from './com/constants';
+
+export const StatusAtom = atom<'connected' | 'disconnected' | 'connecting'>('connecting');
+
+export const LoggedAtom = atom(false);
 
 function App() {
   const [sync] = useAtom(SyncAtom);
-  const [connected] = useAtom(ConnectedAtom);
-  console.log(document.cookie);
-  console.log(sync, connected);
+  const [status, setStatus] = useAtom(StatusAtom);
+  const [logged, setLogged] = useAtom(LoggedAtom);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  //const [logged] = useAtom(LoggedAtom);
   //const [isLog, setIsLog] = useState(false);
   //useEffect(() => {
   //  if (token) {
@@ -28,17 +35,32 @@ function App() {
   //    });
   //  } else setIsLog(false);
   //}, []);
+  useEffect(() => {
+    ClientSocket.connect();
+    ClientSocket.on('connect', () => setStatus('connected'));
+    ClientSocket.on('disconnect', () => setStatus('disconnected'));
+    ClientSocket.on('pong', () => setLogged(true))
+    ClientSocket.emit('ping');
+    //ClientSocket.on('reconnect', () => setStatus('connected'));
+    //ClientSocket.on('reconnecting', () => setStatus('connecting'));
+  }, [])
   return (
     <BrowserRouter>
-      {sync ? (
-        <Routes>
-          {/*<Route path="/pong" element={<Pong />} />*/}
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/user" element={<User />} />
-          <Route path="/other_user/:userName" element={<OtherUser />} />
-          <Route path="*" element={<Pong />} />
-        </Routes>
-      ) : <Log />}
+      {
+        sync ? (
+          <Routes>
+            {/*<Route path="/pong" element={<Pong />} />*/}
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/user" element={<User />} />
+            <Route path="/other_user/:userName" element={<OtherUser />} />
+            <Route path="*" element={<Pong />} />
+          </Routes>
+        ) : {
+          'connected': logged ? <Loader /> : <Log />,
+          'disconnected': <Log />,
+          'connecting': <Fragment>Loading...</Fragment>
+        }[status]
+      }
     </BrowserRouter>
   );
 }

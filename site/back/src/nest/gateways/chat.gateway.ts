@@ -15,6 +15,7 @@ import { ChatUser, ChatUsers } from '../../channel/class/ChatUsers';
 import { UserStatus } from 'src/game/Constants';
 import EventsGateway from './events.gateway';
 import { channel } from 'diagnostics_channel';
+import UserService from '../services/user.service';
 
 @WebSocketGateway({
   namespace: 'events',
@@ -33,7 +34,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   private tmpMessage:string;
 
   constructor(
-    private readonly eventsGateway: EventsGateway
+    private readonly eventsGateway: EventsGateway,
+    private readonly userService: UserService,
   ) {}
 
     createNewRoomChannel( players: User[], channelName: string ): void {
@@ -81,14 +83,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     // }
   }
 
+
   @SubscribeMessage('updateChatUser')
-  handleNewUser(
+  async handleNewUser(
     @ConnectedSocket() client: Socket,
     @MessageBody() newUser: ChatUser,
   ) {
     let user = this.chatUsers.getUserById(client.id);
 
-    console.log('coucou a toi ' + client.id);
+    // console.log('coucou a toi ' + client.id);
+
+    // get all users in db
+    const connectedUsers = this.eventsGateway.connectedUsers;
+    console.log('in updateChatUser');
+    connectedUsers.forEach(usr => console.log(usr));
 
     if (!user) {
       user = new ChatUser(client.id, this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
@@ -100,6 +108,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
       // this.eventsGateway.server.emit('ChannelCreated', this.currentUsers);
 
       this.eventsGateway.server.emit('getUserId', client.id);
+      this.eventsGateway.server.emit('toAllMembers', connectedUsers);
     }
     // } else {
     // 	user.setSocketId(client.id);
@@ -149,15 +158,16 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   // 	this.eventsGateway.server.in(socketId).socketsLeave(roomId);
   // }
 
-  //  @SubscribeMessage('DmRoom')
-  //  async handleCreateDm(
-  // 	 @ConnectedSocket() client: Socket,
-  // 	 @MessageBody() otherId: string
-  //  ) {
-	// 	// load old db messages here
-  // 		// this.createNewRoomDm(client.id, otherId);
-  // 		//  this.eventsGateway.server.to(client.id).emit('openCreatedDm', client);
-  //  }
+  //@SubscribeMessage('DmRoom')
+  //async handleCreateDm(
+  // @ConnectedSocket() client: Socket,
+  // @MessageBody() otherId: string
+  //) {
+  //  
+	//// load old db messages here
+  //	// this.createNewRoomDm(client.id, otherId);
+  //	//  this.eventsGateway.server.to(client.id).emit('openCreatedDm', client);
+  //}
    
    @SubscribeMessage('ChannelRoom')
    async handleChannelRoom(
@@ -182,17 +192,29 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
         //  this.eventsGateway.server.to(client.id).emit('openCreatedDm', client);
    }
 
-//   @SubscribeMessage('submitMessageDm')
-//   handleMessages(
-//     @ConnectedSocket() client: Socket,
-//     @MessageBody() other: string,
-//     // @MessageBody() message: string,
-//   ) {
-// 	// console.log("other = " + other);
-// //     // -> faire appel a la db pour stocker le message
-//     this.eventsGateway.server.to(client.id).emit('NewCreatedDm', this.tmpMessage, true);
-//     this.eventsGateway.server.to(other).emit('NewCreatedDm', this.tmpMessage, false);
-//   }
+   @SubscribeMessage('submitMessageDm')
+   async handleMessages(
+     @ConnectedSocket() client: Socket,
+     @MessageBody() other: string,
+     @MessageBody() message: string,
+   ) {
+      console.log('submitting: ' + message);
+      console.log(this.eventsGateway.connectedUsers);
+      console.log(this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id))
+      const sender = this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id);
+      const receiver = this.eventsGateway.connectedUsers.find(usr => usr.socketId == other);
+
+      console.log(other);
+      // console.log("other = " + other);
+ //     // -> faire appel a la db pour stocker le message
+      try {
+        const msg = await this.userService.sendPrivMsg(sender.userId, receiver.userId, message);
+      } catch (error) {
+        client.emit('FailedToCreateDm', error);
+      }
+      this.eventsGateway.server.to(client.id).emit('NewSentDm', message, true);
+      this.eventsGateway.server.to(other).emit('NewReceivedDm', message, false);
+   }
 
   @SubscribeMessage('submitMessageChannel')
   handleMessagesChannel(

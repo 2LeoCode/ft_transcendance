@@ -1,9 +1,13 @@
-import { Atom } from "jotai";
+import { Atom } from '../types/atom.type';
 
 export default interface PublicUser {
 	id: string;
 	user42: string;
-	nick: Atom<string>;
-	avatarPath: Atom<string>;
-	online: Atom<boolean>;
+	nick: string;
+	avatarPath: string;
+	online: boolean;
+
+	nickAtom: Atom<string>;
+	avatarPathAtom: Atom<string>;
+	onlineAtom: Atom<boolean>;
 }

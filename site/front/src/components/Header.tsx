@@ -1,17 +1,20 @@
 import { useAtom } from "jotai";
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Database } from "../com/database";
+import React, { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+//import { Database } from "../com/database";
+import useDatabase from "../com/use-database";
 import "../styles/Header.css";
 import Settings from "./Settings";
-import { ConnectedAtom, LoggedAtom } from "../pages/Log";
-import { SyncAtom } from "./Loader";
 
 function Header() {
+  const Database = useDatabase();
+
   const [settings, setSettings] = useState(false);
-  const [username] = useAtom(Database.user.nick);
+  console.log(Database.user.nickAtom);
+  const [nick] = useAtom(Database.user.nickAtom);
+  //const [logged, setLogged] = useAtom(LoggedAtom);
   const navigate = useNavigate();
-  async function handleLogout() {
+  function handleLogout() {
 //    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
 //    //  id = res[0].id;
 //    //  console.log(res);
@@ -20,17 +23,18 @@ function Header() {
 //    //  console.log(res);
 //    //});
 //    //localStorage.clear();//
-//    //navigate("/auth/login")
-	window.location.reload();
-	navigate('/');
-  }
+//    //navigate("/auth/login");
 
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+	  window.location.reload();
+  }
   return (
     <div className="Header">
-      <NavLink to="/user" className="infos_user">
+      <Link to='/user' className="infos_user">
         <img height="50%" src="./default-avatar.webp" alt="avatar" />
-        {username}
-      </NavLink>
+        {nick}
+      </Link>
       <p
         className='settings'
         onClick={() => {

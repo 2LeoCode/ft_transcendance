@@ -1,27 +1,46 @@
 import Channel from './interfaces/channel.interface';
-import Message from './interfaces/message.interface';
+import Message, { ReceiverType } from './interfaces/message.interface';
 import PublicChannel, { ChannelAccessibility, ChannelVisibility } from './interfaces/public-channel.interface';
 import PublicUser from './interfaces/public-user.interface';
 import Score from './interfaces/score.interface';
 import User from './interfaces/user.interface';
 import { atom } from 'jotai';
 
-const EntityParser =  {
-	publicUser: (entity: any): PublicUser => ({
-		id: entity.id,
-		nick: atom(entity.nick),
-		user42: entity.user42,
-		avatarPath: atom(entity.avatarPath),
-		online: atom(entity.online),
-	}),
+const EntityParser = {
+	publicUser: (entity: any): PublicUser => {
+		const publicUserNoAtom = {
+			id: entity.id,
+			nick: entity.nick,
+			user42: entity.user42,
+			avatarPath: entity.avatarPath,
+			online: entity.online
+		};
 
-	publicChannel: (entity: any): PublicChannel => ({
-		id: entity.id,
-		name: atom(entity.name),
-		password: atom(entity.password),
-		accessibility: atom(entity.accessibility),
-		visibility: atom(entity.visibility),
-	}),
+		return {
+			...publicUserNoAtom,
+			nickAtom: atom(publicUserNoAtom.nick),
+			avatarPathAtom: atom(publicUserNoAtom.avatarPath),
+			onlineAtom: atom(publicUserNoAtom.online)
+		};
+	},
+
+	publicChannel: (entity: any): PublicChannel => {
+		const publicChannelNoAtom = {
+			id: entity.id,
+			name: entity.name,
+			password: entity.password,
+			accessibility: entity.accessibility,
+			visibility: entity.visibility,
+		};
+
+		return {
+			...publicChannelNoAtom,
+			nameAtom: atom(publicChannelNoAtom.name),
+			passwordAtom: atom(publicChannelNoAtom.password),
+			accessibilityAtom: atom(publicChannelNoAtom.accessibility),
+			visibilityAtom: atom(publicChannelNoAtom.visibility)
+		};
+	},
 
 	score: (entity: any): Score => ({
 		id: entity.id,
@@ -32,93 +51,99 @@ const EntityParser =  {
 	}),
 
 	user: (entity: any): User => {
-		return {
+		const userNoAtom = {
 			...EntityParser.publicUser(entity),
-			blockedBy: atom(
-				entity.blockedBy.map(
-					(user: any) => EntityParser.publicUser(user)
-				),
+			blockedBy: entity.blockedBy.map(
+				(user: any) => EntityParser.publicUser(user)
 			),
-			blocked: atom(
-				entity.blocked.map(
-					(user: any) => EntityParser.publicUser(user)
-				),
+			blocked: entity.blocked.map(
+				(user: any) => EntityParser.publicUser(user)
 			),
-			friends: atom(
-				entity.friends.map(
-					(friend: any) => EntityParser.publicUser(friend)
-				),
+			friends: entity.friends.map(
+				(friend: any) => EntityParser.publicUser(friend)
 			),
-			friendRequests: atom(
-				entity.friendRequests.map(
-					(friendRequest: any) => EntityParser.publicUser(friendRequest)
-				),
+			friendRequests: entity.friendRequests.map(
+				(friendRequest: any) => EntityParser.publicUser(friendRequest)
 			),
-			ownedChannels: atom(
-				entity.ownedChannels.map(
-						(channel: any) => EntityParser.channel(channel)
-				),
+			ownedChannels: entity.ownedChannels.map(
+				(channel: any) => EntityParser.channel(channel)
 			),
-			channels: atom(
-				entity.channels.map(
-					(channel: any) => EntityParser.channel(channel)
-				),
+			channels: entity.channels.map(
+				(channel: any) => EntityParser.channel(channel)
 			),
-			messagesIn: atom(
-				entity.receiver.messages.map(
-					(message: any) => EntityParser.message(message, 'user')
-				),
+			messagesIn: entity.receiver.messages.map(
+				(message: any) => EntityParser.message(message)
 			),
-			messagesOut: atom(
-				entity.messages.map(
-					async (message: any) => EntityParser.message(message, 'user')
-				),
+			messagesOut: entity.messages.map(
+				(message: any) => EntityParser.message(message)
 			),
-			scores: atom(
-				entity.scores.map(
-					(score: any) => EntityParser.score(score)
-				),
+			scores: entity.scores.map(
+				(score: any) => EntityParser.score(score)
 			),
+		};
+
+		return {
+			...userNoAtom,
+			blockedByAtom: atom(userNoAtom.blockedBy),
+			blockedAtom: atom(userNoAtom.blocked),
+			friendsAtom: atom(userNoAtom.friends),
+			friendRequestsAtom: atom(userNoAtom.friendRequests),
+			ownedChannelsAtom: atom(userNoAtom.ownedChannels),
+			channelsAtom: atom(userNoAtom.channels as Channel[]),
+			messagesInAtom: atom(userNoAtom.messagesIn as Message[]),
+			messagesOutAtom: atom(userNoAtom.messagesOut as Message[]),
+			scoresAtom: atom(userNoAtom.scores)
 		};
 	},
 
 	
 	channel: (entity: any): Channel => {
-		return {
+		const channelNoAtom = {
 			...EntityParser.publicChannel(entity),
 			owner: EntityParser.publicUser(entity.owner),
-			mutedIds: atom(entity.mutedIds as string[]),
-			bannedIds: atom(entity.bannedIds as string[]),
-			adminsIds: atom(entity.adminsIds as string[]),
-			invites: atom(
-				entity.invites.map(
-					(invite: any) => EntityParser.publicUser(invite)
-				) as PublicUser[],
+			mutedIds: entity.mutedIds,
+			bannedIds: entity.bannedIds,
+			adminsIds: entity.adminsIds,
+			invites: entity.invites.map(
+				(invite: any) => EntityParser.publicUser(invite)
 			),
-			messages: atom(
-				entity.receiver.messages.map(
-					async (message: any) => EntityParser.message(message, 'channel')
-				) as Message[],
+			messages: entity.receiver.messages.map(
+				(message: any) => EntityParser.message(message)
 			),
-			users: atom(
-				entity.users.map(
-					async (user: any) => EntityParser.publicUser(user)
-				) as PublicUser[],
-			),
+			users: entity.users.map(
+				(user: any) => EntityParser.publicUser(user)
+			)
 		};
+
+		return {
+			...channelNoAtom,
+			mutedIdsAtom: atom(channelNoAtom.mutedIds),
+			bannedIdsAtom: atom(channelNoAtom.bannedIds),
+			adminsIdsAtom: atom(channelNoAtom.adminsIds),
+			invitesAtom: atom(channelNoAtom.invites),
+			messagesAtom: atom(channelNoAtom.messages),
+			usersAtom: atom(channelNoAtom.users)
+		}
 	},
 
-	message: (entity: any, type: 'user' | 'channel'): Message => {
-		return {
+	message: (entity: any): Message => {
+		const messageNoAtom = {
 			id: entity.id,
-			content: atom(entity.content as string),
+			content: entity.content as string,
 			createDate: entity.createDate as Date,
-			updateDate: atom(entity.updateDate as Date),
+			updateDate: entity.updateDate as Date,
 			sender: EntityParser.publicUser(entity.sender),
 			receiver:
-				type === 'channel' ?
-				EntityParser.publicChannel(entity.receiver.parentChannel) :
-				EntityParser.publicUser(entity.receiver.parentUser)
+				entity.receiver.type === 'Channel' ?
+					EntityParser.publicChannel(entity.receiver.parentChannel) :
+					EntityParser.publicUser(entity.receiver.parentUser),
+			receiverType: entity.receiver.type as ReceiverType
+		};
+
+		return {
+			...messageNoAtom,
+			contentAtom: atom(messageNoAtom.content),
+			updateDateAtom: atom(messageNoAtom.updateDate)
 		};
 	}
 }

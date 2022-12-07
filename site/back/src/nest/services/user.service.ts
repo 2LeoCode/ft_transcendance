@@ -66,10 +66,16 @@ export default class UserService {
 		});
 	}
 
+	async updateByName(user42: string, dto: UpdateUserDto): Promise<void> {
+		await this.userRepository.update({ user42: user42 }, dto);
+	}
+
 	async update(id: string, dto: UpdateUserDto): Promise<void> {
 		const sameNick = await this.userRepository.findOne({
 			where: { nick: dto.nick }
 		});
+		console.log(id);
+		console.log(sameNick);
 		if (sameNick && sameNick.id !== id)
 			throw new Error('Nickname already taken');
 		await this.userRepository.update(id, dto);
