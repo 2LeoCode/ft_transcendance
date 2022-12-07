@@ -19,7 +19,6 @@ function App() {
   const [sync] = useAtom(SyncAtom);
   const [status, setStatus] = useAtom(StatusAtom);
   const [logged, setLogged] = useAtom(LoggedAtom);
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   //const [logged] = useAtom(LoggedAtom);
   //const [isLog, setIsLog] = useState(false);
   //useEffect(() => {

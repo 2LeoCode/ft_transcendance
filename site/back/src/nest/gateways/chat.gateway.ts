@@ -199,12 +199,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
      @MessageBody() message: string,
    ) {
       console.log('submitting: ' + message);
-      console.log(this.eventsGateway.connectedUsers);
-      console.log(this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id))
       const sender = this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id);
       const receiver = this.eventsGateway.connectedUsers.find(usr => usr.socketId == other);
 
-      console.log(other);
+      console.log('other: ' + other);
       // console.log("other = " + other);
  //     // -> faire appel a la db pour stocker le message
       try {
@@ -212,8 +210,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
       } catch (error) {
         client.emit('FailedToCreateDm', error);
       }
-      this.eventsGateway.server.to(client.id).emit('NewSentDm', message, true);
-      this.eventsGateway.server.to(other).emit('NewReceivedDm', message, false);
+      this.eventsGateway.server.to(client.id).emit('NewSentDm', message);
+      this.eventsGateway.server.to(other).emit('NewReceivedDm', message);
    }
 
   @SubscribeMessage('submitMessageChannel')

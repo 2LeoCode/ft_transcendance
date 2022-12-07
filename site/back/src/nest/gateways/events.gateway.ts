@@ -51,7 +51,7 @@ export default class EventsGateway implements OnGatewayConnection {
 			);
 			console.log('Client good!');
 			dbUser.online = true;
-			this.server.emit('userConnected', dbUser);
+			this.server.emit('clientConnected', dbUser);
 		} catch (e) {
 			console.log('bad token');
 			client.disconnect(true);
@@ -69,7 +69,7 @@ export default class EventsGateway implements OnGatewayConnection {
 			{ online: false }
 		);
 		const index = this.connectedUsers.findIndex(usr => usr.socketId == client.id);
-		this.server.emit('userDisconnected', this.connectedUsers[index].username);
+		this.server.emit('clientDisconnected', this.connectedUsers[index].username);
 		this.connectedUsers.splice(index, 1);
 	}
 	@SubscribeMessage('ping')

@@ -19,6 +19,7 @@ import PublicUser from '../com/interfaces/public-user.interface';
 import Conversations from '../components/Conversations';
 import PrivateMessages from '../components/PrivateMessages';
 import { DmReceiptAtom } from '../components/ChatUser';
+import EntityParser from '../com/entity-parser';
 
 let socket: Socket;
 
@@ -48,7 +49,7 @@ export type Conversation = {
   }[]
 };
 
-export const DmContentAtom = atom('');
+export const DmContentAtom = atom<string>('');
 export const IsDmAtom = atom(false);
 export const IsChannelAtom = atom(false);
 export const ConversationsAtom = atom<Conversation[]>([]);
@@ -60,7 +61,7 @@ function Chat() {
   const [isDm, setIsDm] = useAtom(IsDmAtom);
   const [DmContent, setDmContent] = useAtom(DmContentAtom);
   const [currentUsers, setCurrentUsers] = useState<User[]>([]);
-  const [allUsers] = useAtom(Database.onlineUsersAtom);
+  const [onlineUsers, setOnlineUsers] = useAtom(Database.onlineUsersAtom);
   const [currentChannels, setCurrentChannels] = useState<string[]>([]);
   const [friends_id_tab, setFriends_id_tab] = useState([]);
   const [friends_name_tab, setFriends_name_tab] = useState<any[] | any[]>([]);
@@ -107,31 +108,45 @@ function Chat() {
     console.log('Channel created ' + nameChannel);
   };
 
-  const submitMessage = (e: any) => {
-    e.preventDefault();
-    //socket.emit('tmpMessageStock', name);
-    console.log('submitMessage');
-    setDmContent(DmData);
-    console.log(DmContent);
-    if (isChannel === true)
-      socket.emit("submitMessageChannel", emitMessageTo);
-    else if (isDm === true)
-      socket.emit('submitMessageDm', DmContent);
-  };
+  //const submitMessage = (e: any) => {
+  //  e.preventDefault();
+  //  //socket.emit('tmpMessageStock', name);
+  //  console.log('submitMessage');
+  //  const dmContent = DmData;
+  //  setDmContent('Hello');
+  //  console.log(DmContent);
+  //  if (isChannel === true)
+  //    socket.emit("submitMessageChannel", emitMessageTo);
+  //  else if (isDm === true)
+  //    socket.emit('submitMessageDm', DmContent);
+  //};
 
   // socket.on("newRoom", (newRoomData: IRoom) => {
   //   socket.emit("joinRoom", newRoomData.roomId);
   // });
 
   useEffect((): any => {
-    console.log(allUsers);
   
     socket = ClientSocket;
+    console.log('useEffect');
+    ClientSocket.on('clientConnected', (user: any) => {
+      console.log('Client connected', user);
+      setOnlineUsers((prev) => [...prev, EntityParser.publicUser(user)]);
+      console.log('current users: ' + currentUsers);
+    });
+    
+    ClientSocket.on('clientDisconnected', (user: any) => {
+      console.log(user);
+      setOnlineUsers((prev) => prev.filter((u) => u.user42 !== user));
+      console.log('Client disconnected', user);
+    });
 
-
-    socket.on('NewCreatedDm', (message: string) => {
-
+    socket.on('NewReceivedDm', (message: any) => {
+      console.log('Received', message);
     })
+    socket.on('NewSentDm', (message: any) => {
+      console.log('Sent', message);
+    });
     socket.emit('updateChatUser');
 
     // socket.on('disconnect', (currentGamesUsers: User[]) => {
@@ -178,8 +193,16 @@ function Chat() {
     });
 
     // setMounted(true);
-  }, [allUsers]);
+  }, []);
 
+  useEffect(() => {
+    console.log('DmReceipt', DmReceipt);
+    console.log('DmContent', DmContent);
+    if (isChannel === true)
+      socket.emit("submitMessageChannel", emitMessageTo);
+    else if (isDm === true)
+      socket.emit('submitMessageDm', DmReceipt, DmContent);
+  }, [DmContent])
   // if (!mounted) {
   //   initFriends();
   // }
@@ -188,6 +211,7 @@ function Chat() {
   // }, []);
 
 
+  console.log('ALLUSERS:', onlineUsers);
   return (
     <div>
       <Header />
@@ -243,7 +267,9 @@ function Chat() {
           })}
           <br />
           <div className="create_channel">
-            <form onSubmit={createChannel}>
+            <form onSubmit={() => {
+              
+            }}>
               <input
                 type="text"
                 placeholder="Channel Name"
@@ -276,7 +302,12 @@ function Chat() {
           {isChannel && !isDm && <Channel socket={socket} channelName={channelName} />}
         </ul>
         <div className="write_msg">
-          <form onSubmit={submitMessage}>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            //socket.emit('tmpMessageStock', name);
+            console.log('submitMessage');
+            setDmContent(DmData);
+          }}>
             <input
               type="text"
               placeholder="Message..."
@@ -300,7 +331,7 @@ function Chat() {
           </form>
           <h3>All Members</h3>
           {
-            allUsers.map(
+            onlineUsers.map(
               usr => <OnlineUser key={usr.id} name={usr.user42} />
             )
           }

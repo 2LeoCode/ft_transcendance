@@ -19,14 +19,6 @@ ClientSocket.on('error', (err: any) => {
 	console.log(err);
 });
 
-ClientSocket.on('clientConnected', (user: any) => {
-	console.log('Client connected', user);
-});
-
-ClientSocket.on('clientDisconnected', (user: any) => {
-	console.log('Client disconnected', user);
-});
-
 ClientSocket.on('privMsg', (message: any) => {
 	console.log('Incoming private message', message);
 });

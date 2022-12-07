@@ -9,6 +9,7 @@ export const DmReceiptAtom = atom('');
 const ChatUser = ({ conv }: { conv: Conversation }) => {
 	const [, setIsDm] = useAtom(IsDmAtom);
 	const [_, setDmReceipt] = useAtom(DmReceiptAtom);
+
 	function printInfos(name: string) {
 
     let css = document.getElementById(name)?.style;
@@ -35,9 +36,10 @@ const ChatUser = ({ conv }: { conv: Conversation }) => {
 				<Fragment>
 					<button
 						onClick={
-							(e) => {
-								setIsDm(true);
+							async (e) => {
+								console.log('changing receipt');
 								setDmReceipt(conv.user);
+								setIsDm(true);
 							}
 						}>
 						Chat

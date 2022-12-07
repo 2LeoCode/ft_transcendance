@@ -12,34 +12,34 @@ const PrivateMessages = ({ DmContent, DmReceipt }: { DmContent: string, DmReceip
 
 	const [conversations] = useAtom(ConversationsAtom);
 
-	const getMessagesByUser = (messagesIn: Message[], messagesOut: Message[]) => {
-		const messagesByUser: { username: string, messages: Message[] }[] = [];
-		messagesIn.forEach(message => {
-			const user = messagesByUser.find(user => user.username === message.sender.user42);
-			if (user) {
-				user.messages.push(message);
-			} else {
-				messagesByUser.push({
-					username: message.sender.user42,
-					messages: [message]
-				})
-			}
-		});
-	
-		messagesOut.forEach(message => {
-			console.log(message);
-			const user = messagesByUser.find(user => user.username === (message.receiver as PublicUser).user42);
-			if (user) {
-				user.messages.push(message);
-			} else {
-				messagesByUser.push({
-					username: (message.receiver as PublicUser).user42,
-					messages: [message]
-				})
-			}
-		});
-		return messagesByUser;
-	}
+	//const getMessagesByUser = (messagesIn: Message[], messagesOut: Message[]) => {
+	//	const messagesByUser: { username: string, messages: Message[] }[] = [];
+	//	messagesIn.forEach(message => {
+	//		const user = messagesByUser.find(user => user.username === message.sender.user42);
+	//		if (user) {
+	//			user.messages.push(message);
+	//		} else {
+	//			messagesByUser.push({
+	//				username: message.sender.user42,
+	//				messages: [message]
+	//			})
+	//		}
+	//	});
+	//
+	//	messagesOut.forEach(message => {
+	//		console.log(message);
+	//		const user = messagesByUser.find(user => user.username === (message.receiver as PublicUser).user42);
+	//		if (user) {
+	//			user.messages.push(message);
+	//		} else {
+	//			messagesByUser.push({
+	//				username: (message.receiver as PublicUser).user42,
+	//				messages: [message]
+	//			})
+	//		}
+	//	});
+	//	return messagesByUser;
+	//}
 
 	return (
 		<Fragment>
@@ -48,7 +48,6 @@ const PrivateMessages = ({ DmContent, DmReceipt }: { DmContent: string, DmReceip
 					<div className='header'>
 						<h2>{DmReceipt}</h2>
 					</div>
-					<Fragment>
 					{
 						(() => {
 							const conv = conversations.find((conv, i) => conv.user == DmReceipt);
@@ -67,7 +66,6 @@ const PrivateMessages = ({ DmContent, DmReceipt }: { DmContent: string, DmReceip
 						})()
 						
 					}
-					</Fragment>
 				</div>
 			</ul>
 		</Fragment>
