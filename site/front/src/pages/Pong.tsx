@@ -75,11 +75,12 @@ function Pong() {
 		}); 
 
 		socket.on("newRoom", (newRoomData: IRoom) => {
-			if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
+			if (newRoomData.gameState === GameState.WAITING && user.id !== newRoomData.playerOne.user.id) {
         console.log("return");
 				return ;
 			}
 			socket.emit("joinRoom", newRoomData.roomId);
+      console.log("emit joinRoom");
 			roomData = newRoomData;
 			// roomId = newRoomData.roomId;
 			setRoom(roomData);

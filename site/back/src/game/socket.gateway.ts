@@ -65,9 +65,11 @@ import EventsGateway from 'src/nest/gateways/events.gateway';
 		private readonly connectedUsers: ConnectedUsers = new ConnectedUsers();
 	
 		createNewRoom(players: User[]): void {
+			console.log(players[0].username);
+			console.log(players[1].username);
 			const roomId: string = `${players[0].username}&${players[1].username}`;
 			let room: Room = new Room(roomId, players, { mode: players[0].mode });
-			// console.log("roomId = " + roomId);
+			console.log("roomId = " + roomId);
 
 			this.eventsGateway.server.to(players[0].socketId).emit("newRoom", room);
 			this.eventsGateway.server.to(players[1].socketId).emit("newRoom", room);
@@ -242,6 +244,55 @@ import EventsGateway from 'src/nest/gateways/events.gateway';
 				this.connectedUsers.changeUserStatus(client.id, UserStatus.INHUB);
 			}
 			this.eventsGateway.server.to(client.id).emit("leavedRoom");
+		}
+
+		@SubscribeMessage("invitePong")
+		handleInvitePong(@ConnectedSocket() client: Socket, @MessageBody() username: string) {
+
+			console.log("other socketId find: " + this.eventsGateway.connectedUsers.find(usr => usr.username == username).socketId)
+			const otherId = this.eventsGateway.connectedUsers.find(usr => usr.username == username).socketId;
+
+			const senderUsername = this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username;
+			this.eventsGateway.server.to(otherId).emit("receiverInvitePong", senderUsername);
+			
+			let user: User = this.connectedUsers.getUser(client.id);
+			if (!user) {
+				user.setSocketId(client.id);
+				user.setUsername(this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
+				console.log(user.socketId + " & " + client.id);
+			}
+
+			if (user && !this.queue.isInQueue(user)) {
+				this.connectedUsers.changeUserStatus(client.id, UserStatus.INQUEUE);
+				this.connectedUsers.setGameMode(client.id, "classic");
+				// this.queue.enqueue(user);
+
+				this.eventsGateway.server.to(client.id).emit('joinedQueue');
+			}
+			// creer un User[] avec les deux users quand l'invitation est accepter.
+		}
+
+		@SubscribeMessage("AcceptPongInvite")
+		handleAcceptInvitePong(@ConnectedSocket() client: Socket, @MessageBody() username: string) {
+
+			console.log(this.eventsGateway.connectedUsers.find(usr => usr.username == username).socketId);
+			console.log(client.id);
+
+			console.log("other socketId find: " + this.eventsGateway.connectedUsers.find(usr => usr.username == username).socketId)
+			const otherId = this.eventsGateway.connectedUsers.find(usr => usr.username == username).socketId;
+			// console.log(client.id + "  " + username);
+			const receivererUsername = this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username;
+
+			// this.eventsGateway.server.to(otherId).emit("receiverInvitePong", senderUsername);
+			const firstuser: User = new User(this.eventsGateway.connectedUsers.find(usr => usr.username == username).socketId, username);
+			firstuser.setMode("classic");
+			const backuser: User = new User(client.id, this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
+
+			let players: User[] = Array();
+			console.log("player[0] = " + this.connectedUsers.getUser(username));
+			players[0] = firstuser;
+			players[1] = backuser;
+			this.createNewRoom(players);
 		}
 
 		//receive an event
