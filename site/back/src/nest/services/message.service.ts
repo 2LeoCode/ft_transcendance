@@ -24,6 +24,21 @@ export default class MessageService {
 		});
 	}
 
+	async getFull(opts: {
+		id?: string;
+		senderId?: string;
+		receiverId?: string;
+	}): Promise<MessageEntity> {
+		return this.messageRepository.findOne({
+			relations: ['sender', 'receiver', 'receiver.parentUser', 'receiver.parentChannel'],
+			where: {
+				id: opts.id,
+				sender: { id: opts.senderId },
+				receiver: { id: opts.receiverId }
+			},
+		});
+	}
+
 	async getSenderId(id: string): Promise<string> {
 		return (await this.messageRepository.findOne({
 			relations: ['sender'],
@@ -38,8 +53,8 @@ export default class MessageService {
 		})).receiver.id;
 	}
 
-	async add(senderId: string, dto: CreateMessageDto): Promise<void> {
-		await this.messageRepository.save({
+	async add(senderId: string, dto: CreateMessageDto) {
+		return await this.messageRepository.save({
 			sender: { id: senderId },
 			receiver: { id: dto.receiverId },
 			content: dto.content,

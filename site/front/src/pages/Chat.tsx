@@ -11,6 +11,7 @@ import Members from '../components/Members';
 import ClientSocket from '../com/client-socket';
 import ChannelsList from '../components/ChannelsList';
 import { create } from '@mui/material/styles/createTransitions';
+import CreateChannel from '../components/CreateChannel';
 //import AllMembers from '../components/AllMembers';
 import { atom, useAtom } from 'jotai';
 import OnlineUser from '../components/OnlineUser';
@@ -20,6 +21,7 @@ import Conversations from '../components/Conversations';
 import PrivateMessages from '../components/PrivateMessages';
 import { DmReceiptAtom } from '../components/ChatUser';
 import EntityParser from '../com/entity-parser';
+import Message from '../com/interfaces/message.interface';
 
 let socket: Socket;
 
@@ -37,8 +39,6 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
   //await UserCom.update(id, { friendIds: friends_tab });
   window.location.reload();
 }
-
-async function createChannel(e: any) {}
 
 export type SocketUser = { socketId: string; username: string };
 export type Conversation = {
@@ -70,8 +70,11 @@ function Chat() {
   //const [name, setName] = useState('');
   const [nameChannel, setNameChannel] = useState('');
   const [channelName, setChannelName] = useState('');
+  const [createChannelButton, setCreateChannelButton] = useState(false);
   const [emitMessageTo, setEmitMessageTo] = useState('');
   const [DmReceipt] = useAtom(DmReceiptAtom);
+  const [messagesIn, setMessagesIn] = useAtom(Database.user.messagesInAtom);
+  const [messagesOut, setMessagesOut] = useAtom(Database.user.messagesOutAtom);
   const initFriends = async () => {
     //await UserCom.get({ nick: user_infos.nick }).then((res) => {
     //  setId(res[0].id);
@@ -87,6 +90,7 @@ function Chat() {
     //});
   };
 
+  //console.log('got here');
   let createdChannels: Map<string, IRoom> = new Map();
 
   // const updateCurrentUsers = (currentGamesUsers: User[]) => {
@@ -101,12 +105,6 @@ function Chat() {
   //   }
   //   setCurrentUsers(users);
   // };
-
-  const createChannel = (e: any) => {
-    e.preventDefault();
-    socket.emit('ChannelRoom', nameChannel); // load dm room with e.currentTarget.value and socketProps.socketId
-    console.log('Channel created ' + nameChannel);
-  };
 
   //const submitMessage = (e: any) => {
   //  e.preventDefault();
@@ -128,24 +126,26 @@ function Chat() {
   useEffect((): any => {
   
     socket = ClientSocket;
-    console.log('useEffect');
-    ClientSocket.on('clientConnected', (user: any) => {
-      console.log('Client connected', user);
-      setOnlineUsers((prev) => [...prev, EntityParser.publicUser(user)]);
-      console.log('current users: ' + currentUsers);
-    });
-    
-    ClientSocket.on('clientDisconnected', (user: any) => {
-      console.log(user);
-      setOnlineUsers((prev) => prev.filter((u) => u.user42 !== user));
-      console.log('Client disconnected', user);
-    });
+    //console.log('useEffect');
+    //ClientSocket.on('clientConnected', (user: any) => {
+    //  console.log(user.user42 + ' connected');
+    //  setOnlineUsers((prev) => [...prev, EntityParser.publicUser(user)]);
+    //  console.log('current users: ' + currentUsers);
+    //});
+    //
+    //ClientSocket.on('clientDisconnected', (user: any) => {
+    //  setOnlineUsers((prev) => prev.filter((u) => u.user42 !== user));
+    //  console.log(user + ' disconnected');
+    //});
 
     socket.on('NewReceivedDm', (message: any) => {
-      console.log('Received', message);
+      setMessagesIn([...messagesIn, EntityParser.message(message)]);
+      //console.log(messagesIn);
+      //console.log('Received', message);
     })
     socket.on('NewSentDm', (message: any) => {
-      console.log('Sent', message);
+      setMessagesOut([...messagesOut, EntityParser.message(message)]);
+      //console.log('Sent', message);
     });
     socket.emit('updateChatUser');
 
@@ -164,8 +164,8 @@ function Chat() {
 
     socket.on('ChannelCreated', (currentChannels: IRoom, channelName: string) => {
       if (currentChannels) {
-        console.log("coucou " + currentChannels.roomId);
-        setCurrentChannels(current => [...current, channelName]);
+        console.log('coucou ' + currentChannels.roomId);
+        setCurrentChannels((current) => [...current, channelName]);
         createdChannels.set(channelName, currentChannels);
       } else {
         setCurrentChannels([channelName]);
@@ -196,12 +196,10 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    console.log('DmReceipt', DmReceipt);
-    console.log('DmContent', DmContent);
     if (isChannel === true)
       socket.emit("submitMessageChannel", emitMessageTo);
     else if (isDm === true)
-      socket.emit('submitMessageDm', DmReceipt, DmContent);
+      socket.emit('submitMessageDm', [DmReceipt, DmContent]);
   }, [DmContent])
   // if (!mounted) {
   //   initFriends();
@@ -210,26 +208,26 @@ function Chat() {
   //   setMounted(true);
   // }, []);
 
-
-  console.log('ALLUSERS:', onlineUsers);
+  //console.log('ALLUSERS:', onlineUsers);
   return (
     <div>
       <Header />
+      {createChannelButton && <CreateChannel socket={socket} isOn={setCreateChannelButton} />}
       <div className="Chat">
         <div className="left-pannel">
           <h3>Channels</h3>
           <ul className="channels_list">
             {currentChannels.map((channel, index) => {
-                return (
-                  <ChannelsList
-                    key={index}
-                    socketProps={socket}
-                    name={channel}
-                    setter={setIsChannel}
-                    setIsDm={setIsDm}
-                  />
-                );
-              })}
+              return (
+                <ChannelsList
+                  key={index}
+                  socketProps={socket}
+                  name={channel}
+                  setter={setIsChannel}
+                  setIsDm={setIsDm}
+                />
+              );
+            })}
           </ul>
           {isChannel && (
             <div>
@@ -266,6 +264,7 @@ function Chat() {
             // }
           })}
           <br />
+          <button className="create_channel" onClick={() => setCreateChannelButton(true)}>Create Channel</button>
           <div className="create_channel">
             <form onSubmit={() => {
               

@@ -80,7 +80,7 @@ export default class UserEntity {
 	@OneToOne(
 		() => ReceiverEntity,
 		(receiver: ReceiverEntity) => receiver.parentUser,
-		{ cascade: true, nullable: true }
+		{ eager: true, onDelete: 'CASCADE', nullable: true }
 	)
 	@JoinColumn()
 	receiver: ReceiverEntity;

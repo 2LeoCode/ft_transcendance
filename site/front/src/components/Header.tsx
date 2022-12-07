@@ -10,7 +10,7 @@ function Header() {
   const Database = useDatabase();
 
   const [settings, setSettings] = useState(false);
-  console.log(Database.user.nickAtom);
+  //console.log(Database.user.nickAtom);
   const [nick] = useAtom(Database.user.nickAtom);
   //const [logged, setLogged] = useAtom(LoggedAtom);
   const navigate = useNavigate();

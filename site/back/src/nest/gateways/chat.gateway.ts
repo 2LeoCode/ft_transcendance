@@ -16,6 +16,7 @@ import { UserStatus } from 'src/game/Constants';
 import EventsGateway from './events.gateway';
 import { channel } from 'diagnostics_channel';
 import UserService from '../services/user.service';
+import MessageService from '../services/message.service';
 
 @WebSocketGateway({
   namespace: 'events',
@@ -36,12 +37,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   constructor(
     private readonly eventsGateway: EventsGateway,
     private readonly userService: UserService,
+    private readonly messageService: MessageService,
   ) {}
 
     createNewRoomChannel( players: User[], channelName: string ): void {
         const roomId: string = `${channelName}`; // TODO remplacer toto par channel name
         let room: Room = new Room(roomId, players);
-        console.log("roomId = " + roomId);
+        //console.log("roomId = " + roomId);
 
         this.eventsGateway.server.to(players[0].socketId).emit("newRoomChannel", room);
         // this.eventsGateway.server.to(players[1].socketId).emit("newRoom", room);
@@ -52,11 +54,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     }
 
   afterInit(server: Server) {
-    console.log('[+] Init Chat Gateway');
+    //console.log('[+] Init Chat Gateway');
   }
 
   async handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
+    //console.log(`Client connected: ${client.id}`);
   }
 
   //@SubscribeMessage('disconnect')
@@ -71,7 +73,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     }
     // this.eventsGateway.server.emit('disconnect', this.currentUsers);
 
-    console.log('disconnected client');
+    //console.log('disconnected client');
 
     // if (user) {
     // this.eventsGateway.server.emit('updateUserStatus', {
@@ -95,7 +97,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
 
     // get all users in db
     const connectedUsers = this.eventsGateway.connectedUsers;
-    console.log('in updateChatUser');
+    //console.log('in updateChatUser');
     connectedUsers.forEach(usr => console.log(usr));
 
     if (!user) {
@@ -177,13 +179,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
       const newUser= new User(client.id, this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
       let users: User[] = [];
       users.push(newUser);
-      console.log("channel room")
+      //console.log("channel room")
 
 
       // load old db messages here
       const tmpRoomId = this.currentChannels.find(usr => usr.roomId == `${channelName}`);
       if (tmpRoomId) {
-        console.log("client: " + client.id + " joined room: " + tmpRoomId.roomId);
+        //console.log("client: " + client.id + " joined room: " + tmpRoomId.roomId);
 				client.join(tmpRoomId.roomId);
         this.eventsGateway.server.emit("joinedChannelRoom", tmpRoomId.roomId);
       } else {
@@ -195,23 +197,28 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
    @SubscribeMessage('submitMessageDm')
    async handleMessages(
      @ConnectedSocket() client: Socket,
-     @MessageBody() other: string,
-     @MessageBody() message: string,
+     @MessageBody() [other, message]: [string, string]
    ) {
-      console.log('submitting: ' + message);
+      //console.log('submitting to ' + other + ' => ' + message);
       const sender = this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id);
-      const receiver = this.eventsGateway.connectedUsers.find(usr => usr.socketId == other);
-
-      console.log('other: ' + other);
+      const receiver = this.eventsGateway.connectedUsers.find(usr => usr.username == other);
+      //console.log('connectedUsers:', this.eventsGateway.connectedUsers);
+      //console.log('sender:', sender);
+     // console.log('receiver:', receiver);
+      //
       // console.log("other = " + other);
  //     // -> faire appel a la db pour stocker le message
       try {
-        const msg = await this.userService.sendPrivMsg(sender.userId, receiver.userId, message);
+        const tmp = await this.userService.sendPrivMsg(sender.userId, receiver.userId, message);
+        const msg = await this.messageService.getFull({id: tmp.id});
+
+        console.log('DM: ', msg);
+        client.emit('NewSentDm', msg);
+        this.eventsGateway.server.to(receiver.socketId).emit('NewReceivedDm', msg);
       } catch (error) {
+        console.warn(error);
         client.emit('FailedToCreateDm', error);
       }
-      this.eventsGateway.server.to(client.id).emit('NewSentDm', message);
-      this.eventsGateway.server.to(other).emit('NewReceivedDm', message);
    }
 
   @SubscribeMessage('submitMessageChannel')
@@ -230,7 +237,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() message: string,
   ) {
-	console.log("new message back " + message);
+	//console.log("new message back " + message);
 	this.tmpMessage = message;
 //     // -> faire appel a la db pour stocker le message
   }

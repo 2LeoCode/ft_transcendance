@@ -16,15 +16,15 @@ window.onbeforeunload = () => {
 }
 
 ClientSocket.on('error', (err: any) => {
-	console.log(err);
+	console.warn(err);
 });
 
-ClientSocket.on('privMsg', (message: any) => {
-	console.log('Incoming private message', message);
-});
-
-ClientSocket.on('channelMsg', (message: any) => {
-	console.log('Incoming channel message', message);
-});
+//ClientSocket.on('privMsg', (message: any) => {
+//	console.log('Incoming private message', message);
+//});
+//
+//ClientSocket.on('channelMsg', (message: any) => {
+//	console.log('Incoming channel message', message);
+//});
 
 export default ClientSocket;

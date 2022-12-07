@@ -1,0 +1,12 @@
+.CreateChannel {
+	position: absolute;
+	margin-top: 20vh;
+	margin-left: calc(30vw);
+	padding-top: 50px;
+	height: 40vh;
+	max-height: 250px;
+	width: 40vw;
+	background-color: white;
+	border-radius: 10%;
+	overflow-y: auto;
+}

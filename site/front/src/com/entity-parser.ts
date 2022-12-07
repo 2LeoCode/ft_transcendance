@@ -51,6 +51,7 @@ const EntityParser = {
 	}),
 
 	user: (entity: any): User => {
+		//console.log('Got', entity);
 		const userNoAtom = {
 			...EntityParser.publicUser(entity),
 			blockedBy: entity.blockedBy.map(
@@ -98,6 +99,7 @@ const EntityParser = {
 
 	
 	channel: (entity: any): Channel => {
+		//console.log('Channel', entity)
 		const channelNoAtom = {
 			...EntityParser.publicChannel(entity),
 			owner: EntityParser.publicUser(entity.owner),
@@ -127,16 +129,17 @@ const EntityParser = {
 	},
 
 	message: (entity: any): Message => {
+		//console.log('Got message', entity);
 		const messageNoAtom = {
 			id: entity.id,
 			content: entity.content as string,
 			createDate: entity.createDate as Date,
 			updateDate: entity.updateDate as Date,
-			sender: EntityParser.publicUser(entity.sender),
-			receiver:
+			senderId: entity.sender.id,
+			receiverId:
 				entity.receiver.type === 'Channel' ?
-					EntityParser.publicChannel(entity.receiver.parentChannel) :
-					EntityParser.publicUser(entity.receiver.parentUser),
+					entity.receiver.parentChannel.id :
+					entity.receiver.parentUser.id,
 			receiverType: entity.receiver.type as ReceiverType
 		};
 

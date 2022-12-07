@@ -43,17 +43,19 @@ export default class EventsGateway implements OnGatewayConnection {
 				username: payload.username,
 				userId: dbUser.id
 			});
-			console.log(this.connectedUsers);
+			//console.log(this.connectedUsers);
 			//client.emit('onConnection', payload);
 			this.userService.updateByName(
 				payload.username,
 				{ online: true }
 			);
-			console.log('Client good!');
+			//console.log('Client good!');
 			dbUser.online = true;
-			this.server.emit('clientConnected', dbUser);
+
+			console.log(`Client connected: ${payload.username}`);
+			client.broadcast.emit('clientConnected', dbUser);
 		} catch (e) {
-			console.log('bad token');
+			//console.log('bad token');
 			client.disconnect(true);
 		}
 	}
@@ -61,7 +63,7 @@ export default class EventsGateway implements OnGatewayConnection {
 	async handleDisconnect(
 		client: Socket
 	) {
-		console.log('goodbye');
+	//	console.log('goodbye');
 		const user = this.connectedUsers.find(usr => usr.socketId == client.id);
 		if (!user) return;
 		this.userService.updateByName(

@@ -6,12 +6,14 @@ import ClientSocket from "../com/client-socket";
 import useDatabase from "../com/use-database";
 import { DmContentAtom, IsChannelAtom, IsDmAtom } from "../pages/Chat";
 import { SocketUser } from "../pages/Chat";
+import { DmReceiptAtom } from "./ChatUser";
 
 const OnlineUser: React.FC<{ name: string; }> = (props) => {
 	const db = useDatabase();
 	//const [name, setName] = useAtom(DmNameAtom);
 	const [, setIsDm] = useAtom(IsDmAtom);
 	const [, setIsChannel] = useAtom(IsChannelAtom);
+	const [, setDmReceipt] = useAtom(DmReceiptAtom);
 
 	function printInfos(name: string) {
     let css = document.getElementById(name)?.style;
@@ -40,6 +42,8 @@ const OnlineUser: React.FC<{ name: string; }> = (props) => {
 								<button
             			value={ClientSocket.id}
             			onClick={(e) => {
+										console.log('Clicked');
+										setDmReceipt(props.name);
             			  setIsDm(true);
             			  setIsChannel(false);
             			}}>

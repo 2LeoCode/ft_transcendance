@@ -48,9 +48,12 @@ export default class UserService {
 	}
 
 	async getOne(id: string): Promise<UserEntity> {
-		return this.userRepository.findOne({
+		const r = await this.userRepository.findOne({
 			relations: [
 				'messages',
+				'messages.receiver',
+				'messages.receiver.parentUser',
+				'messages.receiver.parentChannel',
 				'scores',
 				'channels',
 				'ownedChannels', 
@@ -60,10 +63,14 @@ export default class UserService {
 				'blockedBy',
 				'receiver',
 				'receiver.messages',
-				'receiver.parentUser'
+				'receiver.messages.sender',
+				'receiver.parentUser',
+				'receiver.parentChannel'
 			],
 			where: { id: id }
 		});
+		//console.log(r);
+		return r;
 	}
 
 	async updateByName(user42: string, dto: UpdateUserDto): Promise<void> {
@@ -74,8 +81,8 @@ export default class UserService {
 		const sameNick = await this.userRepository.findOne({
 			where: { nick: dto.nick }
 		});
-		console.log(id);
-		console.log(sameNick);
+		//console.log(id);
+		//console.log(sameNick);
 		if (sameNick && sameNick.id !== id)
 			throw new Error('Nickname already taken');
 		await this.userRepository.update(id, dto);
@@ -92,7 +99,7 @@ export default class UserService {
 		});
 		if (other.blocked.find((user: UserEntity) => user.id === userId))
 			throw new Error(`${otherId} blocked ${userId}`);
-		await this.messageService.add(userId, {
+		return await this.messageService.add(userId, {
 			receiverId: other.receiver.id,
 			content: content
 		});

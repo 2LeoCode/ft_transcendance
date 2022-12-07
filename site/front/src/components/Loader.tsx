@@ -10,7 +10,7 @@ const Loader = () => {
   const db2 = useDatabase();
 
   useEffect(() => {
-	console.log('in loader');
+	//console.log('in loader');
     (async () => {
 	  const db = require('../com/database');
       await db.syncDatabase();

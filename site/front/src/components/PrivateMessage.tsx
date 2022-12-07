@@ -10,11 +10,11 @@ const PrivateMessage = ({ message }: {
 	const db = useDatabase();
 
 	return (
-		<div className={
+		<li className={
 			`${message.isOwn ? 'own' : 'other'}_messages`
 		}>
 			{message.content}
-		</div>
+		</li>
 	);
 }
 

@@ -23,7 +23,7 @@ export default class AuthController {
 		@Res({ passthrough: true }) res: any,
 	): Promise<any> {
 		const user = await this.authService.validateUser(user42);
-		console.log(user);
+		//console.log(user);
 		const token = await this.authService.login(user);
 		res.cookie('token', token.access_token);
 		res.redirect('http://localhost:3000');

@@ -16,7 +16,7 @@ function Channel(props: any) {
     // });
 
     socket.on("NewCreatedChannelMessage", ( message: string, own: boolean ) => {
-      console.log('name ' + message);
+      //console.log('name ' + message);
       setMessages(current => [...current, {
         content: message,
         author: 'tototest',

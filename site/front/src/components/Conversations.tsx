@@ -15,49 +15,46 @@ const Conversations = () => {
 	const [messagesIn, setMessagesIn] = useAtom(db.user.messagesInAtom);
 	const [messagesOut, setMessagesOut] = useAtom(db.user.messagesOutAtom);
 	const [convs, setConvs] = useAtom(ConversationsAtom);
+	const [onlineUsers] = useAtom(db.onlineUsersAtom);
 
 	const getConvs = () => {
-		const messagesByUser: { username: string, messages: Message[] }[] = [];
+		const convs: { username: string, messages: Message[] }[] = [];
 		//console.log(messagesIn, messagesOut)
 		messagesIn.forEach(message => {
-			const user = messagesByUser.find(user => user.username === message.sender.user42);
-			if (user) {
-				user.messages.push(message);
-			} else {
-				messagesByUser.push({
-					username: message.sender.user42,
-					messages: [message]
-				})
+			const sender = onlineUsers.find(user => user.id === message.senderId);
+			if (sender) {
+				const already = convs.find(conv => conv.username === sender.user42);
+				if (already)
+					already.messages.push(message);
+				else
+					convs.push({
+						username: sender.user42,
+						messages: [message]
+					})
 			}
 		});
 	
 		messagesOut.forEach(message => {
-			console.log(message);
-			const user = messagesByUser.find(user => user.username === (message.receiver as PublicUser).user42);
-			if (user) {
-				user.messages.push(message);
-			} else {
-				messagesByUser.push({
-					username: (message.receiver as PublicUser).user42,
+			const receiver = onlineUsers.find(user => user.id === message.receiverId);
+			const already = convs.find(
+				conv => conv.username === (receiver as any).user42
+			);
+			if (already)
+				already.messages.push(message);
+			else
+				convs.push({
+					username: (receiver as any).user42,
 					messages: [message]
 				})
-			}
 		});
-		return messagesByUser;
+		return convs;
 	}
+
 	useEffect(() => {
-		console.log('useEffect')
-		ClientSocket.on('NewReceivedDm', (message: Message) => {
-			console.log('created dm');
-			setMessagesIn([...messagesIn, message]);
-		});
-		ClientSocket.on('NewSentDm', (message: Message) => {
-			console.log('created dm');
-			setMessagesOut([...messagesOut, message]);
-		});
+		//console.log('useEffect')
 
 		ClientSocket.on('FailedToCreateDm', (err) => {
-			console.log(err);
+			//console.log(err);
 		})
 		const newConvs = getConvs()
 			.map(
@@ -65,13 +62,13 @@ const Conversations = () => {
 					user: username,
 					messages: messages.map(
 						(msg: Message) => ({
-							content: msg.content, isOwn: msg.sender.user42 === db.user.user42
+							content: msg.content, isOwn: msg.senderId === db.user.id
 						})
 					)
 				})
 			);
 		setConvs([...convs, ...newConvs]);
-	}, []);
+	}, [messagesIn, messagesOut]);
 
 	return (
 		<div className="Conversations">
@@ -82,7 +79,7 @@ const Conversations = () => {
 						<ul className='conversation_users'>
 							{
 								convs.map((conv, i) => <ChatUser key={i} conv={conv}/>)
-							};
+							}
 						</ul>
 					);
 				})()

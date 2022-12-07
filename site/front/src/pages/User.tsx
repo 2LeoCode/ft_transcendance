@@ -22,7 +22,7 @@ function User() {
   const [scores] = useAtom(Database.user.scoresAtom);
   const matches_won: number = 0;
   const matches_lost: number = 0;
-  console.log(Database.user.nick);
+  //console.log(Database.user.nick);
 
   return (
     <div>

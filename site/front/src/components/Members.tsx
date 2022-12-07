@@ -28,9 +28,9 @@ const Members: React.FC<{
   }
 
   function goDm(e: React.MouseEvent<HTMLButtonElement>) {
-    console.log(socketId);
+    //console.log(socketId);
     // socket.emit('DmRoom', socketId); // load dm room with e.currentTarget.value and socketProps.socketId
-    console.log('goDm to ' + socketId);
+    //console.log('goDm to ' + socketId);
     setName(socketId);
   }
 

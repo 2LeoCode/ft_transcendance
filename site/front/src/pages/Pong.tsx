@@ -60,7 +60,7 @@ function Pong() {
 		}
 		setCurrentGames(games);
 	};
-  
+
 	useEffect((): any => {
 
 
@@ -76,7 +76,7 @@ function Pong() {
 
 		socket.on("newRoom", (newRoomData: IRoom) => {
 			if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
-        console.log("return");
+        //console.log("return");
 				return ;
 			}
 			socket.emit("joinRoom", newRoomData.roomId);
@@ -96,7 +96,7 @@ function Pong() {
     });
 
     socket.on("joinedRoom", () => {
-      console.log("joined room");
+      //console.log("joined room");
       setPlay(true);
     });
 
@@ -108,13 +108,10 @@ function Pong() {
 			setPlay(false);
 			setRoom(null);
 		});
-    socket.on('clientDisconnected', ({
-      socketId,
-      username,
-      userId,
-    }) => {
-      console.log('client disconnected');
-      setOnlineUsers(onlineUsers.filter((user) => user.id !== userId));
+    socket.on('clientDisconnected', (username) => {
+      console.log(`client ${username} disconnected`);
+      setOnlineUsers(onlineUsers.filter((user) => user.user42 !== username));
+      //console.log('-1 onlineUsers:', onlineUsers);
       // if (chatSocket) {
       //   chatSocket.emit("userGameStatus", { isPlaying: false }); // user status "not playing"
       // }
@@ -124,8 +121,9 @@ function Pong() {
       //setRoom(null);
     })
     socket.on('clientConnected', (entity: any) => {
-      console.log('client connected');
+      console.log(`client ${entity.user42} connected`);
       setOnlineUsers([...onlineUsers, EntityParser.publicUser(entity)]);
+      //console.log('+1 onlineUsers:', onlineUsers);
     })
   //  return () => {
   //      // if (chatSocket) {

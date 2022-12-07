@@ -23,14 +23,14 @@ export default class ReceiverEntity {
 	@OneToOne(
 		() => UserEntity,
 		(user: UserEntity) => user.receiver,
-		{ nullable: true }
+		{ nullable: true, onDelete: 'CASCADE' }
 	)
 	parentUser: UserEntity;
 
 	@OneToOne(
 		() => ChannelEntity,
 		(channel: ChannelEntity) => channel.receiver,
-		{ nullable: true }
+		{ nullable: true, onDelete: 'CASCADE' }
 	)
 	parentChannel: ChannelEntity;
 }

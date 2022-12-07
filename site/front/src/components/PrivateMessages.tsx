@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ClientSocket from "../com/client-socket";
 import Message from "../com/interfaces/message.interface";
 import PublicUser from "../com/interfaces/public-user.interface";
@@ -12,6 +12,9 @@ const PrivateMessages = ({ DmContent, DmReceipt }: { DmContent: string, DmReceip
 
 	const [conversations] = useAtom(ConversationsAtom);
 
+	useEffect(() => {
+		console.log(`conversations: ${conversations}`);
+	}, [conversations]);
 	//const getMessagesByUser = (messagesIn: Message[], messagesOut: Message[]) => {
 	//	const messagesByUser: { username: string, messages: Message[] }[] = [];
 	//	messagesIn.forEach(message => {
