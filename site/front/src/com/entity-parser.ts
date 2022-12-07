@@ -8,32 +8,38 @@ import { atom } from 'jotai';
 
 const EntityParser = {
 	publicUser: (entity: any): PublicUser => {
-		const pubUser = {
+		const publicUserNoAtom = {
 			id: entity.id,
 			nick: entity.nick,
 			user42: entity.user42,
 			avatarPath: entity.avatarPath,
-			online: entity.online,
-			nickAtom: atom(entity.nick),
-			avatarPathAtom: atom(entity.avatarPath),
-			onlineAtom: atom(entity.online)
-		} as PublicUser;
-		return pubUser;
+			online: entity.online
+		};
+
+		return {
+			...publicUserNoAtom,
+			nickAtom: atom(publicUserNoAtom.nick),
+			avatarPathAtom: atom(publicUserNoAtom.avatarPath),
+			onlineAtom: atom(publicUserNoAtom.online)
+		};
 	},
 
 	publicChannel: (entity: any): PublicChannel => {
-		const pubChannel = {
+		const publicChannelNoAtom = {
 			id: entity.id,
 			name: entity.name,
 			password: entity.password,
 			accessibility: entity.accessibility,
 			visibility: entity.visibility,
-			nameAtom: atom(entity.name),
-			passwordAtom: atom(entity.password),
-			accessibilityAtom: atom(entity.accessibility),
-			visibilityAtom: atom(entity.visibility)
-		} as PublicChannel;
-		return pubChannel;
+		};
+
+		return {
+			...publicChannelNoAtom,
+			nameAtom: atom(publicChannelNoAtom.name),
+			passwordAtom: atom(publicChannelNoAtom.password),
+			accessibilityAtom: atom(publicChannelNoAtom.accessibility),
+			visibilityAtom: atom(publicChannelNoAtom.visibility)
+		};
 	},
 
 	score: (entity: any): Score => ({
@@ -45,7 +51,7 @@ const EntityParser = {
 	}),
 
 	user: (entity: any): User => {
-		const usr = {
+		const userNoAtom = {
 			...EntityParser.publicUser(entity),
 			blockedBy: entity.blockedBy.map(
 				(user: any) => EntityParser.publicUser(user)
@@ -74,43 +80,25 @@ const EntityParser = {
 			scores: entity.scores.map(
 				(score: any) => EntityParser.score(score)
 			),
-		} as User;
+		};
 
-		Object.defineProperties(usr, {
-			blockedByAtom: {
-				value: atom(usr.blockedBy)
-			},
-			blockedAtom: {
-				value: atom(usr.blocked)
-			},
-			friendsAtom: {
-				value: atom(usr.friends)
-			},
-			friendRequestsAtom: {
-				value: atom(usr.friendRequests)
-			},
-			ownedChannelsAtom: {
-				value: atom(usr.ownedChannels)
-			},
-			channelsAtom: {
-				value: atom(usr.channels)
-			},
-			messagesInAtom: {
-				value: atom(usr.messagesIn)
-			},
-			messagesOutAtom: {
-				value: atom(usr.messagesOut)
-			},
-			scoresAtom: {
-				value: atom(usr.scores)
-			},
-		});
-		return usr;
+		return {
+			...userNoAtom,
+			blockedByAtom: atom(userNoAtom.blockedBy),
+			blockedAtom: atom(userNoAtom.blocked),
+			friendsAtom: atom(userNoAtom.friends),
+			friendRequestsAtom: atom(userNoAtom.friendRequests),
+			ownedChannelsAtom: atom(userNoAtom.ownedChannels),
+			channelsAtom: atom(userNoAtom.channels),
+			messagesInAtom: atom(userNoAtom.messagesIn),
+			messagesOutAtom: atom(userNoAtom.messagesOut),
+			scoresAtom: atom(userNoAtom.scores)
+		};
 	},
 
 	
 	channel: (entity: any): Channel => {
-		const cha = {
+		const channelNoAtom = {
 			...EntityParser.publicChannel(entity),
 			owner: EntityParser.publicUser(entity.owner),
 			mutedIds: entity.mutedIds,
@@ -124,25 +112,22 @@ const EntityParser = {
 			),
 			users: entity.users.map(
 				(user: any) => EntityParser.publicUser(user)
-			),
-			mutedIdsAtom: atom(entity.mutedIds),
-			bannedIdsAtom: atom(entity.bannedIds),
-			adminsIdsAtom: atom(entity.adminsIds),
-			invitesAtom: entity.invites.map(
-				(invite: any) => EntityParser.publicUser(invite)
-			),
-			messagesAtom: entity.receiver.messages.map(
-				(message: any) => EntityParser.message(message, 'channel')
-			),
-			usersAtom: entity.users.map(
-				(user: any) => EntityParser.publicUser(user)
-			),
-		} as Channel;
-		return cha;
+			)
+		};
+
+		return {
+			...channelNoAtom,
+			mutedIdsAtom: atom(channelNoAtom.mutedIds),
+			bannedIdsAtom: atom(channelNoAtom.bannedIds),
+			adminsIdsAtom: atom(channelNoAtom.adminsIds),
+			invitesAtom: atom(channelNoAtom.invites),
+			messagesAtom: atom(channelNoAtom.messages),
+			usersAtom: atom(channelNoAtom.users)
+		}
 	},
 
 	message: (entity: any, type: 'user' | 'channel'): Message => {
-		const msg = {
+		const messageNoAtom = {
 			id: entity.id,
 			content: entity.content as string,
 			createDate: entity.createDate as Date,
@@ -152,17 +137,13 @@ const EntityParser = {
 				type === 'channel' ?
 				EntityParser.publicChannel(entity.receiver.parentChannel) :
 				EntityParser.publicUser(entity.receiver.parentUser)
-		} as Message;
+		};
 
-		Object.defineProperties(msg, {
-			contentAtom: {
-				value: atom(msg.content)
-			},
-			updateDateAtom: {
-				value: atom(msg.updateDate)
-			},
-		});
-		return msg;
+		return {
+			...messageNoAtom,
+			contentAtom: atom(messageNoAtom.content),
+			updateDateAtom: atom(messageNoAtom.updateDate)
+		};
 	}
 }
 

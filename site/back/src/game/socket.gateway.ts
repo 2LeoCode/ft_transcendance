@@ -108,6 +108,8 @@ import EventsGateway from 'src/nest/gateways/events.gateway';
 				newUser.setSocketId(client.id);
 				// newUser.setUsername(user.username);	// user
 			} else {
+				console.log('ClientId:', client.id);
+				console.log('ConnectedUsers:', this.eventsGateway.connectedUsers);
 				newUser= new User(client.id, this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username);
 				console.log(`new user ${this.eventsGateway.connectedUsers.find(usr => usr.socketId == client.id).username}`)
 			}

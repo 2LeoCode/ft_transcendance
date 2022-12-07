@@ -4,6 +4,7 @@ import { Socket } from 'socket.io-client';
 import '../styles/Chat.css';
 import '../styles/Friend.css';
 
+
 const AllMembers: React.FC<{
   socketProps: Socket;
   name: string;
@@ -39,7 +40,7 @@ const AllMembers: React.FC<{
       <li>
         <div onClick={() => printInfos(name)}>
           <img src="./default-avatar.webp" alt="Avatar" width="20px" />
-          {name}
+          You: {name}
         </div>
         <div className="infos" id={name}>
           <button

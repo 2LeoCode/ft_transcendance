@@ -14,6 +14,7 @@ export default interface Channel extends PublicChannel {
 
 	mutedIdsAtom: Atom<string[]>;
 	adminsIdsAtom: Atom<string[]>;
+	bannedIdsAtom: Atom<string[]>;
 	invitesAtom: Atom<PublicUser[]>;
 	messagesAtom: Atom<Message[]>;
 	usersAtom: Atom<PublicUser[]>;

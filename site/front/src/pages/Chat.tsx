@@ -13,6 +13,10 @@ import ClientSocket from '../com/client-socket';
 import ChannelsList from '../components/ChannelsList';
 import { create } from '@mui/material/styles/createTransitions';
 import AllMembers from '../components/AllMembers';
+import { atom, useAtom } from 'jotai';
+import OnlineUser from '../components/OnlineUser';
+import useDatabase from '../com/use-database';
+import PublicUser from '../com/interfaces/public-user.interface';
 
 let socket: Socket;
 
@@ -33,13 +37,20 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
 
 async function createChannel(e: any) {}
 
+export type SocketUser = { socketId: string; username: string };
+
+export const DmNameAtom = atom('');
+export const IsDmAtom = atom(false);
+export const IsChannelAtom = atom(false);
+
 function Chat() {
+  const Database = useDatabase();
   const [id, setId] = useState('');
   const [isChannel, setIsChannel] = useState(false);
-  const [isDm, setIsDm] = useState(false);
-  const [DmName, setDmName] = useState<string>();
+  const [isDm, setIsDm] = useAtom(IsDmAtom);
+  const [DmName, setDmName] = useAtom(DmNameAtom);
   const [currentUsers, setCurrentUsers] = useState<User[]>([]);
-  const [allUsers, setAllUsers] = useState<string[]>([]);
+  const [allUsers] = useAtom(Database.onlineUsersAtom);
   const [currentChannels, setCurrentChannels] = useState<string[]>([]);
   const [friends_id_tab, setFriends_id_tab] = useState([]);
   const [friends_name_tab, setFriends_name_tab] = useState<any[] | any[]>([]);
@@ -99,6 +110,7 @@ function Chat() {
   // });
 
   useEffect((): any => {
+    console.log('useEffect');
     socket = ClientSocket;
 
     socket.emit('updateChatUser');
@@ -112,8 +124,8 @@ function Chat() {
     //   updateCurrentUsers(currentGamesUsers);
     // });
 
-    socket.on('toAllMembers', (names: string[], ids:string[]) => {
-      setAllUsers(names);   // TODO Here we need to attach the socket ids to the usernames.
+    socket.on('toAllMembers', (users: SocketUser[]) => {
+      //setAllUsers(users);   // TODO Here we need to attach the socket ids to the usernames.
     })
 
     socket.on('ChannelCreated', (currentChannels: IRoom, channelName: string) => {
@@ -267,27 +279,11 @@ function Chat() {
             <input type="submit" value="Add Friend" />
           </form>
           <h3>All Members</h3>
-          {allUsers.map((user, index) => {
-            // if (socket && socket.id === user.socketId) {
-            //   return (
-            //     // <button key={user.socketId} value={user.socketId}>
-            //     //   You: <Members socket={user.socketId} name="toto" />
-            //     // </button>
-            //   );
-            // } else {
-            return (
-              <AllMembers
-                key={index}
-                socketId={socket.id}
-                socketProps={socket}
-                name={user}
-                setIsDm={setIsDm}
-                setIsChannel={setIsChannel}
-                setName={setDmName}
-              />
-            );
-            // }
-          })}
+          {
+            allUsers.map(
+              usr => <OnlineUser key={usr.id} name={usr.user42} />
+            )
+          }
         </div>
       </div>
     </div>

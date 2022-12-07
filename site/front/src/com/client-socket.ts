@@ -1,11 +1,14 @@
 import { io } from "socket.io-client";
+import Constants from "./constants";
 
 const ClientSocket = io(`ws://localhost:2000/events`, {
 	transports: ['websocket'],
 	upgrade: false,
 	reconnection: false,
-	reconnectionAttempts: Infinity,
-	autoConnect: false
+	autoConnect: false,
+	query: {
+		token: Constants.jwtToken,
+	}
 });
 
 window.onbeforeunload = () => {
