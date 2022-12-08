@@ -4,12 +4,14 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 //import { Database } from "../com/database";
 import useDatabase from "../com/use-database";
 import "../styles/Header.css";
-import Settings from "./Settings";
+import Chat, { ChatAtom } from "./chat/Chat";
+import Settings, { SettingsAtom } from "./Settings";
 
 function Header() {
   const Database = useDatabase();
 
-  const [settings, setSettings] = useState(false);
+  const [settings, setSettings] = useAtom(SettingsAtom);
+  const [chat, setChat] = useAtom(ChatAtom);
   //console.log(Database.user.nickAtom);
   const [nick] = useAtom(Database.user.nickAtom);
   //const [logged, setLogged] = useAtom(LoggedAtom);
@@ -45,15 +47,20 @@ function Header() {
       <NavLink to="/pong">
         <h1>FIGHT PONG</h1>
       </NavLink>
-      <NavLink to="/chat">
-        <p className="chat">Chat</p>
-      </NavLink>
+      <p
+        className='chat'
+        onClick={() => {
+          setChat(true);
+        }}>
+        Chat
+      </p>
       <p
         className='logout'
-        onClick={() => handleLogout()}>
+        onClick={handleLogout}>
         Logout
       </p>
-      {settings && <Settings isOn={setSettings} />}
+      {chat && <Chat />}
+      {settings && <Settings />}
     </div>
   );
 }

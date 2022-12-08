@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/App.css';
 import Log from './pages/Log';
 import { useAtom, atom } from 'jotai';
-import Chat from './pages/Chat';
+import Chat from './components/chat/Chat';
 import User from './pages/User';
 import OtherUser from './pages/OtherUser';
 import Pong from './pages/Pong';
@@ -12,7 +12,6 @@ import ClientSocket from './com/client-socket';
 import Constants from './com/constants';
 
 export const StatusAtom = atom<'connected' | 'disconnected' | 'connecting'>('connecting');
-
 export const LoggedAtom = atom(false);
 
 function App() {
@@ -38,7 +37,7 @@ function App() {
     ClientSocket.connect();
     ClientSocket.on('connect', () => setStatus('connected'));
     ClientSocket.on('disconnect', () => setStatus('disconnected'));
-    ClientSocket.on('pong', () => setLogged(true))
+    ClientSocket.on('pong', () => setLogged(true));
     ClientSocket.emit('ping');
     //ClientSocket.on('reconnect', () => setStatus('connected'));
     //ClientSocket.on('reconnecting', () => setStatus('connecting'));
@@ -49,7 +48,7 @@ function App() {
         sync ? (
           <Routes>
             {/*<Route path="/pong" element={<Pong />} />*/}
-            <Route path="/chat" element={<Chat />} />
+            {/*<Route path="/chat" element={<Chat />} /> */}
             <Route path="/user" element={<User />} />
             <Route path="/other_user/:userName" element={<OtherUser />} />
             <Route path="*" element={<Pong />} />

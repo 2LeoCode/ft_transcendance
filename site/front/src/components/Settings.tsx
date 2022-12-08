@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import "../styles/Settings.css";
 import { Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import useDatabase from "../com/use-database";
 //import { Database } from "../com/database";
 
+export const SettingsAtom = atom(false);
 
 function Settings(props: any) {
   const Database = useDatabase();
   const [, setNick] = useAtom(Database.user.nickAtom);
   const [newName, setNewName] = useState("");
+  const [settings, setSettings] = useAtom(SettingsAtom);
   // const [name, setName] = useAtom<string | undefined>(Database.user.nick);
   //const navigate = useNavigate();
   const changeUsername = async(e: any) => {
@@ -39,7 +41,7 @@ function Settings(props: any) {
       <p>Activate 2FA</p>
       <Switch color="error" />
       <br />
-      <button type="button" onClick={() => props.isOn(false)}>
+      <button type="button" onClick={() => setSettings(false)}>
         Close
       </button>
     </div>

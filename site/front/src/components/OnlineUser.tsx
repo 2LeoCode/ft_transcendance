@@ -1,12 +1,15 @@
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Socket } from "socket.io-client";
 import ClientSocket from "../com/client-socket";
 import useDatabase from "../com/use-database";
-import { DmContentAtom, IsChannelAtom, IsDmAtom } from "../pages/Chat";
-import { SocketUser } from "../pages/Chat";
+//import { DmContentAtom, IsChannelAtom, IsDmAtom } from "../pages/Chat";
+//import { SocketUser } from "../pages/Chat";
 import { DmReceiptAtom } from "./ChatUser";
+
+const IsChannelAtom = atom(false);
+const IsDmAtom = atom(false);
 
 const OnlineUser: React.FC<{ name: string; }> = (props) => {
 	const db = useDatabase();

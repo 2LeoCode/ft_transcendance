@@ -1,0 +1,92 @@
+.Chat {
+	width: 90vw;
+	height: 75vh;
+	background-color: rgb(247, 247, 247);
+	margin: auto;
+	margin-top: 50px;
+	box-shadow: 0px 0px 10px 10px white;
+	display: grid;
+	grid-template-columns: 25% 50% 25%;
+	grid-template-rows: 93% 7%;
+	grid-template-areas:
+	'left main right'
+	'left write right';
+	font-family: sans-serif;
+}
+
+.Chat ul, .Chat li
+{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.left-pannel, .right-pannel {
+	overflow-y: auto;
+	background-color: rgb(185, 185, 185);
+}
+
+.left-pannel {
+	grid-area: left;
+}
+
+.right-pannel {
+	grid-area: right;
+}
+
+.main {
+	grid-area: main;
+	overflow-wrap: anywhere;
+	overflow-y: auto;
+}
+
+.main header {
+	margin-top: 0px;
+}
+
+.main li {
+	margin: 10px;
+	padding: 15px 15px 20px 20px;
+	border-radius: 20px;
+}
+
+.main li.own_message {
+	margin-left: 50px;
+}
+
+.main li.other_message {
+	margin-right: 50px;
+}
+
+
+.own_message {
+	clear: both;
+	float: right;
+	background-color: rgb(255, 0, 0);
+}
+
+.other_message {
+	clear: both;
+	float: left;
+	background-color: rgb(255, 92, 92);
+
+}
+
+.write_msg {
+	grid-area: write;
+}
+
+.write_msg input{
+	width: 65%;
+	height: 30px;
+}
+
+.write_msg button{
+	margin-left: 5px;
+	height: 35px;
+}
+
+.create_channel input {
+	margin: auto;
+	width: 80%;
+}

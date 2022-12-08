@@ -1,10 +1,12 @@
 import { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Conversation, IsDmAtom } from "../pages/Chat";
+//import { Conversation, IsDmAtom } from "../pages/Chat";
 import Message from "../com/interfaces/message.interface";
 import { atom, useAtom } from "jotai";
+import { Conversation } from "./PrivateMessages";
 
 export const DmReceiptAtom = atom('');
+export const IsDmAtom = atom(false);
 
 const ChatUser = ({ conv }: { conv: Conversation }) => {
 	const [, setIsDm] = useAtom(IsDmAtom);

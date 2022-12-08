@@ -1,92 +1,128 @@
+.ChatHeader {
+	position: absolute;
+	margin-top: 10px;
+	top: 0;
+	left: 70%;
+	right: 0;
+	height: 20vh;
+	background-color: rgb(0, 0, 0);
+	color: rgb(163, 0, 0);
+	font-size: 34px;
+	/* font-weight: bold; */
+	text-align: left;
+	/* margin-left: 20px; */
+	line-height: 36px;
+}
+
 .Chat {
-	width: 90vw;
-	height: 75vh;
-	background-color: rgb(247, 247, 247);
-	margin: auto;
-	margin-top: 50px;
-	box-shadow: 0px 0px 10px 10px white;
-	display: grid;
-	grid-template-columns: 25% 50% 25%;
-	grid-template-rows: 93% 7%;
-	grid-template-areas:
-	'left main right'
-	'left write right';
-	font-family: sans-serif;
+	background: linear-gradient(#000, #000) no-repeat center/2px 100%;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	top: 16vh;
+	left: 70%;
+	background-color: rgba(119, 109, 109, 0.697);
+	/* background: rgb(255, 255, 255); */
+	border: 1px solid rgb(0, 0, 0);
+	border-radius: 5px;
+	box-shadow: 0 0 20px rgba(245, 22, 22, 0.697);
+	/* overflow: auto; */
 }
 
-.Chat ul, .Chat li
-{
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-}
-
-.left-pannel, .right-pannel {
-	overflow-y: auto;
-	background-color: rgb(185, 185, 185);
-}
-
-.left-pannel {
-	grid-area: left;
-}
-
-.right-pannel {
-	grid-area: right;
-}
-
-.main {
-	grid-area: main;
-	overflow-wrap: anywhere;
-	overflow-y: auto;
-}
-
-.main header {
-	margin-top: 0px;
-}
-
-.main li {
-	margin: 10px;
-	padding: 15px 15px 20px 20px;
-	border-radius: 20px;
-}
-
-.main li.own_message {
-	margin-left: 50px;
-}
-
-.main li.other_message {
-	margin-right: 50px;
-}
-
-
-.own_message {
-	clear: both;
-	float: right;
-	background-color: rgb(255, 0, 0);
-}
-
-.other_message {
-	clear: both;
-	float: left;
-	background-color: rgb(255, 92, 92);
-
-}
-
-.write_msg {
-	grid-area: write;
-}
-
-.write_msg input{
-	width: 65%;
-	height: 30px;
-}
-
-.write_msg button{
+.ChatBodyHeader {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 20px;
+	margin-top: 16px;
 	margin-left: 5px;
-	height: 35px;
+	display: grid;
+	/* show grid delimitations */
+	/* border: 1px solid rgb(0, 0, 0); */
+	grid-template-columns: 1fr 50%;
+	grid-template-rows: 1fr 100%;
+	grid-template-areas: "ChatBodyHeaderContent ChatBodyHeaderUsers";
+	/* background-color: rgb(0, 0, 0); */
+	color: rgb(0, 0, 0);
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 20px;
 }
 
-.create_channel input {
-	margin: auto;
-	width: 80%;
+.ChatBodyHeaderChannels {
+	/* top: 0; */
+	/* bottom: 0; */
+	/* border-right: rgb(0, 0, 0) 1px solid; */
+	grid-area: ChatBodyHeaderContent;
+}
+
+.ChatBodyHeaderUsers {
+	/* border-left: rgb(0, 0, 0) 1px solid; */
+	grid-area: ChatBodyHeaderUsers;
+}
+
+.ChatBody {
+    border-top: 1px solid #000;
+	position: absolute;
+	/* make it a two columns grid */
+	display: grid;
+	grid-template-columns: 1fr 50%;
+	grid-template-rows: 1fr;
+	grid-template-areas: "ChatBodyContent ChatBodyUsers";
+	border-radius: 5px;
+	top: 50px;
+	left: 10px;
+	right: 0;
+	align-items: left;
+	font-size: 20px;
+	/* make it scrollable */
+	overflow: auto;
+}
+
+.ChatBodyContent {
+	grid-area: ChatBodyContent;
+	/* make it scrollable */
+	text-align: left;
+	margin-left: 30px;
+	overflow: auto;
+}
+
+.ChatBodyUsers {
+	grid-area: ChatBodyUsers;
+	/* make it scrollable */
+	/* align text to left */
+	text-align: left;
+	margin-left: 30px;
+	overflow: auto;
+}
+
+.ChatExitButton {
+	position: absolute;
+	top: 5px;
+	right: 15px;
+	width: auto;
+	height: 35px;
+	background-color: rgb(149, 35, 35);
+	border-radius: 30%;
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 20px;
+	cursor: pointer;
+}
+
+.ChatResizer {
+	position: absolute;
+	bottom: 0;
+	top: 0;
+	left: 0;
+	width: 10px;
+	background-color: rgb(149, 35, 35);
+	cursor: ew-resize;
+	/* Make not draggable */
+	user-select: none;
+
 }

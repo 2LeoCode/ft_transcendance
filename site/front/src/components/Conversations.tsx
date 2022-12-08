@@ -7,8 +7,9 @@ import { Atom } from "../com/types/atom.type";
 import useDatabase from "../com/use-database";
 import OnlineUser from "./OnlineUser";
 import ChatUser from "./ChatUser";
-import { ConversationsAtom } from "../pages/Chat";
+//import { ConversationsAtom } from "../pages/Chat";
 import ClientSocket from "../com/client-socket";
+import { ConversationsAtom } from "./PrivateMessages";
 
 const Conversations = () => {
 	const db = useDatabase();
