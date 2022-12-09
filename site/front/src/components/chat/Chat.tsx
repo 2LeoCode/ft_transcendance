@@ -14,26 +14,24 @@ const Chat = () => {
   const [onlineUsers] = useAtom(db.onlineUsersAtom);
   const [visibleChannels] = useAtom(db.visibleChannelsAtom);
   const [mouseOnResizer, setMouseOnResizer] = useState(false);
-  const [chatPos, setChatPos] = useState(-1);
+  const [chatPos, setChatPos] = useState(1000);
 
   const resizeStart = async (e: React.MouseEvent<HTMLDivElement>) => {
     setMouseOnResizer(true);
   }
 
   const resizeUpdate = async (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!mouseOnResizer) return;
+    if (!mouseOnResizer)
+      return;
     if (mouseOnResizer) {
-      const chat = document.getElementById('Chat')!;
       const newLeft = e.clientX - 5;
-      if (newLeft < 0 || newLeft > window.innerWidth - 300) return;
-      chat.style.left = `${e.clientX - 5}px`;
-      setChatPos(e.clientX - 5);
+      if (newLeft < 0 || newLeft > window.innerWidth - 300)
+        return;
+      const chat = document.getElementById('Chat')!;
+      chat.style.left = newLeft + 'px';
+      setChatPos(newLeft);
     }
   }
-
-  useEffect(() => {
-    //console.log
-  }, [])
 
   return (
     <Fragment>
@@ -47,10 +45,18 @@ const Chat = () => {
         >
 		      Back
 	      </button>
+
+        <button
+          onClick={() => setChatPos(0)}
+          className='ChatExpandButton'
+        >
+          Expand
+        </button>
       </div>
 	    <div
         id='Chat'
         className='Chat'
+        style={{ left: chatPos }}
       >
         <div
           id='ChatResizer'
@@ -58,10 +64,10 @@ const Chat = () => {
           draggable='false'
           // onDragStartCapture={initial}
           // onDragCapture={resize}
-          onMouseDown={resizeStart}
-          onMouseMove={resizeUpdate}
+          onMouseDownCapture={resizeStart}
+          onMouseMoveCapture={resizeUpdate}
           onMouseLeave={resizeUpdate}
-          onMouseUp={() => setMouseOnResizer(false)}
+          onMouseUpCapture={() => setMouseOnResizer(false)}
         />
         <div className='ChatBodyHeader'>
           <div className='ChatBodyHeaderContent'>

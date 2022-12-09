@@ -15,11 +15,12 @@
 }
 
 .Chat {
+	/* draw vertical line */
 	background: linear-gradient(#000, #000) no-repeat center/2px 100%;
 	position: absolute;
 	bottom: 0;
 	right: 0;
-	top: 16vh;
+	top: 14vh;
 	left: 70%;
 	background-color: rgba(119, 109, 109, 0.697);
 	/* background: rgb(255, 255, 255); */
@@ -64,6 +65,7 @@
 }
 
 .ChatBody {
+	/* Draw horizontal line */
     border-top: 1px solid #000;
 	position: absolute;
 	/* make it a two columns grid */
@@ -101,6 +103,22 @@
 .ChatExitButton {
 	position: absolute;
 	top: 5px;
+	right: 15px;
+	width: auto;
+	height: 35px;
+	background-color: rgb(149, 35, 35);
+	border-radius: 30%;
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 20px;
+	cursor: pointer;
+}
+
+.ChatExpandButton {
+	position: absolute;
+	top: 60px;
 	right: 15px;
 	width: auto;
 	height: 35px;
