@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import UserEntity from '../entities/user.entity';
@@ -8,6 +8,9 @@ import ChannelEntity from '../entities/channel.entity';
 import ReceiverService from './receiver.service';
 import MessageService from './message.service';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export default class UserService {

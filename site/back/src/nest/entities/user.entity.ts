@@ -15,6 +15,15 @@ export default class UserEntity {
 	@Column()
 	user42: string;
 
+	//2fa begin
+	@Column()
+	email: string;
+
+	@Column({ default: false, nullable: true })
+   	isTwoFaEnabled: Boolean;
+	//2fa end
+
+
 	@Column('text', { nullable: true })
 	avatar: Express.Multer.File;
 
