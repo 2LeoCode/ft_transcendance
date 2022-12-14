@@ -1,20 +1,21 @@
-import { useAtom } from "jotai";
-import React, { useEffect, useState } from "react";
+import { atom, useAtom } from "jotai";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 //import { Database } from "../com/database";
 import useDatabase from "../com/use-database";
 import "../styles/Header.css";
-import Chat, { ChatAtom } from "./chat/Chat";
+import Chat from "./chat/Chat";
 import Settings, { SettingsAtom } from "./Settings";
 
 function Header() {
   const Database = useDatabase();
 
   const [settings, setSettings] = useAtom(SettingsAtom);
-  const [chat, setChat] = useAtom(ChatAtom);
+  //const [chat, setChat] = useAtom(ChatAtom);
   //console.log(Database.user.nickAtom);
   const [nick] = useAtom(Database.user.nickAtom);
   //const [logged, setLogged] = useAtom(LoggedAtom);
+
   const navigate = useNavigate();
   function handleLogout() {
 //    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
@@ -32,36 +33,31 @@ function Header() {
 	  window.location.reload();
   }
   return (
-    <div className="Header">
-      <Link to='/user' className="infos_user">
-        <img height="50%" src="./default-avatar.webp" alt="avatar" />
-        {nick}
-      </Link>
-      <p
-        className='settings'
-        onClick={() => {
-          setSettings(true);
-        }}>
-        Settings
-      </p>
-      <NavLink to="/pong">
-        <h1>FIGHT PONG</h1>
-      </NavLink>
-      <p
-        className='chat'
-        onClick={() => {
-          setChat(true);
-        }}>
-        Chat
-      </p>
-      <p
-        className='logout'
-        onClick={handleLogout}>
-        Logout
-      </p>
-      {chat && <Chat />}
-      {settings && <Settings />}
-    </div>
+      <div className="Header">
+        <Link to='/user' className="infos_user">
+          <img height="50%" src="./default-avatar.webp" alt="avatar" />
+          {nick}
+        </Link>
+        <p
+          className='settings'
+          onClick={() => {
+            setSettings(true);
+          }}>
+          Settings
+        </p>
+        <NavLink to="/pong">
+          <h1>FIGHT PONG</h1>
+        </NavLink>
+        <NavLink to="/chat">
+          <h1>Chat</h1>
+        </NavLink>
+        <p
+          className='logout'
+          onClick={handleLogout}>
+          Logout
+        </p>
+        {settings && <Settings />}
+      </div>
   );
 }
 

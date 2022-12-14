@@ -14,7 +14,7 @@ export default class EventsGateway implements OnGatewayConnection {
 	constructor(
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
-	) { console.log('EventsGateway constructor') }
+	) {  }
 
 	@WebSocketServer()
 	server: Server;
@@ -52,7 +52,9 @@ export default class EventsGateway implements OnGatewayConnection {
 			//console.log('Client good!');
 			dbUser.online = true;
 
-			console.log(`Client connected: ${payload.username}`);
+			console.log(`hello ${payload.username}`);
+			//console.log('list:', this.connectedUsers.map(usr => usr.username).join(', '));
+			//console.log('broadcasting to all clients');
 			client.broadcast.emit('clientConnected', dbUser);
 		} catch (e) {
 			//console.log('bad token');
@@ -65,6 +67,7 @@ export default class EventsGateway implements OnGatewayConnection {
 	) {
 	//	console.log('goodbye');
 		const user = this.connectedUsers.find(usr => usr.socketId == client.id);
+		console.log(`goodbye ${user?.username} (${client.id})`);
 		if (!user) return;
 		this.userService.updateByName(
 			user.username,
@@ -74,10 +77,10 @@ export default class EventsGateway implements OnGatewayConnection {
 		this.server.emit('clientDisconnected', this.connectedUsers[index].username);
 		this.connectedUsers.splice(index, 1);
 	}
+
 	@SubscribeMessage('ping')
 	ping(client: Socket) {
 		client.emit('pong');
 	}
-
 
 }

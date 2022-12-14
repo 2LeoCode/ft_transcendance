@@ -16,12 +16,11 @@
 
 .Chat {
 	/* draw vertical line */
-	background: linear-gradient(#000, #000) no-repeat center/2px 100%;
+	/* background: linear-gradient(#000, #000) no-repeat center/2px 100%; */
 	position: absolute;
 	bottom: 0;
 	right: 0;
 	top: 14vh;
-	left: 70%;
 	background-color: rgba(119, 109, 109, 0.697);
 	/* background: rgb(255, 255, 255); */
 	border: 1px solid rgb(0, 0, 0);
@@ -38,12 +37,9 @@
 	height: 20px;
 	margin-top: 16px;
 	margin-left: 5px;
-	display: grid;
+	/* display: grid; */
 	/* show grid delimitations */
 	/* border: 1px solid rgb(0, 0, 0); */
-	grid-template-columns: 1fr 50%;
-	grid-template-rows: 1fr 100%;
-	grid-template-areas: "ChatBodyHeaderContent ChatBodyHeaderUsers";
 	/* background-color: rgb(0, 0, 0); */
 	color: rgb(0, 0, 0);
 	font-size: 30px;
@@ -52,16 +48,12 @@
 	line-height: 20px;
 }
 
-.ChatBodyHeaderChannels {
+.ChatBodyHeaderMember {
+	float: left;
+	width: 50%;
 	/* top: 0; */
 	/* bottom: 0; */
 	/* border-right: rgb(0, 0, 0) 1px solid; */
-	grid-area: ChatBodyHeaderContent;
-}
-
-.ChatBodyHeaderUsers {
-	/* border-left: rgb(0, 0, 0) 1px solid; */
-	grid-area: ChatBodyHeaderUsers;
 }
 
 .ChatBody {
@@ -69,35 +61,40 @@
     border-top: 1px solid #000;
 	position: absolute;
 	/* make it a two columns grid */
-	display: grid;
-	grid-template-columns: 1fr 50%;
-	grid-template-rows: 1fr;
-	grid-template-areas: "ChatBodyContent ChatBodyUsers";
+	/* display: grid; */
 	border-radius: 5px;
-	top: 50px;
+	top: 60px;
 	left: 10px;
-	right: 0;
-	align-items: left;
+	right: 0%;
+	/* align-items: left; */
 	font-size: 20px;
 	/* make it scrollable */
 	overflow: auto;
 }
 
 .ChatBodyContent {
-	grid-area: ChatBodyContent;
 	/* make it scrollable */
 	text-align: left;
-	margin-left: 30px;
+	/* margin-left: 30px; */
+	border: #000 1px solid;
 	overflow: auto;
+	width: 50%;
+	float: left;
 }
 
 .ChatBodyUsers {
-	grid-area: ChatBodyUsers;
 	/* make it scrollable */
 	/* align text to left */
+	/* position: relative; */
+	float: left;
+	place-items: top left;
 	text-align: left;
-	margin-left: 30px;
-	overflow: auto;
+	/* margin-left: 30px; */
+	border: #000 1px solid;
+	overflow: hidden;
+}
+
+.ChatBodyUser {
 }
 
 .ChatExitButton {
@@ -132,6 +129,13 @@
 	cursor: pointer;
 }
 
+.ChatResizerWrapper {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	/* background-color: blue; */
+}
+
 .ChatResizer {
 	position: absolute;
 	bottom: 0;
@@ -142,5 +146,5 @@
 	cursor: ew-resize;
 	/* Make not draggable */
 	user-select: none;
-
+	-webkit-user-drag: none;
 }
