@@ -135,11 +135,11 @@ const EntityParser = {
 			content: entity.content as string,
 			createDate: entity.createDate as Date,
 			updateDate: entity.updateDate as Date,
-			senderId: entity.sender.id,
-			receiverId:
+			sender: EntityParser.publicUser(entity.sender),
+			receiver:
 				entity.receiver.type === 'Channel' ?
-					entity.receiver.parentChannel.id :
-					entity.receiver.parentUser.id,
+					EntityParser.publicChannel(entity.receiver.parentChannel) :
+					EntityParser.publicUser(entity.receiver.parentUser),
 			receiverType: entity.receiver.type as ReceiverType
 		};
 

@@ -4,6 +4,8 @@
 	background-color: rgb(255, 255, 255);
 	border: none;
 	border-radius: 0;
+	display: flex;
+	flex-direction: column;
 }
 
 .ChatHeader {
@@ -16,6 +18,12 @@
 .ChatBody {
 	width: 100%;
 	height: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	/* flex-direction: row; */
+	/* flex-wrap: nowrap; */
+	/* justify-content: space-between; */
 	background-color: blue;
 	text-align: left;
 	align-content: left;
@@ -56,14 +64,15 @@
 .ChatBodyUsers {
 	position: relative;
 	margin: 0;
+	padding: 0;
 	left: 0;
 	width: 202px;
 	height: 500px;
 	background-color: rgb(255, 255, 255);
 	border: #000 1px solid;
 	overflow: none;
-	left: 0;
 	float: left;
+	left: 0;
 }
 
 .ChatBodyCurrentConv {

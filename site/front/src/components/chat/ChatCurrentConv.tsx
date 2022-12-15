@@ -26,7 +26,7 @@ const ChatCurrentConv = () => {
               <li
                 key={msg.id}
                 style={
-                  msg.senderId == db.user.id ?
+                  msg.sender.id == db.user.id ?
                   { color: 'white', backgroundColor: 'black' } :
                   { color: 'black', backgroundColor: 'white' }
                 }

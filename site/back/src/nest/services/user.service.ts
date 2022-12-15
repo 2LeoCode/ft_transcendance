@@ -64,6 +64,7 @@ export default class UserService {
 				'receiver',
 				'receiver.messages',
 				'receiver.messages.sender',
+				'receiver.messages.receiver',
 				'receiver.parentUser',
 				'receiver.parentChannel'
 			],

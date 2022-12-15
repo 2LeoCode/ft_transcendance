@@ -9,8 +9,8 @@ export default interface Message {
 	content: string;
 	createDate: Date;
 	updateDate: Date;
-	senderId: string;
-	receiverId: string;
+	sender: PublicUser;
+	receiver: PublicUser | PublicChannel;
 	receiverType: ReceiverType;
 	contentAtom: Atom<string>;
 	updateDateAtom: Atom<Date>;

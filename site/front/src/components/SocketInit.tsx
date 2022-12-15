@@ -1,9 +1,9 @@
 import { useAtom } from "jotai";
-import { useEffect } from "react";
-import { LoggedAtom, StatusAtom } from "../App";
+import { Fragment, useEffect } from "react";
 import ClientSocket from "../com/client-socket";
 import EntityParser from "../com/entity-parser";
 import useDatabase from "../com/use-database"
+import ChatSocket from "./chat/ChatSocket";
 
 const SocketInit = () => {
   const db = useDatabase();
@@ -26,7 +26,11 @@ const SocketInit = () => {
 
   }, []);
 
-  return null;
+  return (
+		<Fragment>
+			<ChatSocket />
+		</Fragment>
+	);
 }
 
 export default SocketInit;
