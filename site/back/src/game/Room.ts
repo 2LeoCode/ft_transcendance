@@ -73,6 +73,7 @@ export default class Room implements IRoom {
 	pauseTime: {pause: number, resume: number}[];
 
 	isGameEnd: boolean;
+	otherLeft: boolean;
 
 	// settings customisation
 	maxGoal: number;
@@ -103,6 +104,7 @@ export default class Room implements IRoom {
 	this.maxGoal = 11;
 
 	this.isGameEnd = false;
+	this.otherLeft = false;
 
 	this.timer = 0;
 	this.gameDuration = 60000 * 5; // 1min * num of minutes

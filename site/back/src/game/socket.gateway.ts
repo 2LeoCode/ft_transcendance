@@ -59,13 +59,12 @@ function getCurrentTime() {
   //},
 })
 export class SocketEvents
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly userService: UserService,
     private readonly eventsGateway: EventsGateway,
     private readonly scoreService: ScoreService,
-  ) {}
+  ) { }
 
   //@WebSocketServer()
   //server: Server;
@@ -154,10 +153,12 @@ export class SocketEvents
     this.connectedUsers.addUser(newUser);
   }
 
-  //disconnection
-  handleDisconnect(@ConnectedSocket() client: Socket) {
-    //console.log(`Client disconnected: ${client.id}`);
+  @SubscribeMessage('forceDisconnection')
+  handleForceDisconnection(
+    @ConnectedSocket() client: Socket,
+  ) {
     let user: User = this.connectedUsers.getUser(client.id);
+
 
     if (user) {
       this.rooms.forEach((room: Room) => {
@@ -181,7 +182,54 @@ export class SocketEvents
               this.currentGames,
             );
           }
+          console.log("force disconnect");
           client.leave(room.roomId);
+          // this.eventsGateway.server.emit("winner", "disconnect");
+          room.otherLeft = true;
+          return;
+        }
+      });
+
+      /* remove from queue and connected users */
+      this.queue.remove(user);
+      // this.connectedUsers.removeUser(user);
+    }
+
+  }
+
+
+  //disconnection
+  handleDisconnect(@ConnectedSocket() client: Socket) {
+    //console.log(`Client disconnected: ${client.id}`);
+    let user: User = this.connectedUsers.getUser(client.id);
+
+
+    if (user) {
+      this.rooms.forEach((room: Room) => {
+        if (room.isAPlayer(user)) {
+          room.removeUser(user);
+
+          if (
+            room.players.length === 0 &&
+            room.gameState !== GameState.WAITING
+          ) {
+            this.rooms.delete(room.roomId);
+
+            const roomIndex: number = this.currentGames.findIndex(
+              (toRemove) => toRemove.roomId === room.roomId,
+            );
+            if (roomIndex !== -1) {
+              this.currentGames.splice(roomIndex, 1);
+            }
+            this.eventsGateway.server.emit(
+              'updateCurrentGames',
+              this.currentGames,
+            );
+          }
+          console.log("lost connection");
+          client.leave(room.roomId);
+          this.eventsGateway.server.to(room.roomId).emit("lost connection");
+          // this.eventsGateway.server.emit("winner", "disconnect");
           return;
         }
       });
@@ -299,9 +347,9 @@ export class SocketEvents
   ) {
     console.log(
       'other socketId find: ' +
-        this.eventsGateway.connectedUsers.find(
-          (usr) => usr.username == username,
-        ).socketId,
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.username == username,
+      ).socketId,
     );
     const otherId = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
@@ -348,9 +396,9 @@ export class SocketEvents
 
     console.log(
       'other socketId find: ' +
-        this.eventsGateway.connectedUsers.find(
-          (usr) => usr.username == username,
-        ).socketId,
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.username == username,
+      ).socketId,
     );
     const otherId = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
@@ -393,12 +441,12 @@ export class SocketEvents
     return second * 1000;
   }
 
-  @SubscribeMessage('endGame')
-  handleEndGame(@MessageBody() roomId: string) {
-    const room: Room = this.rooms.get(roomId);
+  // @SubscribeMessage('endGame')
+  // handleEndGame(@MessageBody() roomId: string) {
+  //   const room: Room = this.rooms.get(roomId);
 
-    room.isGameEnd = true;
-  }
+  //   room.isGameEnd = true;
+  // }
 
   @SubscribeMessage('requestUpdate')
   async handleRequestUpdate(
@@ -407,7 +455,7 @@ export class SocketEvents
   ) {
     const room: Room = this.rooms.get(roomId);
 
-    if (room) {
+    if (room && !room.isGameEnd) {
       const currentTimestamp: number = Date.now();
 
       if (room.gameState === GameState.WAITING) {
@@ -417,39 +465,57 @@ export class SocketEvents
         }
       }
       if (room.gameState === GameState.STARTING) {
+      
         room.start();
       } else if (room.gameState === GameState.PLAYING) {
+
         room.update(currentTimestamp);
-        if (room.isGameEnd) {
+
+        this.eventsGateway.server.to(room.roomId).emit('updateRoom', JSON.stringify(room.serialize()));
+
+        if (room.otherLeft || room.playerOne.score >= 7 || room.playerTwo.score >= 7) {
           // maybe make another socket.on to save everything in db
-          console.log('save game ici.');
-        // this.saveGame(room, currentTimestamp);
-        const scoreDtoPlayerOne: CreateScoreDto = {
-          playerScore: room.playerOne.score,
-          enemyScore: room.playerTwo.score,
-        };
-        const scoreDtoPlayerTwo: CreateScoreDto = {
-          playerScore: room.playerTwo.score,
-          enemyScore: room.playerOne.score,
-        };
+          if (!room.isGameEnd) {
 
-		const user = await this.userService.getOnePublic({user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id,).username});
-		const userId = user.id;
-		this.eventsGateway.server.emit("winner", user.user42);
+            room.isGameEnd = true;
+            console.log('isGameEnd = ' + room.isGameEnd);
 
-        if (room.playerOne.user.socketId === client.id) {
-          this.scoreService.add(userId, scoreDtoPlayerOne);
-        } else if (room.playerTwo.user.socketId === client.id) {
-          this.scoreService.add(userId, scoreDtoPlayerTwo);
+            const scoreDtoPlayerOne: CreateScoreDto = {
+              playerScore: room.playerOne.score,
+              enemyScore: room.playerTwo.score,
+            };
+            const scoreDtoPlayerTwo: CreateScoreDto = {
+              playerScore: room.playerTwo.score,
+              enemyScore: room.playerOne.score,
+            };
+
+            const user = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).username });
+            const userId = user.id;
+
+            // console.log("playerTwo socketId = " + room.playerTwo.user.socketId + " " + client.id);
+
+            if (room.otherLeft) {
+              console.log("other Left");
+              this.eventsGateway.server.to(client.id).emit("winner", user.user42);
+
+            } else if (room.playerOne.score > room.playerTwo.score) {
+              console.log("playerOne wins");
+              this.eventsGateway.server.emit("winner", room.playerOne.user.username);
+
+            } else {
+              console.log("playerTwo wins");
+              this.eventsGateway.server.emit("winner", room.playerTwo.user.username);
+
+            }
+          }
+
+          //     if (room.playerOne.user.socketId === client.id) {
+          //       this.scoreService.add(userId, scoreDtoPlayerOne);
+          //     } else if (room.playerTwo.user.socketId === client.id) {
+          //       this.scoreService.add(userId, scoreDtoPlayerTwo);
+          //     }
         }
-	}
       }
-
-      //ici insert game modes
-
-      this.eventsGateway.server
-        .to(room.roomId)
-        .emit('updateRoom', JSON.stringify(room.serialize()));
     }
 
     // const currentTimestamp: number = Date.now();

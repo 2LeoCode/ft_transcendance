@@ -156,9 +156,6 @@ export class Draw {
 		//get the ufc font for the scores and ending page
         // this.gameContext.font = 'ufc';
 		this.gameContext.textAlign = 'center';
-		if (this.playerScore == 7)
-		this.gameContext.fillText(`${winner} wins!`, this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
-		if (this.player2Score == 7)
 		this.gameContext.fillText(`${winner} wins!`, this.gameX + this.gameWidth / 2, this.gameY + this.gameHeight / 2 + 10);
 		}
 	}

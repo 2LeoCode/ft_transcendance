@@ -15,9 +15,9 @@ import EntityParser from "../com/entity-parser";
 let socket: Socket;
 
 export type onGoingGame = {
-    roomId: string;
-    playerOne: string;
-    playerTwo: string;
+  roomId: string;
+  playerOne: string;
+  playerTwo: string;
 };
 
 //export const MouseOnResizerAtom = atom(false);
@@ -36,7 +36,13 @@ function Pong() {
   // let roomId: string | undefined;
   let user: User;
 
-  
+  const quitGame = () => {
+    // maybe emit to get the user out of the room...
+    socket.emit("forceDisconnection");
+    setPlay(false);
+    setRoom(null);
+  }
+
   const joinQueue = (e: React.MouseEvent<HTMLButtonElement>) => {
     socket.emit('joinQueue', e.currentTarget.value);
   }
@@ -52,19 +58,19 @@ function Pong() {
   }
 
   const updateCurrentGames = (currentGamesData: IRoom[]) => {
-        const games: onGoingGame[] = [];
+    const games: onGoingGame[] = [];
 
-        for (const game of currentGamesData) {
-            games.push({
-                roomId: game.roomId,
-                playerOne: game.playerOne.user.username,
-                playerTwo: game.playerTwo.user.username,
-            });
-        }
-        setCurrentGames(games);
-    };
+    for (const game of currentGamesData) {
+      games.push({
+        roomId: game.roomId,
+        playerOne: game.playerOne.user.username,
+        playerTwo: game.playerTwo.user.username,
+      });
+    }
+    setCurrentGames(games);
+  };
 
-    useEffect((): any => {
+  useEffect((): any => {
 
     console.log('registering socket events...');
     socket = ClientSocket;
@@ -72,23 +78,23 @@ function Pong() {
     socket.emit("handleUserConnect", user); // user is gonna be the user from chat if needed 
 
     socket.emit("getCurrentGames");
-    
-    socket.on("updateCurrentGames", (currentGamesData: IRoom[]) => {
-            updateCurrentGames(currentGamesData);
-        }); 
 
-        socket.on("newRoom", (newRoomData: IRoom) => {
-            if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
+    socket.on("updateCurrentGames", (currentGamesData: IRoom[]) => {
+      updateCurrentGames(currentGamesData);
+    });
+
+    socket.on("newRoom", (newRoomData: IRoom) => {
+      if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
         //console.log("return");
-                return ;
-            }
-            socket.emit("joinRoom", newRoomData.roomId);
+        return;
+      }
+      socket.emit("joinRoom", newRoomData.roomId);
       console.log("emit joinRoom");
-            roomData = newRoomData;
-            // roomId = newRoomData.roomId;
-            setRoom(roomData);
-            setInQueue(false);
-        });
+      roomData = newRoomData;
+      // roomId = newRoomData.roomId;
+      setRoom(roomData);
+      setInQueue(false);
+    });
 
     socket.on("joinedQueue", () => {
       // console.log("joinQueue");
@@ -104,54 +110,68 @@ function Pong() {
       setPlay(true);
     });
 
-        socket.on("leavedRoom", () => {
-            // if (chatSocket) {
-            // 	chatSocket.emit("userGameStatus", { isPlaying: false }); // user status "not playing"
-            // }
-            // roomId = undefined;
-            setPlay(false);
-            setRoom(null);
-        });
-    
-  //  return () => {
-  //      // if (chatSocket) {
-  //      //   chatSocket.emit("userGameStatus", { isPlaying: false }); // user status
-  //      // }
-  //      if (socket) {
-  //        console.log('err')
-  //        socket.disconnect();
-  //      }
-  //    }
+    socket.on("leavedRoom", () => {
+      // if (chatSocket) {
+      // 	chatSocket.emit("userGameStatus", { isPlaying: false }); // user status "not playing"
+      // }
+      // roomId = undefined;
+      setPlay(false);
+      setRoom(null);
+    });
+
+    socket.on("lost connection", () => {
+      socket.emit("forceDisconnection");
+      setPlay(false);
+      setRoom(null);
+    })
+
+    //  return () => {
+    //      // if (chatSocket) {
+    //      //   chatSocket.emit("userGameStatus", { isPlaying: false }); // user status
+    //      // }
+    //      if (socket) {
+    //        console.log('err')
+    //        socket.disconnect();
+    //      }
+    //    }
   }, []);
 
 
-//const [mouseOnResizer] = useAtom(MouseOnResizerAtom);
-//const [, setChatWidth] = useAtom(ChatWidthAtom);
+  //const [mouseOnResizer] = useAtom(MouseOnResizerAtom);
+  //const [, setChatWidth] = useAtom(ChatWidthAtom);
 
-//const resizeChat = async (e: React.MouseEvent<HTMLDivElement>) => {
-//  if (!mouseOnResizer)
-//    return;
-//  if (mouseOnResizer) {
-//    console.log('resizeChat')
-//    const newWidth = (window.screenX - e.clientX) / window.screenX;
-//    
-//    console.log('newWidth: ' + newWidth);
-//    if (newWidth < 10 || newWidth > 100)
-//      return;
-//    //const chat = document.getElementById('chat_0')!;
-//    //chat.style.width = `${newWidth}%`;
-//    setChatWidth(newWidth);
-//  }
-//}
+  //const resizeChat = async (e: React.MouseEvent<HTMLDivElement>) => {
+  //  if (!mouseOnResizer)
+  //    return;
+  //  if (mouseOnResizer) {
+  //    console.log('resizeChat')
+  //    const newWidth = (window.screenX - e.clientX) / window.screenX;
+  //    
+  //    console.log('newWidth: ' + newWidth);
+  //    if (newWidth < 10 || newWidth > 100)
+  //      return;
+  //    //const chat = document.getElementById('chat_0')!;
+  //    //chat.style.width = `${newWidth}%`;
+  //    setChatWidth(newWidth);
+  //  }
+  //}
 
   return (
-  //<div
-  //    id='mouse_mask_0'
-  //    onMouseMove={resizeChat}
-  //    style={{ width: '100%', height: '100%'}}
-  //>
-	<Fragment>
-      <Header />
+    //<div
+    //    id='mouse_mask_0'
+    //    onMouseMove={resizeChat}
+    //    style={{ width: '100%', height: '100%'}}
+    //>
+    <Fragment>
+      {!play && <Header />}
+      {play && <button
+        className="quit_button"
+        value={'quit'}
+        onClick={quitGame}
+        type="button">
+        Give up
+            </button>
+      }
       <div id='pong_0' className="Pong">
         {!play && inQueue && !watch && (
           <button
@@ -165,7 +185,7 @@ function Pong() {
         )}
         {!play && !inQueue && !watch && (
           <button
-          value={'speed'}
+            value={'speed'}
             type="button"
             className="play_button"
             onClick={joinQueue}            // create room on the onClick
@@ -205,7 +225,7 @@ function Pong() {
         {play && <Game socketProps={socket} roomProps={room}></Game>}
         {watch && !play && <Watch currentGamesProps={currentGames} socketProps={socket}></Watch>}
       </div>
-	</Fragment>
+    </Fragment>
     // </div>
   );
 }
