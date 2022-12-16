@@ -492,7 +492,7 @@ export class SocketEvents
             const user = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == room.playerOne.user.socketId).username });
             const userId = user.id;
             const user2 = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == room.playerTwo.user.socketId).username });
-            const userId2 = user.id;
+            const userId2 = user2.id;
 
             // console.log("playerTwo socketId = " + room.playerTwo.user.socketId + " " + client.id);
 
@@ -574,5 +574,20 @@ export class SocketEvents
     this.eventsGateway.server
       .to(client.id)
       .emit('updateCurrentGames', this.currentGames);
+  }
+
+  @SubscribeMessage('getScores')
+  async handleGetScores(@ConnectedSocket() client: Socket) {
+
+    const user = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).username });
+    const userId = user.id;
+
+    // let scores = await this.scoreService.get({id: userId});
+
+    console.log("coucou " + userId);
+
+    this.eventsGateway.server
+      .to(client.id)
+      .emit('scoresPayload');
   }
 }
