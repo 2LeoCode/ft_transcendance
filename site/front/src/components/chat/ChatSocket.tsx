@@ -24,8 +24,8 @@ const ChatSocket = () => {
 					const conv = prev.find(conv => conv.user.id === res.sender.id);
 
 					if (conv) {
-						conv.messages.push(EntityParser.message(msg));
-						return prev;
+						conv.messages = [...conv.messages, EntityParser.message(msg)];
+						return [...prev];
 					}
 					return [...prev, {
 						user: res.sender,
@@ -37,13 +37,14 @@ const ChatSocket = () => {
 				console.log('sendPrivMsg');
 				const res = EntityParser.message(msg);
 
-				setMessagesOut(prev => [...prev, EntityParser.message(msg)]);
+				setMessagesOut(prev => [...prev, res]);
 				setConvs(prev => {
-					const conv = prev.find(conv => conv.user.id === res.id);
-	
+					const conv = prev.find(conv => conv.user.id === res.receiver.id);
+
 					if (conv) {
-						conv.messages.push(EntityParser.message(msg));
-						return prev;
+						conv.messages = [...conv.messages, EntityParser.message(msg)];
+						console.log('prev', prev);
+						return [...prev];
 					}
 					return [...prev, {
 						user: res.receiver as PublicUser,

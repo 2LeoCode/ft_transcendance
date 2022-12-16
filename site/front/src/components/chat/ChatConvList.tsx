@@ -39,7 +39,10 @@ const ChatConvList = () => {
 						});
 					}
 				});
-			return convs;
+			return convs.map(conv => ({
+				...conv,
+				messages: conv.messages.sort((a, b) => a.createDate < b.createDate ? -1 : 1)
+			}));
 		})());
 	}, []);
 

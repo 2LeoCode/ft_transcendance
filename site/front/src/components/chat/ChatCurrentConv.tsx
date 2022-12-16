@@ -6,6 +6,7 @@ import PublicUser from "../../com/interfaces/public-user.interface";
 import { Atom } from "../../com/types/atom.type";
 import useDatabase from "../../com/use-database";
 import { Conv } from "./ChatConv";
+import { ConvsAtom } from "./ChatConvList";
 
 export const CurrentConvAtom = atom<Conv | null>(null);
 export const NullAtom = atom<null>(null);
@@ -15,6 +16,7 @@ const ChatCurrentConv = () => {
   const [currentConv] = useAtom(CurrentConvAtom);
   const [nick] = useAtom(currentConv?.user.nickAtom || NullAtom);
   const [input, setInput] = useState('');
+  const [_] = useAtom(ConvsAtom);
 
   return (
     <div className="ChatBodyCurrentConv">
@@ -35,11 +37,11 @@ const ChatCurrentConv = () => {
               </li>
             ))}
           </ul>
-          <form onSubmit={((e) => {
+          <form onSubmit={(e) => {
             e.preventDefault();
             ClientSocket.emit('privMsg', currentConv.user.id, input);
             setInput('');
-          })}>
+          }}>
             <input
               type="text"
               value={input}
