@@ -56,6 +56,7 @@ export default class UserService {
 				'messages.receiver.parentUser',
 				'messages.receiver.parentChannel',
 				'scores',
+				'scores.user',
 				'channels',
 				'ownedChannels', 
 				'friends',
