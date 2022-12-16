@@ -13,13 +13,9 @@ const Game: React.FC<{ socketProps: Socket, roomProps: any }> = ({ socketProps, 
 
   let endGame = false;
 
-  // console.log("canva is working... " + client.id);
-
   const [width, setWitdh] = useState<number>(vw_to_px(70));
   const [height, setHeight] = useState<number>(vh_to_px(50));
-  // const [gameEnded, setGameEnded] = useState(false);
 
-  // here we'll need to compare room players with user ids to check if in game or not
   const isAplayer = true; /*(room.playerOne.user.socketId == user.username || room.playerTwo.user.socketId == user.username);*/
 
   let oldTimestamp = 0;
@@ -64,7 +60,6 @@ const Game: React.FC<{ socketProps: Socket, roomProps: any }> = ({ socketProps, 
   useEffect(() => {
 
     const canvas = canvasRef.current;
-    console.log("canvaref = " + canvas);
     if (!canvas) {
       return;
     }
@@ -72,7 +67,6 @@ const Game: React.FC<{ socketProps: Socket, roomProps: any }> = ({ socketProps, 
     let animationFrameId: number;
 
     const draw = new Draw(canvas);
-    // console.log("room mode" + room.mode);
     draw.gameMode = room.mode;
 
     //if not a spectator
@@ -95,9 +89,7 @@ const Game: React.FC<{ socketProps: Socket, roomProps: any }> = ({ socketProps, 
     });
 
     socket.on("winner", (username: string) => {
-      console.log("winner is...");
       draw.stopGame(username);
-      // socket.emit("requestUpdate", roomId);
       endGame = true;
     })
 

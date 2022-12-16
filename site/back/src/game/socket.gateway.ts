@@ -29,35 +29,15 @@ import EventsGateway from 'src/nest/gateways/events.gateway';
 import ScoreService from 'src/nest/services/score.service';
 import { CreateScoreDto } from 'src/nest/dtos/score.dto';
 
-// let numConnected = 0;
-// let previousId = null;
-// let paddle1 = new Paddle(paddleWidth, paddleHeight, wallOffset, 100 / 2 - paddleHeight / 2, null);
-// let paddle2 = new Paddle2(paddleWidth, paddleHeight, 200 - (wallOffset + paddleWidth) , 100 / 2 - paddleHeight / 2, null);
-// let ball = new Ball(ballSize, ballSize, 200 / 2 - ballSize / 2, 100 / 2 - ballSize / 2);
-// let now = getCurrentTime();
-// let lastUpdate = 0;
-// let then = now;
-// let fps = 5;
-
 function getCurrentTime() {
   const date: number = Date.now();
   return date;
 }
 
-// function update() {
-// 	paddle1.update();
-// 	paddle2.update();
-// 	ball.update(paddle1, paddle2);
-// 	paddle1.score = ball.score1;
-// 	paddle2.score = ball.score2;
-// }
-
 @WebSocketGateway({
   namespace: 'events',
-  //cors: {
-  //	origin: '*',
-  //},
 })
+
 export class SocketEvents
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(
@@ -66,20 +46,14 @@ export class SocketEvents
     private readonly scoreService: ScoreService,
   ) { }
 
-  //@WebSocketServer()
-  //server: Server;
-
   private readonly queue: Queue = new Queue();
   private readonly rooms: Map<string, Room> = new Map();
   private readonly currentGames: Array<Room> = new Array();
   private readonly connectedUsers: ConnectedUsers = new ConnectedUsers();
 
   createNewRoom(players: User[]): void {
-    console.log(players[0].username);
-    console.log(players[1].username);
     const roomId: string = `${players[0].username}&${players[1].username}`;
     let room: Room = new Room(roomId, players, { mode: players[0].mode });
-    console.log('roomId = ' + roomId);
 
     this.eventsGateway.server.to(players[0].socketId).emit('newRoom', room);
     this.eventsGateway.server.to(players[1].socketId).emit('newRoom', room);
@@ -92,7 +66,6 @@ export class SocketEvents
   afterInit(server: Server) {
     setInterval(() => {
       if (this.queue.size() > 1) {
-        // && this.currentGames.length < MAX_SIMULTANEOUS_GAMES
         let players: User[] = Array();
 
         players = this.queue.matchPlayers();
@@ -109,47 +82,15 @@ export class SocketEvents
 
   @SubscribeMessage('handleUserConnect')
   handleConnectionToGame(@ConnectedSocket() client: Socket) {
-    // console.log("coucou from connect users");
 
-    // let newUser: User = this.connectedUsers.getUserById(user.id); // users when connected
     let newUser: User = null;
-
-    if (newUser) {
-      newUser.setSocketId(client.id);
-      // newUser.setUsername(user.username);	// user
-    } else {
-      //console.log('ClientId:', client.id);
-      //console.log('ConnectedUsers:', this.eventsGateway.connectedUsers);
-      newUser = new User(
-        client.id,
-        this.eventsGateway.connectedUsers.find(
-          (usr) => usr.socketId == client.id,
-        ).username,
-      );
-      //console.log(
-      //  `new user ${
-      //    this.eventsGateway.connectedUsers.find(
-      //      (usr) => usr.socketId == client.id,
-      //    ).username
-      //  }`,
-      //);
-    }
+    newUser = new User(
+      client.id,
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId == client.id,
+      ).username,
+    );
     newUser.setUserStatus(UserStatus.INHUB);
-
-    /* Verify that player is not already in a game */
-    this.rooms.forEach((room: Room) => {
-      if (
-        room.isAPlayer(newUser) &&
-        room.gameState !== GameState.PLAYERONEWIN &&
-        room.gameState !== GameState.PLAYERTWOWIN
-      ) {
-        newUser.setUserStatus(UserStatus.PLAYING);
-        newUser.setRoomId(room.roomId);
-
-        this.eventsGateway.server.to(client.id).emit('newRoom', room);
-        return;
-      }
-    });
     this.connectedUsers.addUser(newUser);
   }
 
@@ -158,7 +99,6 @@ export class SocketEvents
     @ConnectedSocket() client: Socket,
   ) {
     let user: User = this.connectedUsers.getUser(client.id);
-
 
     if (user) {
       this.rooms.forEach((room: Room) => {
@@ -182,17 +122,14 @@ export class SocketEvents
               this.currentGames,
             );
           }
-          console.log("force disconnect");
           client.leave(room.roomId);
-          // this.eventsGateway.server.emit("winner", "disconnect");
           room.otherLeft = true;
           return;
         }
       });
 
-      /* remove from queue and connected users */
+      /* remove from queue */
       this.queue.remove(user);
-      // this.connectedUsers.removeUser(user);
     }
 
   }
@@ -203,7 +140,6 @@ export class SocketEvents
     //console.log(`Client disconnected: ${client.id}`);
     let user: User = this.connectedUsers.getUser(client.id);
 
-
     if (user) {
       this.rooms.forEach((room: Room) => {
         if (room.isAPlayer(user)) {
@@ -226,10 +162,8 @@ export class SocketEvents
               this.currentGames,
             );
           }
-          console.log("lost connection");
           client.leave(room.roomId);
           this.eventsGateway.server.to(room.roomId).emit("lost connection");
-          // this.eventsGateway.server.emit("winner", "disconnect");
           return;
         }
       });
@@ -245,11 +179,10 @@ export class SocketEvents
     @ConnectedSocket() client: Socket,
     @MessageBody() mode: string,
   ) {
-    // console.log("coucou from joinQueue server");
     const user: User = this.connectedUsers.getUser(client.id);
+
     if (!user) {
       user.setSocketId(client.id);
-      // console.log(user.socketId + " & " + client.id);
     }
 
     if (user && !this.queue.isInQueue(user)) {
@@ -430,23 +363,9 @@ export class SocketEvents
     this.createNewRoom(players);
   }
 
-  //receive an event
-  // @SubscribeMessage('message')
-  // handleEvent(@MessageBody() data: string, @ConnectedSocket() client: Socket){
-  // 	//send an event
-  // 	this.eventsGateway.server.emit('message', client.id, data);
-  // }
-
   secondToTimestamp(second: number): number {
     return second * 1000;
   }
-
-  // @SubscribeMessage('endGame')
-  // handleEndGame(@MessageBody() roomId: string) {
-  //   const room: Room = this.rooms.get(roomId);
-
-  //   room.isGameEnd = true;
-  // }
 
   @SubscribeMessage('requestUpdate')
   async handleRequestUpdate(
@@ -474,11 +393,8 @@ export class SocketEvents
         this.eventsGateway.server.to(room.roomId).emit('updateRoom', JSON.stringify(room.serialize()));
 
         if (room.otherLeft || room.playerOne.score >= 7 || room.playerTwo.score >= 7) {
-          // maybe make another socket.on to save everything in db
           if (!room.isGameEnd) {
-
             room.isGameEnd = true;
-            console.log('isGameEnd = ' + room.isGameEnd);
 
             const scoreDtoPlayerOne: CreateScoreDto = {
               playerScore: room.playerOne.score,
@@ -494,50 +410,30 @@ export class SocketEvents
             const user2 = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == room.playerTwo.user.socketId).username });
             const userId2 = user2.id;
 
-            // console.log("playerTwo socketId = " + room.playerTwo.user.socketId + " " + client.id);
-
             if (room.otherLeft) {
-              console.log("other Left");
               if (room.playerOne.user.socketId === client.id)
                 this.eventsGateway.server.to(client.id).emit("winner", room.playerOne.user.username);
               else if (room.playerTwo.user.socketId === client.id)
                 this.eventsGateway.server.to(client.id).emit("winner", room.playerTwo.user.username);
 
             } else if (room.playerOne.score > room.playerTwo.score) {
-              console.log("playerOne wins");
               this.eventsGateway.server.emit("winner", room.playerOne.user.username);
 
             } else {
-              console.log("playerTwo wins");
               this.eventsGateway.server.emit("winner", room.playerTwo.user.username);
 
             }
 
-            console.log("test oooooooooooooooooooone");
             const res = await this.scoreService.add(userId, scoreDtoPlayerOne);
-            console.log("test Twoooooooooooooooooooo");
             const res2 = await this.scoreService.add(userId2, scoreDtoPlayerTwo);
-            client.emit('newScore', await this.scoreService.getFull(res.id));
 
-            //this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('newScore', await this.scoreService.getFull(res2.id));
+            this.eventsGateway.server.to(room.playerOne.user.socketId).emit('newScore', res);
+            this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('newScore', res2);
+
           }
         }
       }
     }
-
-    // const currentTimestamp: number = Date.now();
-    // update();
-    // const payload = {
-    // 	x: ball.x,
-    // 	y: ball.y,
-    // 	paddle1x: paddle1.x,
-    // 	paddle1y: paddle1.y,
-    // 	paddle2x: paddle2.x,
-    // 	paddle2y: paddle2.y,
-    // 	score1: paddle1.score,
-    // 	score2: paddle2.score,
-    // }
-    // this.eventsGateway.server.emit("updatedRoom", payload);
   }
 
   @SubscribeMessage('keyDown')
@@ -579,18 +475,4 @@ export class SocketEvents
       .emit('updateCurrentGames', this.currentGames);
   }
 
-  @SubscribeMessage('getScores')
-  async handleGetScores(@ConnectedSocket() client: Socket) {
-
-    const user = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).username });
-    const userId = user.id;
-
-    // let scores = await this.scoreService.get({id: userId});
-
-    console.log("coucou " + userId);
-
-    this.eventsGateway.server
-      .to(client.id)
-      .emit('scoresPayload');
-  }
 }

@@ -1,26 +1,17 @@
 import { atom, useAtom } from "jotai";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, Location } from "react-router-dom";
 import useDatabase from "../com/use-database";
-//import { Database } from '../com/database';
 import Header from "../components/Header";
 import "../styles/User.css";
-import { io, Socket } from 'socket.io-client';
-import ClientSocket from "../com/client-socket";
-
-let socket: Socket;
 
 declare let Blob: {
   prototype: Blob;
-  new (): Blob;
-  new (request: any, mime: string): Blob;
+  new(): Blob;
+  new(request: any, mime: string): Blob;
 };
 
 function User() {
-
-  socket = ClientSocket;
-
-  //socket.emit("getScores");
 
   const Database = useDatabase();
   const location = useLocation();
@@ -29,9 +20,33 @@ function User() {
   const [uploaded, setUploaded] = useState(false);
   const [nick] = useAtom(Database.user.nickAtom);
   const [scores] = useAtom(Database.user.scoresAtom);
-  const matches_won: number = 0;
-  const matches_lost: number = 0;
-  //console.log(Database.user.nick);
+  const [win, setWin] = useState(0);
+  const [tie, setTie] = useState(0);
+  const [lose, setLose] = useState(0);
+  let matches_won: number;
+  let matches_lost: number;
+  let matches_tie: number;
+
+  useEffect(() => {
+
+    matches_lost = 0;
+    matches_won = 0;
+    matches_tie = 0;
+
+    scores.map((score) => {
+      if (score.playerScore > score.enemyScore)
+        matches_won++;
+      else if (score.playerScore < score.enemyScore)
+        matches_lost++;
+      else
+        matches_tie++;
+    })
+
+    setWin(matches_won);
+    setLose(matches_lost);
+    setTie(matches_tie);
+
+  }, [])
 
   return (
     <div>
@@ -61,14 +76,19 @@ function User() {
           />
         </div>
         <div className="stats">
-          <p className="win">{matches_won} win</p>
-          <p className="lose">{matches_lost} lose</p>
+          <p key="Win" className="win">{win} Win</p>
+          <p key="Tie" className="tie">{tie} Tie</p>
+          <p key="Lose" className="lose">{lose} Lose</p>
         </div>
         <div className="match_history">
           <h4>History</h4>
-          {scores.map((score) => {
+          {scores.map((score, i) => {
+            if (score.playerScore > score.enemyScore)
+              matches_won++;
+            else
+              matches_lost++;
             return (
-              <p>{score.playerScore} - {score.enemyScore}</p>
+              <p key={i}>{score.playerScore} - {score.enemyScore}</p>
             )
           })}
           {/* <p>No match history yet</p> */}

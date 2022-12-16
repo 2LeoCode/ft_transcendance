@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Fragment } from "react";
-// import ReactJS from "react";
 import { io, Socket } from 'socket.io-client';
 import Header from "../components/Header";
 import "../styles/Pong.css";
@@ -8,9 +7,6 @@ import Watch from "./Watch";
 import { GameState, IRoom, User } from "../gameObjects/GameObject";
 import ClientSocket from "../com/client-socket";
 import useDatabase from "../com/use-database";
-import { atom, useAtom } from "jotai";
-import EntityParser from "../com/entity-parser";
-//import { ChatWidthAtom } from "../components/chat/Chat";
 
 let socket: Socket;
 
@@ -20,11 +16,8 @@ export type onGoingGame = {
   playerTwo: string;
 };
 
-//export const MouseOnResizerAtom = atom(false);
-
 function Pong() {
   const db = useDatabase();
-  // const [isReady, setIsReady] = useState<boolean | any>(false);
   const [play, setPlay] = useState<boolean>(false);
   const [watch, setWatch] = useState<boolean>(false);
   const [inQueue, setInQueue] = useState<boolean>(false);
@@ -32,11 +25,9 @@ function Pong() {
   const [currentGames, setCurrentGames] = useState<onGoingGame[]>([]);
 
   let roomData: IRoom;
-  // let roomId: string | undefined;
   let user: User;
 
   const quitGame = () => {
-    // maybe emit to get the user out of the room...
     socket.emit("forceDisconnection");
     setPlay(false);
     setRoom(null);
@@ -52,7 +43,6 @@ function Pong() {
   }
 
   const handleWatch = () => {
-    // console.log("handleWatch");
     setWatch(true);
   }
 
@@ -71,7 +61,6 @@ function Pong() {
 
   useEffect((): any => {
 
-    console.log('registering socket events...');
     socket = ClientSocket;
 
     socket.emit("handleUserConnect", user); // user is gonna be the user from chat if needed 
@@ -84,19 +73,15 @@ function Pong() {
 
     socket.on("newRoom", (newRoomData: IRoom) => {
       if (newRoomData.gameState === GameState.WAITING && user.id != newRoomData.playerOne.user.id) {
-        //console.log("return");
         return;
       }
       socket.emit("joinRoom", newRoomData.roomId);
-      console.log("emit joinRoom");
       roomData = newRoomData;
-      // roomId = newRoomData.roomId;
       setRoom(roomData);
       setInQueue(false);
     });
 
     socket.on("joinedQueue", () => {
-      // console.log("joinQueue");
       setInQueue(true);
     });
 
@@ -105,15 +90,10 @@ function Pong() {
     });
 
     socket.on("joinedRoom", () => {
-      //console.log("joined room");
       setPlay(true);
     });
 
     socket.on("leavedRoom", () => {
-      // if (chatSocket) {
-      // 	chatSocket.emit("userGameStatus", { isPlaying: false }); // user status "not playing"
-      // }
-      // roomId = undefined;
       setPlay(false);
       setRoom(null);
     });
@@ -123,44 +103,9 @@ function Pong() {
       setPlay(false);
       setRoom(null);
     })
-
-    //  return () => {
-    //      // if (chatSocket) {
-    //      //   chatSocket.emit("userGameStatus", { isPlaying: false }); // user status
-    //      // }
-    //      if (socket) {
-    //        console.log('err')
-    //        socket.disconnect();
-    //      }
-    //    }
   }, []);
 
-
-  //const [mouseOnResizer] = useAtom(MouseOnResizerAtom);
-  //const [, setChatWidth] = useAtom(ChatWidthAtom);
-
-  //const resizeChat = async (e: React.MouseEvent<HTMLDivElement>) => {
-  //  if (!mouseOnResizer)
-  //    return;
-  //  if (mouseOnResizer) {
-  //    console.log('resizeChat')
-  //    const newWidth = (window.screenX - e.clientX) / window.screenX;
-  //    
-  //    console.log('newWidth: ' + newWidth);
-  //    if (newWidth < 10 || newWidth > 100)
-  //      return;
-  //    //const chat = document.getElementById('chat_0')!;
-  //    //chat.style.width = `${newWidth}%`;
-  //    setChatWidth(newWidth);
-  //  }
-  //}
-
   return (
-    //<div
-    //    id='mouse_mask_0'
-    //    onMouseMove={resizeChat}
-    //    style={{ width: '100%', height: '100%'}}
-    //>
     <Fragment>
       {!play && <Header />}
       {play && <button
@@ -168,7 +113,7 @@ function Pong() {
         value={'quit'}
         onClick={quitGame}
         type="button">
-        Give up
+        QUIT
             </button>
       }
       <div id='pong_0' className="Pong">
@@ -225,7 +170,6 @@ function Pong() {
         {watch && !play && <Watch currentGamesProps={currentGames} socketProps={socket}></Watch>}
       </div>
     </Fragment>
-    // </div>
   );
 }
 
