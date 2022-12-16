@@ -8,7 +8,6 @@ const ChatBody = () => (
 		<ChatCurrentConv />
 		<ChatConvList />
     {/* <ChatVisibleChannels />
-    <ChatFindUser />
     <ChatJoinChannel />
     <ChatBody /> */}
   </div>

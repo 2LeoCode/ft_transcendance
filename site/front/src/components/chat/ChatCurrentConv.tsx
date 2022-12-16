@@ -1,20 +1,20 @@
 import { atom, useAtom } from "jotai";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
+import ClientSocket from "../../com/client-socket";
 import Message from "../../com/interfaces/message.interface";
 import PublicUser from "../../com/interfaces/public-user.interface";
+import { Atom } from "../../com/types/atom.type";
 import useDatabase from "../../com/use-database";
-
-export type Conv = {
-  user: PublicUser;
-  messages: Message[];
-};
+import { Conv } from "./ChatConv";
 
 export const CurrentConvAtom = atom<Conv | null>(null);
+export const NullAtom = atom<null>(null);
 
 const ChatCurrentConv = () => {
   const db = useDatabase();
   const [currentConv] = useAtom(CurrentConvAtom);
-  const [nick] = useAtom(currentConv?.user.nickAtom || atom(''));
+  const [nick] = useAtom(currentConv?.user.nickAtom || NullAtom);
+  const [input, setInput] = useState('');
 
   return (
     <div className="ChatBodyCurrentConv">
@@ -35,6 +35,21 @@ const ChatCurrentConv = () => {
               </li>
             ))}
           </ul>
+          <form onSubmit={((e) => {
+            e.preventDefault();
+            ClientSocket.emit('privMsg', currentConv.user.id, input);
+            setInput('');
+          })}>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => {
+                e.preventDefault();
+                setInput(e.target.value);
+              }}>
+            </input>
+            <input type="submit" value="Send" />
+          </form>
         </Fragment>
       ) : <h2 style={{textAlign: 'center'}}>No active conversation</h2>}
     </div>

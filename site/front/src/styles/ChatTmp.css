@@ -37,9 +37,9 @@
 	border-radius: 30%;
 	color: white;
 	font-size: 20px;
-	font-weight: bold;
 	text-align: center;
 	line-height: 20px;
+	font: inherit;
 	cursor: pointer;
 }
 
@@ -67,7 +67,7 @@
 	padding: 0;
 	left: 0;
 	width: 202px;
-	height: 500px;
+	height: 800px;
 	background-color: rgb(255, 255, 255);
 	border: #000 1px solid;
 	overflow: none;

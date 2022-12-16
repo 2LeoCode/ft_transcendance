@@ -1,14 +1,14 @@
 import { atom, useAtom } from 'jotai';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ClientSocket from '../../com/client-socket';
-import useDatabase from '../../com/use-database';
+import ClientSocket from '../com/client-socket';
+import useDatabase from '../com/use-database';
 //import { MouseOnResizerAtom } from '../../pages/Pong';
-import '../../styles/ChatTmp.css';
-import ChatBody from './ChatBody';
-import ChatHeader from './ChatHeader';
-import ChatOnlineUsers from './ChatUserList';
-import ChatUsers from './ChatUserList';
+import '../styles/ChatTmp.css';
+import ChatBody from '../components/chat/ChatBody';
+import ChatHeader from '../components/chat/ChatHeader';
+import ChatOnlineUsers from '../components/chat/ChatUserList';
+import ChatUsers from '../components/chat/ChatUserList';
 
 // export const UpdateChatAtom = atom(false);
 

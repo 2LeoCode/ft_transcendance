@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import PublicUser from "../../com/interfaces/public-user.interface";
 import useDatabase from "../../com/use-database";
 
-export const SelectedUserAtom = atom('');
+export const SelectedUserAtom = atom(null as PublicUser | null);
 
 const ChatUser = ({ usr }: { usr: PublicUser }) => {
   const db = useDatabase();
@@ -26,10 +26,10 @@ const ChatUser = ({ usr }: { usr: PublicUser }) => {
         alt="avatar"
       />
       <p
-        onClick={() => setSelectedUser(usr.id)}
+        onClick={() => setSelectedUser(usr)}
         className='ChatUserName'
         style={
-          selectedUser == usr.id ?
+          selectedUser?.id == usr.id ?
           	{ color: 'white', backgroundColor: 'black' } :
           	{ color: 'black', backgroundColor: 'white' }
       }>

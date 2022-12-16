@@ -51,6 +51,7 @@ export default class UserService {
 		const r = await this.userRepository.findOne({
 			relations: [
 				'messages',
+				'messages.sender',
 				'messages.receiver',
 				'messages.receiver.parentUser',
 				'messages.receiver.parentChannel',
@@ -65,12 +66,14 @@ export default class UserService {
 				'receiver.messages',
 				'receiver.messages.sender',
 				'receiver.messages.receiver',
+				'receiver.messages.receiver.parentUser',
+				'receiver.messages.receiver.parentChannel',
 				'receiver.parentUser',
 				'receiver.parentChannel'
 			],
 			where: { id: id }
 		});
-		//console.log(r);
+		console.log(r.receiver.messages[0].sender);
 		return r;
 	}
 

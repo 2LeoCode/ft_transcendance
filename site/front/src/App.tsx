@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/App.css';
 import Log from './pages/Log';
 import { useAtom, atom } from 'jotai';
-import Chat from './components/chat/Chat';
+import Chat from './pages/Chat';
 import User from './pages/User';
 import OtherUser from './pages/OtherUser';
 import Pong from './pages/Pong';

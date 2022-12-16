@@ -1,12 +1,16 @@
 import { useAtom } from "jotai";
 import { Fragment, useEffect } from "react";
 import useDatabase from "../../com/use-database"
+import { ConvsAtom } from "./ChatConvList";
+import { CurrentConvAtom } from "./ChatCurrentConv";
 import ChatUser, { SelectedUserAtom } from "./ChatUser";
 
 const ChatUserList = () => {
   const db = useDatabase();
   const [onlineUsers] = useAtom(db.onlineUsersAtom);
   const [selectedUser] = useAtom(SelectedUserAtom);
+	const [convs, setConvs] = useAtom(ConvsAtom); 
+	const [, setCurrentConv] = useAtom(CurrentConvAtom);
 
   return (
     <Fragment>
@@ -21,9 +25,21 @@ const ChatUserList = () => {
           </ul>
 		    {selectedUser && (
 			    <Fragment>
-			  	  <button>Invite Pong</button>
-		        <button>Ask Friend</button>
-		        <button>Talk</button>
+			  	  {selectedUser.id != db.user.id && <button style={{fontWeight: 'bold'}}>Invite Pong</button>}
+		        <button>See Profile</button>
+		        {selectedUser.id != db.user.id && <button
+							onClick={() => {
+								let conv = convs.find((conv) => conv.user.id == selectedUser.id);
+								if (!conv) {
+									conv = {
+										user: selectedUser,
+										messages: [],
+									}
+									setConvs([...convs, conv]);
+								}
+								setCurrentConv(conv);
+							}}
+							>Start Conversation</button>}
           </Fragment>
         )}
       </div>

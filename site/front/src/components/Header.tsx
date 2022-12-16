@@ -4,7 +4,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 //import { Database } from "../com/database";
 import useDatabase from "../com/use-database";
 import "../styles/Header.css";
-import Chat from "./chat/Chat";
+import Chat from "../pages/Chat";
 import Settings, { SettingsAtom } from "./Settings";
 
 function Header() {

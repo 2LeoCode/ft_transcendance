@@ -29,14 +29,21 @@ export default class MessageService {
 		senderId?: string;
 		receiverId?: string;
 	}): Promise<MessageEntity> {
-		return this.messageRepository.findOne({
-			relations: ['sender', 'receiver', 'receiver.parentUser', 'receiver.parentChannel'],
+		const msg = this.messageRepository.findOne({
+			relations: [
+				'sender',
+				'receiver',
+				'receiver.parentUser',
+				'receiver.parentChannel'
+		],
 			where: {
 				id: opts.id,
 				sender: { id: opts.senderId },
 				receiver: { id: opts.receiverId }
 			},
 		});
+		console.log('message found', msg);
+		return msg;
 	}
 
 	async getSenderId(id: string): Promise<string> {

@@ -40,7 +40,7 @@ const DatabaseLoader = (async () => {
 				headers: {
 					Authorization: `Bearer ${Constants.jwtToken}`
 				}
-			}).then(res => {
+			}).then(async res => {
 				if (!res.ok)
 					throw new Error(res.statusText);
 				return res.json();
