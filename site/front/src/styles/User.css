@@ -52,7 +52,7 @@ h3 {
 	display: none;
 }
 
-.win, .lose {
+.win, .lose, .tie {
 	font-size: 20px;
 }
 
@@ -62,4 +62,8 @@ h3 {
 
 .lose {
 	color: red;
+}
+
+.tie {
+	color: orange;
 }

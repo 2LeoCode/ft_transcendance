@@ -44,7 +44,7 @@ export default class ScoreService {
 			playerScore: dto.playerScore,
 			enemyScore: dto.enemyScore
 		});
-		console.log('test', test);
+		// console.log('test', test);
 		return test;
 	}
 

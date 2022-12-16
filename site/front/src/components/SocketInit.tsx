@@ -13,10 +13,10 @@ const SocketInit = () => {
 	useEffect(() => {
 		
 		ClientSocket.on('newScore', (score: any) => {
-			console.log('received new score');
 			const newScore = EntityParser.score(score);
 			setScores((prev) => [...prev, newScore]);
-		})
+    })
+    
 	}, [])
 
 
