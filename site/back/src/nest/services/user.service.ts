@@ -74,7 +74,6 @@ export default class UserService {
 			],
 			where: { id: id }
 		});
-		console.log(r.receiver.messages[0].sender);
 		return r;
 	}
 
