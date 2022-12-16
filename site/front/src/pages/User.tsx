@@ -20,7 +20,7 @@ function User() {
 
   socket = ClientSocket;
 
-  socket.emit("getScores");
+  //socket.emit("getScores");
 
   const Database = useDatabase();
   const location = useLocation();

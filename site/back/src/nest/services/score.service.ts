@@ -22,6 +22,15 @@ export default class ScoreService {
 		});
 	}
 
+	async getFull(id: string): Promise<ScoreEntity> {
+		return this.scoreRepository.findOne({
+			relations: ['user'],
+			where: {
+				id: id,
+			}
+		});
+	}
+
 	async getUserId(id: string): Promise<string> {
 		return this.scoreRepository.findOne({
 			relations: ['user'],
@@ -29,12 +38,14 @@ export default class ScoreService {
 		}).then((score: ScoreEntity) => score.user.id);
 	}
 
-	async add(userId: string, dto: CreateScoreDto): Promise<void> {
-		await this.scoreRepository.save({
+	async add(userId: string, dto: CreateScoreDto) {
+		const test = await this.scoreRepository.save({
 			user: { id: userId },
 			playerScore: dto.playerScore,
 			enemyScore: dto.enemyScore
 		});
+		console.log('test', test);
+		return test;
 	}
 
 	async remove(userId: string, id: string): Promise<void> {

@@ -514,9 +514,12 @@ export class SocketEvents
             }
 
             console.log("test oooooooooooooooooooone");
-            this.scoreService.add(userId, scoreDtoPlayerOne);
+            const res = await this.scoreService.add(userId, scoreDtoPlayerOne);
             console.log("test Twoooooooooooooooooooo");
-            this.scoreService.add(userId2, scoreDtoPlayerTwo);
+            const res2 = await this.scoreService.add(userId2, scoreDtoPlayerTwo);
+            client.emit('newScore', await this.scoreService.getFull(res.id));
+
+            //this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('newScore', await this.scoreService.getFull(res2.id));
           }
         }
       }

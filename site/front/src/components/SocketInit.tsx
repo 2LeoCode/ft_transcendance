@@ -8,6 +8,17 @@ import ChatSocket from "./chat/ChatSocket";
 const SocketInit = () => {
   const db = useDatabase();
   const [, setOnlineUsers] = useAtom(db.onlineUsersAtom);
+	const [, setScores] = useAtom(db.user.scoresAtom);
+
+	useEffect(() => {
+		
+		ClientSocket.on('newScore', (score: any) => {
+			console.log('received new score');
+			const newScore = EntityParser.score(score);
+			setScores((prev) => [...prev, newScore]);
+		})
+	}, [])
+
 
   useEffect(() => {
     console.log('SocketInit');

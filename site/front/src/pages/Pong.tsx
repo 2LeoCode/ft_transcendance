@@ -30,7 +30,6 @@ function Pong() {
   const [inQueue, setInQueue] = useState<boolean>(false);
   const [room, setRoom] = useState<IRoom | null>(null);
   const [currentGames, setCurrentGames] = useState<onGoingGame[]>([]);
-  const [, setOnlineUsers] = useAtom(db.onlineUsersAtom);
 
   let roomData: IRoom;
   // let roomId: string | undefined;
