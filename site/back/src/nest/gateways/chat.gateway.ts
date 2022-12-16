@@ -29,19 +29,14 @@ export class ChatGateway {
 			usr => usr.userId == receiverId
 		);
 
-		console.log(receiverId, '+',  msg);
-		console.log(this.eventsGateway.connectedUsers);
-		if (receiver) {
-			try {
-				let res = await this.userService.sendPrivMsg(sender.userId, receiver.userId, msg);
-				res = await this.messageService.getFull({ id: res.id });
+		try {
+			let res = await this.userService.sendPrivMsg(sender.userId, receiverId, msg);
+			res = await this.messageService.getFull({ id: res.id });
+			if (receiver)
 				this.eventsGateway.server.to(receiver.socketId).emit('recvPrivMsg', res);
-				client.emit('sendPrivMsg', res);
-			} catch (e) {
-				client.emit('privMsgError', e.message);
-			}
-		} else {
-			client.emit('privMsgError', 'User not found');
+			client.emit('sendPrivMsg', res);
+		} catch (e) {
+			client.emit('privMsgError', e.message);
 		}
 	}
 
