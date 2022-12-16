@@ -5,6 +5,10 @@ import useDatabase from "../com/use-database";
 //import { Database } from '../com/database';
 import Header from "../components/Header";
 import "../styles/User.css";
+import { io, Socket } from 'socket.io-client';
+import ClientSocket from "../com/client-socket";
+
+let socket: Socket;
 
 declare let Blob: {
   prototype: Blob;
@@ -13,6 +17,11 @@ declare let Blob: {
 };
 
 function User() {
+
+  socket = ClientSocket;
+
+  socket.emit("getScores");
+
   const Database = useDatabase();
   const location = useLocation();
 

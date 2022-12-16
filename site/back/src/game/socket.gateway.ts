@@ -465,7 +465,7 @@ export class SocketEvents
         }
       }
       if (room.gameState === GameState.STARTING) {
-      
+
         room.start();
       } else if (room.gameState === GameState.PLAYING) {
 
@@ -489,14 +489,19 @@ export class SocketEvents
               enemyScore: room.playerOne.score,
             };
 
-            const user = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).username });
+            const user = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == room.playerOne.user.socketId).username });
             const userId = user.id;
+            const user2 = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == room.playerTwo.user.socketId).username });
+            const userId2 = user2.id;
 
             // console.log("playerTwo socketId = " + room.playerTwo.user.socketId + " " + client.id);
 
             if (room.otherLeft) {
               console.log("other Left");
-              this.eventsGateway.server.to(client.id).emit("winner", user.user42);
+              if (room.playerOne.user.socketId === client.id)
+                this.eventsGateway.server.to(client.id).emit("winner", room.playerOne.user.username);
+              else if (room.playerTwo.user.socketId === client.id)
+                this.eventsGateway.server.to(client.id).emit("winner", room.playerTwo.user.username);
 
             } else if (room.playerOne.score > room.playerTwo.score) {
               console.log("playerOne wins");
@@ -507,13 +512,12 @@ export class SocketEvents
               this.eventsGateway.server.emit("winner", room.playerTwo.user.username);
 
             }
-          }
 
-          //     if (room.playerOne.user.socketId === client.id) {
-          //       this.scoreService.add(userId, scoreDtoPlayerOne);
-          //     } else if (room.playerTwo.user.socketId === client.id) {
-          //       this.scoreService.add(userId, scoreDtoPlayerTwo);
-          //     }
+            console.log("test oooooooooooooooooooone");
+            this.scoreService.add(userId, scoreDtoPlayerOne);
+            console.log("test Twoooooooooooooooooooo");
+            this.scoreService.add(userId2, scoreDtoPlayerTwo);
+          }
         }
       }
     }
@@ -570,5 +574,20 @@ export class SocketEvents
     this.eventsGateway.server
       .to(client.id)
       .emit('updateCurrentGames', this.currentGames);
+  }
+
+  @SubscribeMessage('getScores')
+  async handleGetScores(@ConnectedSocket() client: Socket) {
+
+    const user = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).username });
+    const userId = user.id;
+
+    // let scores = await this.scoreService.get({id: userId});
+
+    console.log("coucou " + userId);
+
+    this.eventsGateway.server
+      .to(client.id)
+      .emit('scoresPayload');
   }
 }
