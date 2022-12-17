@@ -109,8 +109,11 @@ function User() {
         <div className="friends">
           <h4>Friends</h4>
           {friends.map((friend, i) => {
+            let status = "offline";
+            if (friend.online)
+              status = "online";
             return (
-              <ul key={i}>{friend.user42}</ul>
+              <ul key={i}>{friend.user42}-{status}</ul>
             )
           })}
         </div>
