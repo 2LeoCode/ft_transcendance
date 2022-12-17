@@ -85,7 +85,6 @@ export class ConnectedUsers {
 
 	changeUserStatus(socketId: string, status: UserStatus) {
 		let user: User = this.getUser(socketId);
-		console.log(user);
 		user.setUserStatus(status);
 	}
 

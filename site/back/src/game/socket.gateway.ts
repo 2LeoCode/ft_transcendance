@@ -452,4 +452,44 @@ export class SocketEvents
       .emit('updateCurrentGames', this.currentGames);
   }
 
+  // Friends requests
+  @SubscribeMessage('friendRequest')
+  async handleFriendRequest(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() username: string
+  ) {
+    const user = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.username == username,
+    );
+    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    ).userId);
+    this.userService.sendFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    if (user && tmp) {
+      this.eventsGateway.server
+        .to(user.socketId)
+        .emit('friendRequest', user.username, tmp);
+    }
+  }
+
+  @SubscribeMessage('acceptFriendRequest')
+  handleAcceptFriendRequest(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() username: string
+  ) {
+    const user = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.username == username,
+    );
+    this.userService.acceptFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    // this.userService.acceptFriendRequest(user.userId, this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId);
+    if (user) {
+      this.eventsGateway.server
+        .to(user.socketId)
+        .emit('acceptFriendRequest', this.eventsGateway.connectedUsers.find(
+          (usr) => usr.socketId == client.id,
+        ));
+    }
+  }
+
+
 }

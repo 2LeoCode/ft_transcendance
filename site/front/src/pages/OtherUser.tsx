@@ -5,6 +5,10 @@ import "../styles/User.css";
 import { atom, useAtom } from "jotai";
 import { Database } from "../com/database";
 import useDatabase from "../com/use-database";
+import ClientSocket from "../com/client-socket";
+import { Socket } from "socket.io-client";
+
+let socket: Socket
 
 declare const Blob: {
   prototype: Blob;
@@ -14,10 +18,18 @@ declare const Blob: {
 
 function OtherUser() {
 
+  socket = ClientSocket;
+
   const [image, setImage] = useState(new Blob());
   const [uploaded, setUploaded] = useState(false);
   const params = useParams();
   const username = params.userName;
+
+  function inviteFriend(e: React.MouseEvent<HTMLButtonElement>) {
+    const friendName = e.currentTarget.value;
+    console.log(friendName);
+    socket.emit("friendRequest", friendName);
+  }
 
   return (
     <div>
@@ -25,11 +37,16 @@ function OtherUser() {
       <div className="User">
         <h3>{username}</h3>
         <div className="avatar">
-            <img src="./default-avatar.webp" alt="Avatar" width="80%" />
+            <img src="./default-avatar.webp"  alt="Avatar" width="80%" />
           <br />
         </div>
         <div className="match_history">
-          <button >Add Friend</button>
+          <button 
+            value={username}
+            onClick={inviteFriend}
+            >
+            Add Friend
+          </button>
           {/* <p>No match history yet</p> */}
         </div>
       </div>
