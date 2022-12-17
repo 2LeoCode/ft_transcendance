@@ -473,21 +473,31 @@ export class SocketEvents
   }
 
   @SubscribeMessage('acceptFriendRequest')
-  handleAcceptFriendRequest(
+  async handleAcceptFriendRequest(
     @ConnectedSocket() client: Socket,
     @MessageBody() username: string
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     );
+    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    ).userId);
+    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == user.socketId,
+    ).userId);
     this.userService.acceptFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
     // this.userService.acceptFriendRequest(user.userId, this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId);
-    if (user) {
+    if (user && tmp && tmp2) {
       this.eventsGateway.server
         .to(user.socketId)
-        .emit('acceptFriendRequest', this.eventsGateway.connectedUsers.find(
-          (usr) => usr.socketId == client.id,
-        ));
+        .emit('acceptFriendRequest', user.username, tmp);
+      this.eventsGateway.server
+        .to(client.id)
+        .emit('acceptFriendRequest', user.username, tmp2);
+      this.eventsGateway.server
+        .to(client.id)
+        .emit('removeRequest', tmp2);
     }
   }
 

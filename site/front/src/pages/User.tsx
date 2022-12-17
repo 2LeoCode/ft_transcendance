@@ -110,7 +110,7 @@ function User() {
           <h4>Friends</h4>
           {friends.map((friend, i) => {
             return (
-              <ul key={i}>{friend.nick}</ul>
+              <ul key={i}>{friend.user42}</ul>
             )
           })}
         </div>
