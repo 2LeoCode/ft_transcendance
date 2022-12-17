@@ -297,10 +297,11 @@ export class SocketEvents
         (usr) => usr.socketId == client.id,
       ).username);
       user = newUser;
+      this.connectedUsers.addUser(user);
     }
 
     if (user && !this.queue.isInQueue(user)) {
-      this.connectedUsers.changeUserStatus(user.socketId, UserStatus.INQUEUE);
+      this.connectedUsers.changeUserStatus(client.id, UserStatus.INQUEUE);
       this.connectedUsers.setGameMode(user.socketId, 'classic');
 
       this.eventsGateway.server.to(client.id).emit('joinedQueue');

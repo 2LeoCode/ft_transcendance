@@ -71,9 +71,11 @@ const ChatUserList = () => {
                 </button>
               </Link>
             }
-            <button>
-              See Profile
-            </button>
+            <Link to={`/other_user/${selectedUser.user42}`}>
+              <button>
+                See Profile
+              </button>
+            </Link>
             {selectedUser.id != db.user.id && <button
               onClick={() => {
                 let conv = convs.find((conv) => conv.user.id == selectedUser.id);
