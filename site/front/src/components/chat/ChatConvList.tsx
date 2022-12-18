@@ -51,7 +51,7 @@ const ChatConvList = () => {
     <div className="ChatBodyUsers">
       <h2>Conversations</h2>
       <ul className='ChatUserList'>
-        {convs.map((conv) => <ChatConv key={conv.user.id} conv={conv} />)}
+        {convs.map((conv, tamere) => <ChatConv key={tamere} conv={conv} />)}
       </ul>
     </div>
   );

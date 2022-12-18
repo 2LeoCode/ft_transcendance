@@ -2,16 +2,18 @@
 	width: 70vw;
 	height: 50vw;
 	max-width: 1000px;
-	max-height: 725px;
+	max-height: 750px;
 	background-color: white;
 	margin: auto;
 	margin-bottom: 50px;
 	display: grid;
 	grid-template-columns: 33% 34% 33%;
-	grid-template-rows: 10% 90%;
+	grid-template-rows: 20% 30% 10% 40%;
 	grid-template-areas:
 	'header header header'
-	'left center right';
+	'left-top center-top right-top'
+	'left center right'
+	'left-bottom center-bottom right-bottom';
 	grid-auto-rows: auto;
 	margin-top: 50px;
 	font-family: sans-serif;
@@ -19,7 +21,7 @@
 	border-radius: 10%;
 }
 
-.avatar, .stats, .match_history {
+.avatar, .stats, .friends, .requested_friends, .match_history {
 	padding-bottom: 20%;
 }
 
@@ -33,11 +35,19 @@ h3 {
 }
 
 .stats {
-	grid-area: center;
+	grid-area: center-top;
+}
+
+.friends {
+	grid-area: right;
+}
+
+.requested_friends {
+	grid-area: right-top;
 }
 
 .match_history {
-	grid-area: right;
+	grid-area: center-bottom;
 }
 
 

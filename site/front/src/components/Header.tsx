@@ -35,7 +35,7 @@ function Header() {
   return (
       <div className="Header">
         <Link to='/user' className="infos_user">
-          <img height="50%" src="./default-avatar.webp" alt="avatar" />
+          <img height="50%" src="./default-avatar.webp" alt="" />
           {nick}
         </Link>
         <p

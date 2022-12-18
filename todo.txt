@@ -3,17 +3,14 @@ USER PROFILE
 -Fix l'avatar ( upload avatar )
 |-> When logged for the first time the user is prompted to add information to their account
         (nickname, avatar, etc...)
-- Add friends (probably on their profile) -> and see status in real time (in chat)
 
 AUTH
 - 2FA -> email ou message peu importe...
 
 CHAT
-
 // Leo en cours
 - Create channels -> private, password
         |-> the creator of the channel is the owner of a channel and can kick, ban, mute other users and the channel administrators
         |-> a user who is an administrator of a channel can kick, ban mute other users, but not the channel owners.
         |-> users can join/leave channels via a button and password if needed.
-- Directs messages
 - Block users -> the messages from the blocked person must be hidden

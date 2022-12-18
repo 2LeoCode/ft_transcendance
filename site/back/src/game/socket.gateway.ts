@@ -231,10 +231,12 @@ export class SocketEvents
       const user = this.connectedUsers.getUser(client.id);
 
       client.join(roomId);
-      if (user.status === UserStatus.INHUB) {
-        this.connectedUsers.changeUserStatus(client.id, UserStatus.SPECTATING);
-      } else if (room.isAPlayer(user)) {
-        room.addUser(user);
+      if (user) {
+        if (user.status === UserStatus.INHUB) {
+          this.connectedUsers.changeUserStatus(client.id, UserStatus.SPECTATING);
+        } else if (room.isAPlayer(user)) {
+          room.addUser(user);
+        }
       }
 
       this.eventsGateway.server.to(client.id).emit('joinedRoom');
@@ -274,16 +276,10 @@ export class SocketEvents
   }
 
   @SubscribeMessage('invitePong')
-  handleInvitePong(
+  async handleInvitePong(
     @ConnectedSocket() client: Socket,
     @MessageBody() username: string,
   ) {
-    console.log(
-      'other socketId find: ' +
-      this.eventsGateway.connectedUsers.find(
-        (usr) => usr.username == username,
-      ).socketId,
-    );
     const otherId = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     ).socketId;
@@ -297,23 +293,19 @@ export class SocketEvents
 
     let user: User = this.connectedUsers.getUser(client.id);
     if (!user) {
-      user.setSocketId(client.id);
-      user.setUsername(
-        this.eventsGateway.connectedUsers.find(
-          (usr) => usr.socketId == client.id,
-        ).username,
-      );
-      console.log(user.socketId + ' & ' + client.id);
+      let newUser: User = new User(client.id, this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId == client.id,
+      ).username);
+      user = newUser;
+      this.connectedUsers.addUser(user);
     }
 
     if (user && !this.queue.isInQueue(user)) {
       this.connectedUsers.changeUserStatus(client.id, UserStatus.INQUEUE);
-      this.connectedUsers.setGameMode(client.id, 'classic');
-      // this.queue.enqueue(user);
+      this.connectedUsers.setGameMode(user.socketId, 'classic');
 
       this.eventsGateway.server.to(client.id).emit('joinedQueue');
     }
-    // creer un User[] avec les deux users quand l'invitation est accepter.
   }
 
   @SubscribeMessage('AcceptPongInvite')
@@ -321,27 +313,13 @@ export class SocketEvents
     @ConnectedSocket() client: Socket,
     @MessageBody() username: string,
   ) {
-    console.log(
-      this.eventsGateway.connectedUsers.find((usr) => usr.username == username)
-        .socketId,
-    );
-    console.log(client.id);
-
-    console.log(
-      'other socketId find: ' +
-      this.eventsGateway.connectedUsers.find(
-        (usr) => usr.username == username,
-      ).socketId,
-    );
     const otherId = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     ).socketId;
-    // console.log(client.id + "  " + username);
     const receivererUsername = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     ).username;
 
-    // this.eventsGateway.server.to(otherId).emit("receiverInvitePong", senderUsername);
     const firstuser: User = new User(
       this.eventsGateway.connectedUsers.find(
         (usr) => usr.username == username,
@@ -357,7 +335,6 @@ export class SocketEvents
     );
 
     let players: User[] = Array();
-    console.log('player[0] = ' + this.connectedUsers.getUser(username));
     players[0] = firstuser;
     players[1] = backuser;
     this.createNewRoom(players);
@@ -473,6 +450,65 @@ export class SocketEvents
     this.eventsGateway.server
       .to(client.id)
       .emit('updateCurrentGames', this.currentGames);
+  }
+
+  // Friends requests
+  @SubscribeMessage('friendRequest')
+  async handleFriendRequest(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() username: string
+  ) {
+    const user = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.username == username,
+    );
+    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    ).userId);
+    this.userService.sendFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    if (user && tmp) {
+      this.eventsGateway.server
+        .to(user.socketId)
+        .emit('friendRequest', user.username, tmp);
+    }
+  }
+
+  @SubscribeMessage('acceptFriendRequest')
+  async handleAcceptFriendRequest(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() username: string
+  ) {
+    const user = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.username == username,
+    );
+    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    ).userId);
+    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == user.socketId,
+    ).userId);
+    this.userService.acceptFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    // this.userService.acceptFriendRequest(user.userId, this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId);
+    if (user && tmp && tmp2) {
+      this.eventsGateway.server
+        .to(user.socketId)
+        .emit('acceptFriendRequest', user.username, tmp);
+      this.eventsGateway.server
+        .to(client.id)
+        .emit('acceptFriendRequest', user.username, tmp2);
+      this.eventsGateway.server
+        .to(client.id)
+        .emit('removeRequest', tmp2);
+    }
+  }
+
+  @SubscribeMessage('getOtherUserScores')
+  async handleGetOtherUserScores(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() username: string
+  ) {
+    const user = await this.userService.getOnePublic({ user42: username });
+    const res = await this.scoreService.get({ userId: user.id });
+    this.eventsGateway.server.to(client.id).emit('otherUserScores', res);
   }
 
 }
