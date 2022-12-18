@@ -52,7 +52,6 @@ const EntityParser = {
 
 	user: (entity: any): User => {
 		//console.log('Got', entity);
-		console.log(entity.messages);
 		const userNoAtom = {
 			...EntityParser.publicUser(entity),
 			blockedBy: entity.blockedBy.map(

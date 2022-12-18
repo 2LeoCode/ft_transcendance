@@ -8,12 +8,12 @@
 	margin-bottom: 50px;
 	display: grid;
 	grid-template-columns: 33% 34% 33%;
-	grid-template-rows: 10% 40% 10% 30%;
+	grid-template-rows: 20% 30% 10% 40%;
 	grid-template-areas:
 	'header header header'
-	'left center-top right-top'
+	'left-top center-top right-top'
 	'left center right'
-	'left center-bottom right-bottom';
+	'left-bottom center-bottom right-bottom';
 	grid-auto-rows: auto;
 	margin-top: 50px;
 	font-family: sans-serif;
@@ -42,12 +42,12 @@ h3 {
 	grid-area: right;
 }
 
-requested_friends {
+.requested_friends {
 	grid-area: right-top;
 }
 
 .match_history {
-	grid-area: center;
+	grid-area: center-bottom;
 }
 
 

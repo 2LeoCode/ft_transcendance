@@ -1,6 +1,6 @@
 import { atom, useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
-import { useLocation, Location } from "react-router-dom";
+import { useLocation, Location, Link } from "react-router-dom";
 import ClientSocket from "../com/client-socket";
 import useDatabase from "../com/use-database";
 import Header from "../components/Header";
@@ -92,17 +92,17 @@ function User() {
           <h4>Friends Requests</h4>
           {requestedFriends.map((friend, i) => {
             return (
-                <ul key={i}>
-                  {friend.user42}
-                  <button
-                    value={friend.user42}
-                    onClick={acceptFriendRequest}>
-                    Accept
-                  </button>
-                  <button>
-                    Decline
-                  </button>
-                </ul>
+              <p key={i}>
+                {friend.user42}
+                <button
+                  value={friend.user42}
+                  onClick={acceptFriendRequest}>
+                  Accept
+                </button>
+                <button>
+                  Decline
+                </button>
+              </p>
             )
           })}
         </div>
@@ -113,22 +113,19 @@ function User() {
             if (friend.online)
               status = "online";
             return (
-              <ul key={i}>{friend.user42}-{status}</ul>
+              <Link key={i} to={`/other_user/${friend.user42}`}>
+                <ul>{friend.user42}-{status}</ul>
+              </Link>
             )
           })}
         </div>
         <div className="match_history">
           <h4>History</h4>
           {scores.map((score, i) => {
-            // if (score.playerScore > score.enemyScore)
-            //   matches_won++;
-            // else
-            //   matches_lost++;
             return (
               <ul key={i}>{score.playerScore} - {score.enemyScore}</ul>
             )
           })}
-          {/* <p>No match history yet</p> */}
         </div>
       </div>
     </div>

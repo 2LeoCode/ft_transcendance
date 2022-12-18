@@ -501,5 +501,14 @@ export class SocketEvents
     }
   }
 
+  @SubscribeMessage('getOtherUserScores')
+  async handleGetOtherUserScores(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() username: string
+  ) {
+    const user = await this.userService.getOnePublic({ user42: username });
+    const res = await this.scoreService.get({ userId: user.id });
+    this.eventsGateway.server.to(client.id).emit('otherUserScores', res);
+  }
 
 }

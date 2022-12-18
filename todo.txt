@@ -4,9 +4,6 @@ USER PROFILE
 |-> When logged for the first time the user is prompted to add information to their account
         (nickname, avatar, etc...)
 
-// matheo en cours
-- Add friends (probably on their profile) -> and see status in real time (in chat)
-
 AUTH
 - 2FA -> email ou message peu importe...
 
