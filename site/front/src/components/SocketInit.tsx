@@ -21,7 +21,7 @@ const SocketInit = () => {
 
 
   useEffect(() => {
-    console.log('SocketInit');
+    //console.log('SocketInit');
     ClientSocket
       .on('clientDisconnected', (username) => {
         console.log(`client ${username} disconnected`);

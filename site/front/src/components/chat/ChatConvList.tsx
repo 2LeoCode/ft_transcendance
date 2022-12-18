@@ -28,6 +28,7 @@ const ChatConvList = () => {
 					return acc;
 				}, [] as Conv[]);
 			db.user.messagesOut
+				.filter(msg => msg.receiverType === 'User')
 				.forEach(msg => {
 					const conv = convs.find(conv => conv.user.id === msg.receiver.id);
 					if (conv) {

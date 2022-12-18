@@ -24,28 +24,6 @@ export default class MessageService {
 		});
 	}
 
-	async getFull(opts: {
-		id?: string;
-		senderId?: string;
-		receiverId?: string;
-	}): Promise<MessageEntity> {
-		const msg = this.messageRepository.findOne({
-			relations: [
-				'sender',
-				'receiver',
-				'receiver.parentUser',
-				'receiver.parentChannel'
-		],
-			where: {
-				id: opts.id,
-				sender: { id: opts.senderId },
-				receiver: { id: opts.receiverId }
-			},
-		});
-		console.log('message found', msg);
-		return msg;
-	}
-
 	async getSenderId(id: string): Promise<string> {
 		return (await this.messageRepository.findOne({
 			relations: ['sender'],
@@ -61,10 +39,19 @@ export default class MessageService {
 	}
 
 	async add(senderId: string, dto: CreateMessageDto) {
-		return await this.messageRepository.save({
+		const tmp = await this.messageRepository.save({
 			sender: { id: senderId },
 			receiver: { id: dto.receiverId },
 			content: dto.content,
+		});
+		return this.messageRepository.findOne({
+			relations: [
+				'sender',
+				'receiver',
+				'receiver.parentUser',
+				'receiver.parentChannel'
+			],
+			where: { id: tmp.id }
 		});
 	}
 

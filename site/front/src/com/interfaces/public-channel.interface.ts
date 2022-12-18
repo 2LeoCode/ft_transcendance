@@ -6,12 +6,10 @@ export type ChannelAccessibility = 'public' | 'private';
 export default interface PublicChannel {
 	id: string;
 	name: string;
-	password: string;
 	accessibility: ChannelAccessibility;
 	visibility: ChannelVisibility;
 
 	nameAtom: Atom<string>;
-	passwordAtom: Atom<string>;
 	accessibilityAtom: Atom<ChannelAccessibility>;
 	visibilityAtom: Atom<ChannelVisibility>;
 }

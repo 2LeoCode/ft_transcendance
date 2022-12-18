@@ -1,6 +1,7 @@
 import { atom, useAtom } from "jotai";
 import { Fragment, useEffect, useState } from "react";
 import ClientSocket from "../../com/client-socket";
+import Channel from "../../com/interfaces/channel.interface";
 import Message from "../../com/interfaces/message.interface";
 import PublicUser from "../../com/interfaces/public-user.interface";
 import { Atom } from "../../com/types/atom.type";
@@ -48,8 +49,7 @@ const ChatCurrentConv = () => {
               onChange={(e) => {
                 e.preventDefault();
                 setInput(e.target.value);
-              }}>
-            </input>
+              }} />
             <input type="submit" value="Send" />
           </form>
         </Fragment>

@@ -139,7 +139,7 @@ export default class ChannelController {
 		@UserId() userId: string,
 		@Body() [channelName, otherId, time]: [string, string, number]
 	) {
-		return this.channelService.mute(userId, channelName, otherId, time);
+		return this.channelService.mute(userId, channelName, otherId);
 	}
 
 	@Put('kick')
@@ -196,7 +196,7 @@ export default class ChannelController {
 		@UserId() userId: string,
 		@Body() [channelName, otherId, time]: [string, string, number]
 	) {
-		return this.channelService.ban(userId, channelName, otherId, time);
+		return this.channelService.ban(userId, channelName, otherId);
 	}
 
 	@Put('unban')

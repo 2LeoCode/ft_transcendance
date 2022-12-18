@@ -32,7 +32,21 @@ export default class ReceiverService {
 			receiver.parentUser = parent as UserEntity;
 		else
 			receiver.parentChannel = parent as ChannelEntity;
-		return this.receiverRepository.save(receiver);
+		return (
+			this.receiverRepository.save(receiver)
+				.then((res) => this.receiverRepository.findOne({
+					relations: [
+						'parentUser',
+						'parentChannel',
+						'messages',
+						'messages.sender',
+						'messages.receiver',
+						'messages.receiver.parentUser',
+						'messages.receiver.parentChannel'
+					],
+					where: { id: res.id },
+				}))
+		);
 	}
 
 	async getMessages(id: string): Promise<MessageEntity[]> {
@@ -41,4 +55,9 @@ export default class ReceiverService {
 			where: { id: id },
 		}).then((receiver: ReceiverEntity) => receiver.messages);
 	}
+
+	async remove(id: string) {
+		return this.receiverRepository.delete(id);
+	}
+
 }

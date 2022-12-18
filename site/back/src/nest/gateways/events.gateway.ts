@@ -36,7 +36,7 @@ export default class EventsGateway implements OnGatewayConnection {
 
 			const dbUser = await this.userService.getOnePublic({
 				user42: payload.username
-			})
+			});
 
 			this.connectedUsers.push({
 				socketId: client.id,
@@ -51,6 +51,11 @@ export default class EventsGateway implements OnGatewayConnection {
 			);
 			//console.log('Client good!');
 			dbUser.online = true;
+
+			const channels = await this.userService.getChannels(dbUser.id);
+		
+			for (const channel of channels)
+				client.join(channel.id);
 
 			console.log(`hello ${payload.username}`);
 			//console.log('list:', this.connectedUsers.map(usr => usr.username).join(', '));

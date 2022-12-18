@@ -28,7 +28,6 @@ const EntityParser = {
 		const publicChannelNoAtom = {
 			id: entity.id,
 			name: entity.name,
-			password: entity.password,
 			accessibility: entity.accessibility,
 			visibility: entity.visibility,
 		};
@@ -36,7 +35,6 @@ const EntityParser = {
 		return {
 			...publicChannelNoAtom,
 			nameAtom: atom(publicChannelNoAtom.name),
-			passwordAtom: atom(publicChannelNoAtom.password),
 			accessibilityAtom: atom(publicChannelNoAtom.accessibility),
 			visibilityAtom: atom(publicChannelNoAtom.visibility)
 		};
@@ -52,7 +50,7 @@ const EntityParser = {
 
 	user: (entity: any): User => {
 		//console.log('Got', entity);
-		console.log(entity.messages);
+		//console.log(entity.messages);
 		const userNoAtom = {
 			...EntityParser.publicUser(entity),
 			blockedBy: entity.blockedBy.map(

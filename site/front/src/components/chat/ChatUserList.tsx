@@ -1,6 +1,8 @@
 import { useAtom } from "jotai";
 import { Fragment, useEffect } from "react";
 import useDatabase from "../../com/use-database"
+import { ConvTypeAtom } from "./ChatBody";
+import { CurrentChannelAtom } from "./ChatChannel";
 import { ConvsAtom } from "./ChatConvList";
 import { CurrentConvAtom } from "./ChatCurrentConv";
 import ChatUser, { SelectedUserAtom } from "./ChatUser";
@@ -11,6 +13,8 @@ const ChatUserList = () => {
   const [selectedUser] = useAtom(SelectedUserAtom);
 	const [convs, setConvs] = useAtom(ConvsAtom); 
 	const [, setCurrentConv] = useAtom(CurrentConvAtom);
+	const [, setCurrentChannel] = useAtom(CurrentChannelAtom);
+	const [, setConvType] = useAtom(ConvTypeAtom);
 
   return (
     <Fragment>
@@ -38,6 +42,8 @@ const ChatUserList = () => {
 									setConvs([...convs, conv]);
 								}
 								setCurrentConv(conv);
+								setCurrentChannel(null);
+								setConvType('User');
 							}}
 							>Start Conversation</button>}
           </Fragment>
