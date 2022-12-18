@@ -11,7 +11,7 @@ const SocketInit = () => {
   const [isInRequests, setIsInRequests] = useState("");
   const [, setOnlineUsers] = useAtom(db.onlineUsersAtom);
   const [, setScores] = useAtom(db.user.scoresAtom);
-  const [, setFriends] = useAtom(db.user.friendsAtom);
+  const [friends, setFriends] = useAtom(db.user.friendsAtom);
   const [friendsRequests, setFriendRequests] = useAtom(db.user.friendRequestsAtom);
 
 
@@ -24,7 +24,14 @@ const SocketInit = () => {
         return;
       else
         setIsInRequests(previous);
-      console.log(entity);
+      friendsRequests.map((friend) => {
+        if (friend.user42 === entity.username)
+          return;
+      })
+      friends.map((friend) => {
+        if (friend.user42 === entity.username)
+          return;
+      })
       const newFriendRequest = EntityParser.publicUser(entity);
       setFriendRequests((current) => [...current, newFriendRequest]);
     })
@@ -34,15 +41,20 @@ const SocketInit = () => {
         return;
       else
         setIsInRequests(previous);
-      console.log('acceptFriendRequest');
       const newFriend = EntityParser.publicUser(entity);
-      console.log(entity);
       setFriends((prev) => [...prev, newFriend]);
     })
 
+    ClientSocket.on('declineRequest', (previous: string, entity: any) => {
+      if (isInRequests === previous)
+        return;
+      else
+        setIsInRequests(previous);
+      const newFriend = EntityParser.publicUser(entity);
+      setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
+    })
+
     ClientSocket.on('removeRequest', (entity: any) => {
-      console.log('removeRequest');
-      console.log(entity.user42);
       setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
     })
 

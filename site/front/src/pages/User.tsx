@@ -35,6 +35,11 @@ function User() {
     ClientSocket.emit("acceptFriendRequest", friendName);
   }
 
+  function declineFriendRequest(e: React.MouseEvent<HTMLButtonElement>) {
+    const friendName = e.currentTarget.value;
+    ClientSocket.emit("declineFriendRequest", friendName);
+  }
+
   useEffect(() => {
 
     matches_lost = 0;
@@ -99,7 +104,9 @@ function User() {
                   onClick={acceptFriendRequest}>
                   Accept
                 </button>
-                <button>
+                <button
+                  value={friend.user42}
+                  onClick={declineFriendRequest}>
                   Decline
                 </button>
               </p>
