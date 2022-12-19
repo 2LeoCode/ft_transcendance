@@ -5,6 +5,7 @@ import useDatabase from "../../com/use-database";
 import ChatChannel from "./ChatChannel";
 import { NullAtom } from "./ChatCurrentConv";
 import ChatPublicChannel, { SelectedChannelAtom } from "./ChatPublicChannel";
+import ChatChannelInvite from "./ChatChannelInvite";
 
 export const CreateChannelAtom = atom<boolean>(false);
 
@@ -15,45 +16,12 @@ const ChatChannelList = () => {
 	const [myChannels] = useAtom(db.user.ownedChannelsAtom);
 	const [joinedChannels] = useAtom(db.user.channelsAtom);
 	const [selectedChannel] = useAtom(SelectedChannelAtom);
-	const [inputChannelPassword, setInputChannelPassword] = useState<string>('');
-	const [channelName] = useAtom(selectedChannel?.nameAtom || NullAtom);
+	const [channelInvites] = useAtom(db.user.channelInvitesAtom);
 
 	return (
-		<div className='ChatBodyChannels'>
-			<h2>Visible Channels</h2>
-			<ul className='ChatChannelList'>
-				{
-					visibleChannels.map((channel) =>
-						<ChatPublicChannel
-							key={channel.id}
-							channel={channel} />)
-				}
-			</ul>
-			{selectedChannel && (
-				<div>
-					<form
-						onSubmit={
-							(e) => {
-								e.preventDefault();
-								ClientSocket.emit('joinChannel', channelName, inputChannelPassword);
-								setInputChannelPassword('');
-							}
-						}>
-						<input
-							type='password'
-							value={inputChannelPassword}
-							onChange={
-								(e) => {
-									e.preventDefault();
-									setInputChannelPassword(e.target.value);
-								}
-							} />
-						<input type='submit' value='Join' />
-					</form>
-				</div>
-			)}
+		<div className='ChatBodyUsers'>
 			<h2>My Channels</h2>
-			<ul>
+			<ul className="ChatChannelList">
 				{
 					myChannels.map((channel) =>
 						<ChatChannel
@@ -62,10 +30,19 @@ const ChatChannelList = () => {
 				}
 			</ul>
 			<h2>Joined Channels</h2>
-			<ul>
+			<ul className="ChatChannelList">
 				{
 					joinedChannels.map((channel) =>
 						<ChatChannel
+							key={channel.id}
+							channel={channel} />)
+				}
+			</ul>
+			<h2>Channel Invites</h2>
+			<ul className="ChatChannelList">
+				{
+					channelInvites.map((channel) =>
+						<ChatChannelInvite
 							key={channel.id}
 							channel={channel} />)
 				}

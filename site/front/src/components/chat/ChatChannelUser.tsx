@@ -59,8 +59,8 @@ const ChatChannelUser = ({ user }: { user: PublicUser }) => {
 						)
 					}
 					{
-						channel.owner.id === db.user.id &&
-						admins.find(id => id == user.id) ? (
+						channel.owner.id === db.user.id && db.user.id !== user.id &&
+						(admins.find(id => id == user.id) ? (
 							<Fragment>
 								<button
 									onClick={() => {
@@ -76,7 +76,7 @@ const ChatChannelUser = ({ user }: { user: PublicUser }) => {
 									}}
 								>Promote</button>
 							</Fragment>
-						)
+						))
 					}
 				</Fragment>
 			)}

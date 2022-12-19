@@ -5,6 +5,7 @@ import { ChannelAccessibility, ChannelVisibility } from "../../com/interfaces/pu
 import useDatabase from "../../com/use-database";
 import { CurrentChannelAtom } from "./ChatChannel";
 import { CreateChannelAtom } from "./ChatChannelList";
+import swal from "sweetalert";
 
 const ChatCreateChannel = () => {
 	const db = useDatabase();
@@ -14,7 +15,7 @@ const ChatCreateChannel = () => {
 	const [inputName, setInputName] = useState<string>('');
 	const [inputPassword, setInputPassword] = useState<string>('');
 	const [inputVisibility, setInputVisibility] = useState<ChannelVisibility>('visible');
-	const [inputAccessibility, setInputAccessibility] = useState<ChannelAccessibility>('public');
+	//const [inputAccessibility, setInputAccessibility] = useState<ChannelAccessibility>('public');
 	const [currentChannel, setCurrentChannel] = useAtom(CurrentChannelAtom);
 
 	return (
@@ -24,16 +25,16 @@ const ChatCreateChannel = () => {
 				onSubmit={(e) => {
 					e.preventDefault();
 					if (!inputName.length) {
-						alert('Please enter a name');
+						swal('Please enter a name');
 						return;
 					}
-					if (inputVisibility == 'visible' && inputAccessibility == 'private') {
-						alert('Visible channels cannot be private');
-						return;
-					}
+					//if (inputVisibility == 'visible' && inputAccessibility == 'private') {
+					//	swal('Visible channels cannot be private');
+					//	return;
+					//}
 					ClientSocket.emit('createChannel',
 						inputName, inputPassword,
-						inputVisibility, inputAccessibility
+						inputVisibility, 'public'
 					);
 				}
 			}>
@@ -63,7 +64,8 @@ const ChatCreateChannel = () => {
 					<option value='visible'>Visible</option>
 					<option value='hidden'>Hidden</option>
 				</select>
-				<br />
+				
+				{/* <br />
 				<select
 					value={inputAccessibility}
 					onChange={(e) => {
@@ -73,7 +75,7 @@ const ChatCreateChannel = () => {
 				>
 					<option value='public'>Public</option>
 					<option value='private'>Private</option>
-				</select>
+				</select> */}
 				<button type='submit'>Create</button>
 				<button
 					onClick={(e) => {

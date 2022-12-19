@@ -131,7 +131,7 @@ export default class ChannelService {
 			where: { id: channelId }
 		});
 		if (!channel)
-			throw new Error(`Channel ${channel.name} does not exist`);
+			throw new Error(`Channel ${channelId} does not exist`);
 		if (channel.owner.id !== userId)
 			throw new Error(`User ${userId} is not the owner of channel ${channel.name}`);
 		const res = {...channel};
@@ -449,7 +449,7 @@ export default class ChannelService {
 
 	async invite(
 		userId: string,
-		channelName: string,
+		channelId: string,
 		otherId: string
 	) {
 		const channel: ChannelEntity = await this.channelRepository.findOne({
@@ -464,19 +464,18 @@ export default class ChannelService {
 				'receiver.messages.receiver.parentChannel',
 				'receiver.parentChannel',
 			],
-			where: { name: channelName }
+			where: { id: channelId }
 		});
 		if (!channel)
-			throw new Error(`Channel ${channelName} does not exist`);
+			throw new Error(`Channel ${channelId} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channelName}`);
+			throw new Error(`User ${userId} not in channel ${channel.name}`);
 		if (channel.users.find((user: UserEntity) => user.id === otherId))
-			throw new Error(`User ${otherId} already in channel ${channelName}`);
+			throw new Error(`User ${otherId} already in channel ${channel.name}`);
 		if (channel.bannedIds.includes(otherId))
-			throw new Error(`User ${otherId} is banned in channel ${channelName}`);
+			throw new Error(`User ${otherId} is banned in channel ${channel.name}`);
 		channel.invites.push({ id: otherId } as UserEntity);
-		await this.channelRepository.save(channel);
-		return channel;
+		return await this.channelRepository.save(channel);
 	}
 
 	async ban(
@@ -546,5 +545,72 @@ export default class ChannelService {
 		channel.bannedIds = channel.bannedIds.filter((id: string) => id !== otherId);
 		await this.channelRepository.save(channel);
 		return channel;
+	}
+
+	async acceptInvite(
+		userId: string,
+		channelId: string
+	) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: [
+				'owner',
+				'users',
+				'invites',
+				'receiver',
+				'receiver.messages',
+				'receiver.messages.sender',
+				'receiver.messages.receiver',
+				'receiver.messages.receiver.parentChannel',
+				'receiver.parentChannel',
+			],
+			where: { id: channelId }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelId} does not exist`);
+		if (!channel.invites.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not invited to channel ${channel.name}`);
+		channel.users.push({ id: userId } as UserEntity);
+		channel.invites = channel.invites.filter((user: UserEntity) => user.id !== userId);
+		await this.channelRepository.save(channel);
+		return this.channelRepository.findOne({
+			relations: [
+				'owner',
+				'users',
+				'invites',
+				'receiver',
+				'receiver.messages',
+				'receiver.messages.sender',
+				'receiver.messages.receiver',
+				'receiver.messages.receiver.parentChannel',
+				'receiver.parentChannel',
+			],
+			where: { id: channelId }
+		});
+	}
+
+	async declineInvite(
+		userId: string,
+		channelId: string
+	) {
+		const channel: ChannelEntity = await this.channelRepository.findOne({
+			relations: [
+				'owner',
+				'users',
+				'invites',
+				'receiver',
+				'receiver.messages',
+				'receiver.messages.sender',
+				'receiver.messages.receiver',
+				'receiver.messages.receiver.parentChannel',
+				'receiver.parentChannel',
+			],
+			where: { id: channelId }
+		});
+		if (!channel)
+			throw new Error(`Channel ${channelId} does not exist`);
+		if (!channel.invites.find((user: UserEntity) => user.id === userId))
+			throw new Error(`User ${userId} not invited to channel ${channel.name}`);
+		channel.invites = channel.invites.filter((user: UserEntity) => user.id !== userId);
+		return await this.channelRepository.save(channel);
 	}
 }

@@ -66,8 +66,8 @@
 	margin: 0;
 	padding: 0;
 	left: 0;
-	width: 202px;
-	height: 800px;
+	width: 212px;
+	height: 100%;
 	background-color: rgb(255, 255, 255);
 	border: #000 1px solid;
 	overflow: none;
@@ -80,11 +80,36 @@
 	margin: 0;
 	left: 0;
 	width: 802px;
-	height: 500px;
+	height: 100%;
 	background-color: rgb(255, 255, 255);
 	border: #000 1px solid;
 	overflow: none;
 	float: left;
+}
+
+.ChatChannelList {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	width: 210px;
+	background-color: rgb(255, 255, 255);
+	height: 150px;
+	border: #000 1px solid;
+	overflow-y: scroll;
+	scrollbar-width: 50px;
+	left: 0;
+}
+
+.ChatChannelList li {
+	width: 100%;
+	height: 30px;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	/* border: #000 1px solid; */
+	user-select: none;
+	cursor: pointer;
 }
 
 .ChatUserList {
@@ -92,7 +117,7 @@
 	margin: 0;
 	padding: 0;
 	left: 0;
-	width: 200px;
+	width: 210px;
 	background-color: rgb(255, 255, 255);
 	height: 250px;
 	border: #000 1px solid;
@@ -121,4 +146,68 @@
 	/* border: #000 1px solid; */
 	user-select: none;
 	cursor: pointer;
+}
+
+.ChatCurrentChannel {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	left: 0;
+	width: 802px;
+	height: 100%;
+	background-color: rgb(255, 255, 255);
+	border: #000 1px solid;
+	overflow: none;
+	float: left;
+}
+
+.ChatChannelHeader {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	margin: 0;
+	right: 0;
+	width: 100%;
+	height: 320px;
+	border: 1px solid black;
+}
+
+.ChatFooter {
+	position: relative;
+	width: 100%;
+	height: 50px;
+	border: 1px solid black;
+	bottom: 0;
+}
+
+.ChatMessages {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	width: 100%;
+	background-color: rgb(255, 255, 255);
+	height: 500px;
+	display: flex;
+	flex-direction: column-reverse;
+	border: #000 1px solid;
+	overflow-y: scroll;
+	scrollbar-width: 50px;
+	left: 0;
+}
+
+.ChatMessages li {
+	width: 100%;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	/* border: #000 1px solid; */
+	user-select: none;
+	cursor: pointer;
+}
+
+.ChatMessages li p {
+	margin: 5px;
 }

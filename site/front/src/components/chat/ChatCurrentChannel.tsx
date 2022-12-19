@@ -23,38 +23,42 @@ const ChatCurrentChannel = () => {
 
 	return (
 		<div className='ChatCurrentChannel'>
-			<div>
-				<h2>{name}</h2>
-				<button
-					onClick={() => {
-						ClientSocket.emit('leaveChannel', currentChannel.id);
-					}}>Leave</button>
+			<div className='ChatChannelHeader'>
+				<div>
+					<h3>{name}</h3>
+					<button
+						onClick={() => {
+							ClientSocket.emit('leaveChannel', currentChannel.id);
+						}}>Leave</button>
+				</div>
+				<div>
+					<h2>User List</h2>
+					<ul className='ChatUserList'>
+						{users.map(user => <ChatChannelUser key={user.id} user={user} />)}
+					</ul>
+				</div>
 			</div>
-			<div className='ChatChannelRight'>
-				<h4>User List</h4>
-				<ul className='ChatChannelUserList'>
-					{users.map(user => <ChatChannelUser key={user.id} user={user} />)}
-				</ul>
-			</div>
-			<ul>
+			<ul className="ChatMessages">
 				{messages.map((msg) => (
 					<ChatChannelMessage key={msg.id} msg={msg} />
-				))}
+				)).reverse()}
 			</ul>
-			<form onSubmit={(e) => {
-				e.preventDefault();
-				ClientSocket.emit('channelMsg', currentChannel.id, input);
-				setInput('');
-			}}>
-				<input
-					type='text'
-					value={input}
-					onChange={(e) => {
-						e.preventDefault();
-						setInput(e.target.value);
-					}} />
-				<input type='submit' value='Send' />
-			</form>
+			<div className='ChatFooter'>
+				<form onSubmit={(e) => {
+					e.preventDefault();
+					ClientSocket.emit('channelMsg', currentChannel.id, input);
+					setInput('');
+				}}>
+					<input
+						type='text'
+						value={input}
+						onChange={(e) => {
+							e.preventDefault();
+							setInput(e.target.value);
+						}} />
+					<input type='submit' value='Send' />
+				</form>
+			</div>
 		</div>
 	);
 }

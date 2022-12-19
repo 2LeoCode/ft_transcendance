@@ -18,9 +18,9 @@ const EntityParser = {
 
 		return {
 			...publicUserNoAtom,
-			nickAtom: atom(publicUserNoAtom.nick),
-			avatarPathAtom: atom(publicUserNoAtom.avatarPath),
-			onlineAtom: atom(publicUserNoAtom.online)
+			nickAtom: atom(publicUserNoAtom.nick as string),
+			avatarPathAtom: atom(publicUserNoAtom.avatarPath as string),
+			onlineAtom: atom(publicUserNoAtom.online as boolean)
 		};
 	},
 
@@ -34,9 +34,9 @@ const EntityParser = {
 
 		return {
 			...publicChannelNoAtom,
-			nameAtom: atom(publicChannelNoAtom.name),
-			accessibilityAtom: atom(publicChannelNoAtom.accessibility),
-			visibilityAtom: atom(publicChannelNoAtom.visibility)
+			nameAtom: atom(publicChannelNoAtom.name as string),
+			accessibilityAtom: atom(publicChannelNoAtom.accessibility as ChannelAccessibility),
+			visibilityAtom: atom(publicChannelNoAtom.visibility as ChannelVisibility)
 		};
 	},
 
@@ -80,19 +80,23 @@ const EntityParser = {
 			scores: entity.scores.map(
 				(score: any) => EntityParser.score(score)
 			),
+			channelInvites: entity.channelInvites.map(
+				(channel: any) => EntityParser.publicChannel(channel)
+			)
 		};
 
 		return {
 			...userNoAtom,
-			blockedByAtom: atom(userNoAtom.blockedBy),
-			blockedAtom: atom(userNoAtom.blocked),
-			friendsAtom: atom(userNoAtom.friends),
-			friendRequestsAtom: atom(userNoAtom.friendRequests),
-			ownedChannelsAtom: atom(userNoAtom.ownedChannels),
+			blockedByAtom: atom(userNoAtom.blockedBy as PublicUser[]),
+			blockedAtom: atom(userNoAtom.blocked as PublicUser[]),
+			friendsAtom: atom(userNoAtom.friends as PublicUser[]),
+			friendRequestsAtom: atom(userNoAtom.friendRequests as PublicUser[]),
+			ownedChannelsAtom: atom(userNoAtom.ownedChannels as Channel[]),
 			channelsAtom: atom(userNoAtom.channels as Channel[]),
 			messagesInAtom: atom(userNoAtom.messagesIn as Message[]),
 			messagesOutAtom: atom(userNoAtom.messagesOut as Message[]),
-			scoresAtom: atom(userNoAtom.scores)
+			scoresAtom: atom(userNoAtom.scores as Score[]),
+			channelInvitesAtom: atom(userNoAtom.channelInvites as PublicChannel[])
 		};
 	},
 
@@ -118,12 +122,12 @@ const EntityParser = {
 
 		return {
 			...channelNoAtom,
-			mutedIdsAtom: atom(channelNoAtom.mutedIds),
-			bannedIdsAtom: atom(channelNoAtom.bannedIds),
-			adminsIdsAtom: atom(channelNoAtom.adminsIds),
-			invitesAtom: atom(channelNoAtom.invites),
-			messagesAtom: atom(channelNoAtom.messages),
-			usersAtom: atom(channelNoAtom.users)
+			mutedIdsAtom: atom(channelNoAtom.mutedIds as string[]),
+			bannedIdsAtom: atom(channelNoAtom.bannedIds as string[]),
+			adminsIdsAtom: atom(channelNoAtom.adminsIds as string[]),
+			invitesAtom: atom(channelNoAtom.invites as PublicUser[]),
+			messagesAtom: atom(channelNoAtom.messages as Message[]),
+			usersAtom: atom(channelNoAtom.users as PublicUser[])
 		}
 	},
 
@@ -144,8 +148,8 @@ const EntityParser = {
 
 		return {
 			...messageNoAtom,
-			contentAtom: atom(messageNoAtom.content),
-			updateDateAtom: atom(messageNoAtom.updateDate)
+			contentAtom: atom(messageNoAtom.content as string),
+			updateDateAtom: atom(messageNoAtom.updateDate as Date)
 		};
 	}
 }

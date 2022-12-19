@@ -5,8 +5,8 @@ const ChatChannelMessage = ({ msg }: { msg: Message }) => {
 	const [senderNick] = useAtom(msg.sender.nickAtom);
  
 	return (
-		<li key={msg.id} className='ChatMessage'>
-			<p className="ChatMessage">
+		<li key={msg.id}>
+			<p>
 				{senderNick} ({msg.sender.user42}): {msg.content}
 			</p>
 		</li>

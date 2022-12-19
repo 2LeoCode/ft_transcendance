@@ -1,15 +1,23 @@
 import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PublicUser from "../../com/interfaces/public-user.interface";
 import useDatabase from "../../com/use-database";
 import ChatConv from "./ChatConv";
 import { Conv } from "./ChatConv";
+import ClientSocket from "../../com/client-socket";
+import ChatPublicChannel, { SelectedChannelAtom } from "./ChatPublicChannel";
+import { NullAtom } from "./ChatCurrentConv";
 
 export const ConvsAtom = atom([] as Conv[]);
 
 const ChatConvList = () => {
 	const db = useDatabase();
   const [convs, setConvs] = useAtom(ConvsAtom);
+	const [visibleChannels, setVisibleChannels] = useAtom(db.visibleChannelsAtom);
+	const [selectedChannel, setSelectedChannel] = useAtom(SelectedChannelAtom);
+	const [inputChannelName, setInputChannelName] = useState('');
+	const [inputChannelPassword, setInputChannelPassword] = useState('');
+	const [channelName] = useAtom(selectedChannel?.nameAtom || NullAtom);
 
 	useEffect(() => {
 		setConvs((() => {
@@ -53,6 +61,58 @@ const ChatConvList = () => {
       <ul className='ChatUserList'>
         {convs.map((conv, tamere) => <ChatConv key={tamere} conv={conv} />)}
       </ul>
+
+			<h2>Visible Channels</h2>
+			<ul className='ChatChannelList'>
+				{
+					visibleChannels.map((channel) =>
+						<ChatPublicChannel
+							key={channel.id}
+							channel={channel} />)
+				}
+			</ul>
+			{selectedChannel && (
+				<div>
+					<form
+						onSubmit={
+							(e) => {
+								e.preventDefault();
+								ClientSocket.emit('joinChannel', channelName, inputChannelPassword);
+								setInputChannelPassword('');
+							}
+						}>
+						<input
+							type='password'
+							value={inputChannelPassword}
+							onChange={
+								(e) => {
+									e.preventDefault();
+									setInputChannelPassword(e.target.value);
+								}
+							} />
+						<input type='submit' value='Join' />
+					</form>
+				</div>
+			)}
+			<h2>Join Channel</h2>
+			<form onSubmit={(e) => {
+				e.preventDefault();
+				ClientSocket.emit('joinChannel', inputChannelName, inputChannelPassword);
+				setInputChannelName('');
+				setInputChannelPassword('');
+			}}>
+				<input
+					type="text"
+					placeholder="name"
+					value={inputChannelName}
+					onChange={e => setInputChannelName(e.target.value)} />
+				<input
+					type='password'
+					placeholder="password"
+					value={inputChannelPassword}
+					onChange={e => setInputChannelPassword(e.target.value)} />
+				<input type="submit" value="Join" />
+			</form>
     </div>
   );
 }

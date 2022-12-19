@@ -24,8 +24,6 @@ const ChatBody = () => {
 			<ChatConvList />
   	  <ChatChannelList />
 			{createChannel && <ChatCreateChannel />}
-  	  {/* <ChatJoinChannel />
-  	  <ChatBody /> */}
   	</div>
 	);
 }

@@ -10,6 +10,9 @@ import { ConvsAtom } from "./ChatConvList";
 import { CurrentConvAtom, NullAtom } from "./ChatCurrentConv";
 import { SelectedChannelAtom } from "./ChatPublicChannel";
 import { CreateChannelAtom } from "./ChatChannelList";
+import { IRoom } from "../../gameObjects/GameObject";
+import { FoundUsersAtom, PongInviteAtom } from "./ChatUserList";
+import swal from "sweetalert";
 
 const ChatSocket = () => {
 	const db = useDatabase();
@@ -25,6 +28,9 @@ const ChatSocket = () => {
 	const [, setConvType] = useAtom(ConvTypeAtom);
 	const [, setSelectedChannel] = useAtom(SelectedChannelAtom);
 	const [, setCreateChannel] = useAtom(CreateChannelAtom);
+	const [, setPongInvite] = useAtom(PongInviteAtom);
+	const [, setFoundUsers] = useAtom(FoundUsersAtom);
+	const [, setChannelInvites] = useAtom(db.user.channelInvitesAtom);
 
 	const updateChannels = (channel: any) => {
 		const res = EntityParser.channel(channel);
@@ -41,7 +47,7 @@ const ChatSocket = () => {
 				console.log('recvPrivMsg');
 				const res = EntityParser.message(msg);
 
-				setMessagesIn(prev => [...prev, res]);
+				//setMessagesIn(prev => [...prev, res]);
 				setConvs(prev => {
 					const conv = prev.find(conv => conv.user.id === res.sender.id);
 
@@ -59,7 +65,7 @@ const ChatSocket = () => {
 				console.log('sendPrivMsg');
 				const res = EntityParser.message(msg);
 
-				setMessagesOut(prev => [...prev, res]);
+				//setMessagesOut(prev => [...prev, res]);
 				setConvs(prev => {
 					const conv = prev.find(conv => conv.user.id === res.receiver.id);
 
@@ -106,18 +112,19 @@ const ChatSocket = () => {
 			})
 			.on('newUserOnChannel', (channel) => {
 				console.log('newUserOnChannel');
+				console.log(channel);
 				updateChannels(channel);
 			})
 			.on('sentChannelMsg', (channel) => {
 				console.log('sentChannelMsg');
-				updateChannels(channel)
+				updateChannels(channel);
 			})
 			.on('recvChannelMsg', (channel) => {
 				console.log('recvChannelMsg');
 				updateChannels(channel);
 			})
 			.on('chatError', (err) => {
-				alert(err);
+				swal(err);
 			})
 			.on('leftChannel', (chan) => {
 				console.log('leftChannel');
@@ -162,7 +169,7 @@ const ChatSocket = () => {
 				updateChannels(channel);
 			})
 			.on('gotMuted', (channel) => {
-				alert(`You have been muted in channel ${channel.name}`);
+				swal(`You have been muted in channel ${channel.name}`);
 			})
 			.on('gotBanned', (channel) => {
 				setJoinedChannels(prev => [...prev.filter(ch => ch.id !== channel.id)]);
@@ -173,7 +180,7 @@ const ChatSocket = () => {
 					}
 					return prev;
 				});
-				alert(`You have been banned from channel ${channel.name}`);
+				swal(`You have been banned from channel ${channel.name}`);
 			})
 			.on('unmuted', (channel) => {
 				updateChannels(channel);
@@ -186,6 +193,53 @@ const ChatSocket = () => {
 			})
 			.on('demoted', (channel) => {
 				updateChannels(channel);
+			})
+			.on('foundUsers', (users) => {
+				const res = users.map((usr: any) => EntityParser.publicUser(usr));
+
+				console.log('foundUsers', res);
+				setFoundUsers(res);
+			})
+			.on('usersNotFound', () => {
+				swal('User not found');
+			})
+			.on('invitedUserToChannel', (channel) => {
+				console.log('invitedUserToChannel');
+				updateChannels(channel);
+			})
+			.on('invitedToChannel', (channel) => {
+				console.log('invitedToChannel');
+				const res = EntityParser.publicChannel(channel);
+				setChannelInvites(prev => [...prev, res]);
+			})
+			.on('userDeclinedChannelInvite', (channel) => {
+				console.log('userDeclinedInvite');
+				updateChannels(channel);
+			})
+
+			.on('receiverInvitePong', (senderUsername: string) => {
+				swal(
+					`Fight Pong request from ${senderUsername}`, {
+						buttons: {
+							accept: {	
+								text: 'Accept',
+								value: 'accept',
+							},
+							decline: {
+								text: 'Decline',
+								value: 'decline',
+							},
+						},
+					}
+				).then((value) => {
+					ClientSocket.emit(({
+						accept: 'AcceptPongInvite',
+						decline: 'DeclinePongInvite',
+					} as any)[value], senderUsername);
+				});
+			})
+			.on("newRoom", (newRoomData: IRoom) => {
+				ClientSocket.emit("joinRoom", newRoomData.roomId);
 			})
 	}, []);
 	return null;

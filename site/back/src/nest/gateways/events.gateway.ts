@@ -1,5 +1,5 @@
 import { ConsoleLogger, Inject, Injectable, Logger } from "@nestjs/common";
-import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
@@ -86,6 +86,26 @@ export default class EventsGateway implements OnGatewayConnection {
 	@SubscribeMessage('ping')
 	ping(client: Socket) {
 		client.emit('pong');
+	}
+
+	@SubscribeMessage('findUsers')
+	async findUser(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() filter: {
+			nick?: string,
+			user42?: string,
+		}
+	) {
+		try {
+			console.log(filter);
+			const users = await this.userService.getPublic(filter);
+			if (!users.length)
+				client.emit('usersNotFound');
+			else
+				client.emit('foundUsers', users);
+		} catch (e) {
+			client.emit('chatError', e);
+		}
 	}
 
 }

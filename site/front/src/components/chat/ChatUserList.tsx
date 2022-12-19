@@ -1,14 +1,20 @@
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { Fragment, useEffect, useState } from "react";
 import useDatabase from "../../com/use-database"
 import { ConvTypeAtom } from "./ChatBody";
 import { CurrentChannelAtom } from "./ChatChannel";
 import { ConvsAtom } from "./ChatConvList";
-import { CurrentConvAtom } from "./ChatCurrentConv";
+import { CurrentConvAtom, NullAtom } from "./ChatCurrentConv";
 import ChatUser, { SelectedUserAtom } from "./ChatUser";
 import ClientSocket from "../../com/client-socket";
 import { IRoom } from "../../gameObjects/GameObject";
 import { Link } from "react-router-dom";
+import PublicUser from "../../com/interfaces/public-user.interface";
+import ChatFoundUser from "./ChatFoundUser";
+import swal from "sweetalert";
+
+export const PongInviteAtom = atom(null as PublicUser | null);
+export const FoundUsersAtom = atom([] as PublicUser[]);
 
 const ChatUserList = () => {
   const db = useDatabase();
@@ -16,33 +22,31 @@ const ChatUserList = () => {
   const [selectedUser] = useAtom(SelectedUserAtom);
   const [convs, setConvs] = useAtom(ConvsAtom);
   const [, setCurrentConv] = useAtom(CurrentConvAtom);
-	const [, setCurrentChannel] = useAtom(CurrentChannelAtom);
+	const [currentChannel, setCurrentChannel] = useAtom(CurrentChannelAtom);
 	const [, setConvType] = useAtom(ConvTypeAtom);
-  const [pongInvite, setPongInvite] = useState(false);
+  const [pongInvite] = useAtom(PongInviteAtom);
+	const [nickFilterInput, setNickFilterInput] = useState('');
+	const [user42FilterInput, setUser42FilterInput] = useState('');
+	const [foundUsers] = useAtom(FoundUsersAtom);
 
   // send a pong invite to e.currentTarget.value (username)
   function invitePong() {
     ClientSocket.emit('invitePong', selectedUser?.user42);
   }
 
-  // accept pong invite -> create room.
-  function acceptInvitePong() {
-    ClientSocket.emit('AcceptPongInvite', selectedUser?.user42);
-  }
-
-  useEffect((): any => {
-
-    // invite pong notification
-    ClientSocket.on('receiverInvitePong', (senderUsername: string) => {
-      if (senderUsername === selectedUser?.user42)
-        setPongInvite(true);
-    });
-
-    ClientSocket.on("newRoom", (newRoomData: IRoom) => {
-      ClientSocket.emit("joinRoom", newRoomData.roomId);
-    });
-
-  }, [selectedUser]);
+	const startConv = (user: PublicUser) => {
+		let conv = convs.find((conv) => conv.user.id == user.id);
+		if (!conv) {
+			conv = {
+				user: user,
+				messages: [],
+			}
+			setConvs([...convs, conv]);
+		}
+		setCurrentConv(conv);
+		setCurrentChannel(null);
+		setConvType('User');
+	}
 
   return (
     <Fragment>
@@ -66,37 +70,58 @@ const ChatUserList = () => {
                 </button>
               </Link>
             }
-            {selectedUser.id != db.user.id && pongInvite &&
-              <Link to={`/pong`}>
-                <button
-                  onClick={acceptInvitePong}
-                  style={{ fontWeight: 'bold' }}>
-                  Accept Pong Invite
-                </button>
-              </Link>
-            }
             <Link to={`/other_user/${selectedUser.user42}`}>
               <button>
                 See Profile
               </button>
             </Link>
             {selectedUser.id != db.user.id && <button
-              onClick={() => {
-                let conv = convs.find((conv) => conv.user.id == selectedUser.id);
-                if (!conv) {
-                  conv = {
-                    user: selectedUser,
-                    messages: [],
-                  }
-                  setConvs([...convs, conv]);
-                }
-                setCurrentConv(conv);
-								setCurrentChannel(null);
-								setConvType('User');
-              }}
+              onClick={() => startConv(selectedUser)}
             >Start Conversation</button>}
           </Fragment>
         )}
+				<h2>Find user</h2>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						if (!nickFilterInput.length && !user42FilterInput.length) {
+							swal('You must enter at least one filter');
+							return ;
+						}
+						ClientSocket.emit('findUsers', {
+							nick: nickFilterInput.length > 0 ? nickFilterInput : null,
+							user42: user42FilterInput.length > 0 ? user42FilterInput : null,
+						});
+						setNickFilterInput('');
+						setUser42FilterInput('');
+					}}>
+					<input
+						type='text'
+						value={nickFilterInput}
+						onChange={(e) => setNickFilterInput(e.target.value)}
+						placeholder="nickname" />
+					<input
+						type='text'
+						value={user42FilterInput}
+						onChange={(e) => setUser42FilterInput(e.target.value)}
+						placeholder="user42" />
+					<input
+						type='submit'
+						value='Search' />
+				</form>
+				{!!foundUsers.length && (
+					<div>
+						<h3>Found users</h3>
+						<ul className='ChatFoundUsers'>
+							{foundUsers.map((usr) => (
+								<ChatFoundUser
+									key={usr.id}
+									usr={usr}
+									startConv={startConv} />
+							))}
+						</ul>
+					</div>
+				)}
       </div>
     </Fragment>
   );

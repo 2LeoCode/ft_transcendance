@@ -279,4 +279,68 @@ export class ChatGateway {
 			client.emit('chatError', e.message);
 		}
 	}
+
+	@SubscribeMessage('inviteToChannel')
+	async handleInviteToChannel(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() [
+			channelId,
+			userId
+		] : [
+			string,
+			string
+		]
+	) {
+		const sender = this.eventsGateway.connectedUsers.find(
+			usr => usr.socketId == client.id
+		);
+		const receiver = this.eventsGateway.connectedUsers.find(
+			usr => usr.userId == userId
+		);
+
+		try {
+			const res = await this.channelService.invite(sender.userId, channelId, userId);
+			this.eventsGateway.server.to(channelId).emit('invitedUserToChannel', res);
+			if (receiver)
+				this.eventsGateway.server.to(receiver.socketId).emit('invitedToChannel', res);
+		} catch (e) {
+			client.emit('chatError', e.message);
+		}
+	}
+
+	@SubscribeMessage('acceptChannelInvite')
+	async handleAcceptChannelInvite(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() channelId: string
+	) {
+		const sender = this.eventsGateway.connectedUsers.find(
+			usr => usr.socketId == client.id
+		);
+
+		try {
+			const res = await this.channelService.acceptInvite(sender.userId, channelId);
+			this.eventsGateway.server.to(channelId).emit('newUserOnChannel', res);
+			client.emit('joinedChannel', res);
+			client.join(channelId);
+		} catch (e) {
+			client.emit('chatError', e.message);
+		}
+	}
+
+	@SubscribeMessage('declineChannelInvite')
+	async handleDeclineChannelInvite(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() channelId: string
+	) {
+		const sender = this.eventsGateway.connectedUsers.find(
+			usr => usr.socketId == client.id
+		);
+
+		try {
+			const res = await this.channelService.declineInvite(sender.userId, channelId);
+			this.eventsGateway.server.to(channelId).emit('userDeclinedChannelInvite', res);
+		} catch (e) {
+			client.emit('chatError', e.message);
+		}
+	}
 }

@@ -36,9 +36,10 @@ export default class UserService {
 	async getOnePublic(filter: {
 		id?: string,
 		user42?: string,
-	}): Promise<UserEntity> {
+	}) {
 		if (Object.values(filter).every((value) => value === undefined))
 			throw new Error('No filter provided');
+		console.log('f', filter);
 		return this.userRepository.findOne({
 			where: {
 				id: filter.id,
@@ -88,7 +89,8 @@ export default class UserService {
 				'receiver.messages.receiver.parentUser',
 				'receiver.messages.receiver.parentChannel',
 				'receiver.parentUser',
-				'receiver.parentChannel'
+				'receiver.parentChannel',
+				'channelInvites'
 			],
 			where: { id: id }
 		});
