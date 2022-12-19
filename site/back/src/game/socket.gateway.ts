@@ -28,6 +28,7 @@ import UserService from 'src/nest/services/user.service';
 import EventsGateway from 'src/nest/gateways/events.gateway';
 import ScoreService from 'src/nest/services/score.service';
 import { CreateScoreDto } from 'src/nest/dtos/score.dto';
+import { send } from 'process';
 
 function getCurrentTime() {
   const date: number = Date.now();
@@ -164,6 +165,7 @@ export class SocketEvents
           }
           client.leave(room.roomId);
           this.eventsGateway.server.to(room.roomId).emit("lost connection");
+          room.lostConnection = true;
           return;
         }
       });
@@ -200,8 +202,11 @@ export class SocketEvents
 
     if (user && this.queue.isInQueue(user)) {
       this.queue.remove(user);
-      this.eventsGateway.server.to(client.id).emit('leavedQueue');
     }
+    if (this.connectedUsers.getUser(client.id).isWaiting) {
+      this.connectedUsers.setIsWaiting(client.id, false);
+    }
+    this.eventsGateway.server.to(client.id).emit('leavedQueue');
   }
 
   @SubscribeMessage('spectateRoom')
@@ -301,6 +306,7 @@ export class SocketEvents
     }
 
     if (user && !this.queue.isInQueue(user)) {
+      this.connectedUsers.setIsWaiting(client.id, true);
       this.connectedUsers.changeUserStatus(client.id, UserStatus.INQUEUE);
       this.connectedUsers.setGameMode(user.socketId, 'classic');
 
@@ -313,9 +319,13 @@ export class SocketEvents
     @ConnectedSocket() client: Socket,
     @MessageBody() username: string,
   ) {
-    const otherId = this.eventsGateway.connectedUsers.find(
+    const senderSocketId = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     ).socketId;
+    const other = this.connectedUsers.getUser(senderSocketId);
+    if (!other) {
+      return;
+    }
     const receivererUsername = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     ).username;
@@ -337,8 +347,30 @@ export class SocketEvents
     let players: User[] = Array();
     players[0] = firstuser;
     players[1] = backuser;
+    if (other.isWaiting)
     this.createNewRoom(players);
   }
+
+  @SubscribeMessage('DeclinePongInvite')
+  handleDeclineInvitePong(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() username: string,
+  ) {
+    const senderSocketId = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.username == username,
+    ).socketId;
+
+    if (this.connectedUsers.getUser(senderSocketId).isWaiting) {
+      this.connectedUsers.setIsWaiting(senderSocketId, false);
+    }
+    this.eventsGateway.server.to(senderSocketId).emit('leavedQueue');
+    const user = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    );
+    this.eventsGateway.server.to(senderSocketId).emit('pongInviteDeclined', user.username);
+
+  }
+
 
   secondToTimestamp(second: number): number {
     return second * 1000;
@@ -369,7 +401,7 @@ export class SocketEvents
 
         this.eventsGateway.server.to(room.roomId).emit('updateRoom', JSON.stringify(room.serialize()));
 
-        if (room.otherLeft || room.playerOne.score >= 7 || room.playerTwo.score >= 7) {
+        if ((room.otherLeft && !room.lostConnection) || room.playerOne.score >= 7 || room.playerTwo.score >= 7) {
           if (!room.isGameEnd) {
             room.isGameEnd = true;
 
@@ -461,6 +493,7 @@ export class SocketEvents
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     );
+    console.log(user);
     const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     ).userId);

@@ -107,7 +107,7 @@ function Pong() {
 
   return (
     <Fragment>
-      {!play && <Header />}
+      {!play && !inQueue && <Header />}
       {play && <button
         className="quit_button"
         value={'quit'}

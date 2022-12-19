@@ -238,8 +238,12 @@ const ChatSocket = () => {
 						accept: 'AcceptPongInvite',
 						decline: 'DeclinePongInvite',
 					} as any)[value], senderUsername);
-					navigate('/pong');
+					if (value === 'accept')
+						navigate('/pong');
 				});
+			})
+			.on('pongInviteDeclined', (senderUsername: string) => {
+				swal(`${senderUsername} declined your invite`);
 			})
 			.on("newRoom", (newRoomData: IRoom) => {
 				ClientSocket.emit("joinRoom", newRoomData.roomId);

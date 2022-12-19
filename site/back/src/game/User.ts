@@ -9,12 +9,14 @@ export class User {
 	roomId?: string;
 
 	mode?: GameMode;
+	isWaiting?: boolean;
 
 	constructor(socketId: string, username: string) {
 		// this.id = id;
 		this.username = username;
 		// this.ratio = ratio;
 		this.socketId = socketId
+		this.isWaiting = false;
 	}
 
 	setUsername(username: string) {
@@ -40,6 +42,10 @@ export class User {
 			this.mode = GameMode.COLOR;
 		else
 			this.mode = GameMode.DEFAULT;
+	}
+
+	setIsWaiting(isWaiting: boolean) {
+		this.isWaiting = isWaiting;
 	}
 }
 
@@ -92,6 +98,11 @@ export class ConnectedUsers {
 		let user: User = this.getUser(socketId);
 		// console.log("in connected user " + mode);
 		user.setMode(mode);
+	}
+
+	setIsWaiting(socketId: string, isWaiting: boolean) {
+		let user: User = this.getUser(socketId);
+		user.setIsWaiting(isWaiting);
 	}
 
 }
