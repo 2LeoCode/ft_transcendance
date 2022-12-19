@@ -218,6 +218,21 @@ const ChatSocket = () => {
 				console.log('userDeclinedInvite');
 				updateChannels(channel);
 			})
+			.on('updatedJoinedChannel', (channel) => {
+				console.log('updatedJoinedChannel');
+				updateChannels(channel);
+			})
+			.on('updatedVisibleChannel', (channel) => {
+				console.log('updatedVisibleChannel');
+				const res = EntityParser.publicChannel(channel);
+			
+				setVisibleChannels(prev => [...prev.filter(ch => ch.id !== res.id), res]);
+			})
+			.on('removedVisibleChannel', (channel) => {
+				console.log('removedVisibleChannel');
+				
+				setVisibleChannels(prev => [...prev.filter(ch => ch.id !== channel.id)]);
+			})
 
 			.on('receiverInvitePong', (senderUsername: string) => {
 				swal(

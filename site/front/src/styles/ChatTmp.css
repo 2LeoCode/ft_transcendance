@@ -79,6 +79,7 @@
 
 .ChatBodyCurrentConv {
 	position: relative;
+	flex: 1;
 	margin: 0;
 	left: 0;
 	min-width: 212px;
@@ -87,7 +88,6 @@
 	background-color: rgb(255, 255, 255);
 	border: #000 1px solid;
 	overflow: none;
-	float: left;
 }
 
 .ChatChannelList {
@@ -152,12 +152,14 @@
 }
 
 .ChatCurrentChannel {
-	position: relative;
 	display: flex;
 	flex-direction: column;
+	position: relative;
+	flex: 1;
 	margin: 0;
 	left: 0;
-	width: 802px;
+	min-width: 212px;
+	word-break: break-all;
 	height: 100%;
 	background-color: rgb(255, 255, 255);
 	border: #000 1px solid;
@@ -272,4 +274,21 @@
 	/* border: #000 1px solid; */
 	user-select: none;
 	cursor: pointer;
+}
+
+.ChatChannelSettings {
+	position: absolute;
+	/* center the div to the middle of window */
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	/* set the width and height */
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	width: 275px;
+	height: 270px;
+	/* round borders */
+	border-radius: 10px;
+	background-color: lightsalmon;
 }

@@ -9,13 +9,18 @@ import useDatabase from "../../com/use-database";
 import { CurrentChannelAtom } from "./ChatChannel";
 import ChatChannelMessage from "./ChatChannelMessage";
 import ChatChannelUser from "./ChatChannelUser";
+import { textAlign } from "@mui/system";
+
+export const ChannelSettingsAtom = atom(null as Channel | null);
 
 const ChatCurrentChannel = () => {
+	const db = useDatabase();
 	const [currentChannel] = useAtom(CurrentChannelAtom as Atom<Channel>);
 	const [name] = useAtom(currentChannel.nameAtom);
 	const [users] = useAtom(currentChannel.usersAtom);
 	const [input, setInput] = useState('');
 	const [messages, setMessages] = useAtom(currentChannel.messagesAtom);
+	const [, setChannelSettings] = useAtom(ChannelSettingsAtom);
 
 	useEffect(() => {
 		setMessages((prev) => prev.sort((a, b) => a.createDate < b.createDate ? -1 : 1))
@@ -23,6 +28,7 @@ const ChatCurrentChannel = () => {
 
 	return (
 		<div className='ChatCurrentChannel'>
+			<h2 style={{textAlign: 'center'}}>Channel</h2>
 			<div className='ChatChannelHeader'>
 				<div>
 					<h3>{name}</h3>
@@ -30,6 +36,13 @@ const ChatCurrentChannel = () => {
 						onClick={() => {
 							ClientSocket.emit('leaveChannel', currentChannel.id);
 						}}>Leave</button>
+					{currentChannel.owner.id === db.user.id && (
+						<button
+							onClick={() => setChannelSettings(currentChannel)}
+						>
+							Settings
+						</button>
+					)}
 				</div>
 				<div>
 					<h2>User List</h2>

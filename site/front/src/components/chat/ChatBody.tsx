@@ -4,11 +4,12 @@ import ChatUserList, { FoundUsersAtom } from "./ChatUserList";
 import ChatChannelList, { CreateChannelAtom } from "./ChatChannelList";
 import { ReceiverType } from "../../com/interfaces/message.interface";
 import { atom, useAtom } from "jotai";
-import ChatCurrentChannel from "./ChatCurrentChannel";
+import ChatCurrentChannel, { ChannelSettingsAtom } from "./ChatCurrentChannel";
 import ChatCreateChannel from "./ChatCreateChannel";
 import ChatFoundUser from "./ChatFoundUser";
 import PublicUser from "../../com/interfaces/public-user.interface";
 import { CurrentChannelAtom } from "./ChatChannel";
+import ChatChannelSettings from "./ChatChannelSettings";
 
 export const ConvTypeAtom = atom<ReceiverType>('User');
 
@@ -20,6 +21,7 @@ const ChatBody = () => {
 	const [, setConvType] = useAtom(ConvTypeAtom);
 	const [foundUsers, setFoundUsers] = useAtom(FoundUsersAtom);
 	const [createChannel] = useAtom(CreateChannelAtom);
+	const [channelSettings] = useAtom(ChannelSettingsAtom);
 
 	const startConv = (user: PublicUser) => {
 		let conv = convs.find((conv) => conv.user.id == user.id);
@@ -34,6 +36,7 @@ const ChatBody = () => {
 		setCurrentChannel(null);
 		setConvType('User');
 	}
+
 	return (
 		<div className='ChatBody'>
   	  <ChatUserList startConv={startConv} />
@@ -63,6 +66,7 @@ const ChatBody = () => {
 						</button>
 					</div>
 				)}
+			{channelSettings && <ChatChannelSettings />}
   	</div>
 	);
 }

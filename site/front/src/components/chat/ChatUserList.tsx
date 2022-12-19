@@ -75,8 +75,8 @@ const ChatUserList = ({ startConv }: { startConv: Function }) => {
 							return ;
 						}
 						ClientSocket.emit('findUsers', {
-							nick: nickFilterInput.length > 0 ? nickFilterInput : null,
-							user42: user42FilterInput.length > 0 ? user42FilterInput : null,
+							nick: nickFilterInput.length ? nickFilterInput : null,
+							user42: user42FilterInput.length ? user42FilterInput : null,
 						});
 						setNickFilterInput('');
 						setUser42FilterInput('');
