@@ -50,16 +50,18 @@ function OtherUser() {
   }
 
   function blockUser(e: React.MouseEvent<HTMLButtonElement>) {
-    const friendName = e.currentTarget.value;
-    console.log(friendName);
-    socket.emit("blockUser", friendName);
-    removeFriend(e);
+    const username = e.currentTarget.value;
+    console.log(username);
+    socket.emit("blockUser", username);
+    if (friends.find((usr) => usr.user42 === username))
+      removeFriend(e);
+    socket.emit("removeFriendRequest", username);
   }
 
   function unblockUser(e: React.MouseEvent<HTMLButtonElement>) {
-    const friendName = e.currentTarget.value;
-    console.log(friendName);
-    socket.emit("unblockUser", friendName);
+    const username = e.currentTarget.value;
+    console.log(username);
+    socket.emit("unblockUser", username);
   }
 
   const updateScores = (score: Score[]) => {
@@ -163,7 +165,7 @@ function OtherUser() {
             </div>}
         </div>
         <div className="otherUser_buttons">
-          {!alreadyFriend &&
+          {!alreadyFriend && !alreadyBlocked &&
             <button
               value={username}
               onClick={inviteFriend}

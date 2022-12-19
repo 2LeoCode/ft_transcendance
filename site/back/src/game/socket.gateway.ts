@@ -420,10 +420,13 @@ export class SocketEvents
             const userId2 = user2.id;
 
             if (room.otherLeft) {
-              if (room.playerOne.user.socketId === client.id)
+              if (room.playerOne.user.socketId === client.id) {
                 this.eventsGateway.server.to(client.id).emit("winner", room.playerOne.user.username);
-              else if (room.playerTwo.user.socketId === client.id)
+                this.eventsGateway.server.to(room.playerOne.user.socketId).emit('swalError', 'Your opponent left the game');
+              } else if (room.playerTwo.user.socketId === client.id) {
                 this.eventsGateway.server.to(client.id).emit("winner", room.playerTwo.user.username);
+                this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('swalError', 'Your opponent left the game');
+              }
 
             } else if (room.playerOne.score > room.playerTwo.score) {
               this.eventsGateway.server.emit("winner", room.playerOne.user.username);
@@ -439,6 +442,12 @@ export class SocketEvents
             this.eventsGateway.server.to(room.playerOne.user.socketId).emit('newScore', res);
             this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('newScore', res2);
 
+          }
+        } else if (room.lostConnection) {
+          if (room.playerOne.user.socketId === client.id) {
+            this.eventsGateway.server.to(room.playerOne.user.socketId).emit('swalError', 'Lost connection from your opponent');
+          } else if (room.playerTwo.user.socketId === client.id) {
+            this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('swalError', 'Lost connection from your opponent');
           }
         }
       }
@@ -512,6 +521,14 @@ export class SocketEvents
         nope = false;
       }
     });
+    if (tmp2.blocked.find((usr) => usr.user42 === tmp.user42)) {
+      this.eventsGateway.server.to(client.id).emit('swalError', `You are blocked by ${username}`);
+      nope = false;
+    }
+    if (tmp.friendRequests.find((usr) => usr.user42 === tmp2.user42)) {
+      this.eventsGateway.server.to(client.id).emit('swalError', `You've already got a friend request from ${username}`);
+      nope = false;
+    }
     if (nope) {
       this.userService.sendFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
       if (user && tmp) {
@@ -605,6 +622,9 @@ export class SocketEvents
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     );
+    const blocker = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    );
     console.log(user);
     const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == user.socketId,
@@ -614,6 +634,37 @@ export class SocketEvents
       this.eventsGateway.server
         .to(client.id)
         .emit('blockUserUpdate', tmp2);
+      this.eventsGateway.server
+        .to(user.socketId)
+        .emit('swalError', `You have been blocked by ${blocker.username}`);
+    }
+  }
+
+  @SubscribeMessage('removeFriendRequest')
+  async handleRemoveFriendRequest(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() username: string
+  ) {
+    const user = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.username == username,
+    );
+    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    ).userId);
+    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == user.socketId,
+    ).userId);
+    if (user && tmp && tmp2.friendRequests.find((usr) => usr.user42 === tmp.user42)) {
+      this.userService.rejectFriendRequest(user.userId, this.eventsGateway.connectedUsers.find((usr) => usr.socketId === client.id).userId);
+      this.eventsGateway.server
+        .to(user.socketId)
+        .emit('removeRequest', tmp);
+    }
+    if (user && tmp2 && tmp.friendRequests.find((usr) => usr.user42 === username)) {
+      this.userService.rejectFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId === client.id).userId, user.userId);
+      this.eventsGateway.server
+        .to(client.id)
+        .emit('removeRequest', tmp2);
     }
   }
 
@@ -625,6 +676,9 @@ export class SocketEvents
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     );
+    const blocker = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    );
     const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == user.socketId,
     ).userId);
@@ -632,7 +686,10 @@ export class SocketEvents
     if (user && tmp2) {
       this.eventsGateway.server
         .to(client.id)
-        .emit('unblockUserUpdate', user.username, tmp2);
+        .emit('unblockUserUpdate', tmp2);
+      this.eventsGateway.server
+        .to(user.socketId)
+        .emit('swalError', `You have been unblocked by ${blocker.username}`);
     }
   }
 

@@ -6,10 +6,3 @@ USER PROFILE
 
 AUTH
 - 2FA -> email ou message peu importe...
-
-CHAT
-- Channels
-        |-> the owner of a channel and can kick other users and the channel administrators
-        |-> an administrator  can kick, but not the channel owners.
-- Messages
-        |-> Block users -> the messages from the blocked person must be hidden

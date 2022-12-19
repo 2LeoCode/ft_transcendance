@@ -1,6 +1,8 @@
+import { spawn } from "child_process";
 import { useAtom } from "jotai";
 import { Fragment, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
+import swal from "sweetalert";
 import ClientSocket from "../com/client-socket";
 import EntityParser from "../com/entity-parser";
 import useDatabase from "../com/use-database"
@@ -35,6 +37,10 @@ const SocketInit = () => {
       })
       const newFriendRequest = EntityParser.publicUser(entity);
       setFriendRequests((current) => [...current, newFriendRequest]);
+    })
+
+    ClientSocket.on('swalError', (entity: string) => {
+      swal(entity);
     })
 
     ClientSocket.on('acceptFriendRequest', (previous: string, entity: any) => {
