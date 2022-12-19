@@ -16,7 +16,7 @@ import swal from "sweetalert";
 export const PongInviteAtom = atom(null as PublicUser | null);
 export const FoundUsersAtom = atom([] as PublicUser[]);
 
-const ChatUserList = () => {
+const ChatUserList = ({ startConv }: { startConv: Function }) => {
   const db = useDatabase();
   const [onlineUsers] = useAtom(db.onlineUsersAtom);
   const [selectedUser] = useAtom(SelectedUserAtom);
@@ -27,26 +27,12 @@ const ChatUserList = () => {
   const [pongInvite] = useAtom(PongInviteAtom);
 	const [nickFilterInput, setNickFilterInput] = useState('');
 	const [user42FilterInput, setUser42FilterInput] = useState('');
-	const [foundUsers] = useAtom(FoundUsersAtom);
+	const [foundUsers, setFoundUsers] = useAtom(FoundUsersAtom);
 
   // send a pong invite to e.currentTarget.value (username)
   function invitePong() {
     ClientSocket.emit('invitePong', selectedUser?.user42);
   }
-
-	const startConv = (user: PublicUser) => {
-		let conv = convs.find((conv) => conv.user.id == user.id);
-		if (!conv) {
-			conv = {
-				user: user,
-				messages: [],
-			}
-			setConvs([...convs, conv]);
-		}
-		setCurrentConv(conv);
-		setCurrentChannel(null);
-		setConvType('User');
-	}
 
   return (
     <Fragment>
@@ -109,19 +95,6 @@ const ChatUserList = () => {
 						type='submit'
 						value='Search' />
 				</form>
-				{!!foundUsers.length && (
-					<div>
-						<h3>Found users</h3>
-						<ul className='ChatFoundUsers'>
-							{foundUsers.map((usr) => (
-								<ChatFoundUser
-									key={usr.id}
-									usr={usr}
-									startConv={startConv} />
-							))}
-						</ul>
-					</div>
-				)}
       </div>
     </Fragment>
   );

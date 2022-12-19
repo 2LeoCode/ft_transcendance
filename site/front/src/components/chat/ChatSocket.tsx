@@ -13,6 +13,7 @@ import { CreateChannelAtom } from "./ChatChannelList";
 import { IRoom } from "../../gameObjects/GameObject";
 import { FoundUsersAtom, PongInviteAtom } from "./ChatUserList";
 import swal from "sweetalert";
+import { useNavigate } from "react-router-dom";
 
 const ChatSocket = () => {
 	const db = useDatabase();
@@ -31,6 +32,7 @@ const ChatSocket = () => {
 	const [, setPongInvite] = useAtom(PongInviteAtom);
 	const [, setFoundUsers] = useAtom(FoundUsersAtom);
 	const [, setChannelInvites] = useAtom(db.user.channelInvitesAtom);
+	const navigate = useNavigate();
 
 	const updateChannels = (channel: any) => {
 		const res = EntityParser.channel(channel);
@@ -80,7 +82,7 @@ const ChatSocket = () => {
 				});
 			})
 			.on('privMsgError', (err) => {
-				alert(err);
+				swal(err);
 			})
 			.on('createdChannel', (channel) => {
 				console.log('createdChannel');
@@ -236,6 +238,7 @@ const ChatSocket = () => {
 						accept: 'AcceptPongInvite',
 						decline: 'DeclinePongInvite',
 					} as any)[value], senderUsername);
+					navigate('/pong');
 				});
 			})
 			.on("newRoom", (newRoomData: IRoom) => {

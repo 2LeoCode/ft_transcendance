@@ -21,9 +21,11 @@
 	margin: 0;
 	padding: 0;
 	display: flex;
+	flex-direction: row;
 	/* flex-direction: row; */
 	/* flex-wrap: nowrap; */
 	/* justify-content: space-between; */
+	/* justify-content: stretch; */
 	background-color: blue;
 	text-align: left;
 	align-content: left;
@@ -79,7 +81,8 @@
 	position: relative;
 	margin: 0;
 	left: 0;
-	width: 802px;
+	min-width: 212px;
+	word-break: break-all;
 	height: 100%;
 	background-color: rgb(255, 255, 255);
 	border: #000 1px solid;
@@ -210,4 +213,63 @@
 
 .ChatMessages li p {
 	margin: 5px;
+}
+
+.ChatCreateChannel {
+	position: absolute;
+	/* center the div to the middle of window */
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	/* set the width and height */
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	width: 300px;
+	height: 200px;
+	/* round borders */
+	border-radius: 10px;
+	background-color: lightsalmon;
+}
+
+.ChatFoundUsers {
+	position: absolute;
+	/* center the div to the middle of window */
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	/* set the width and height */
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	width: 300px;
+	height: 400px;
+	/* round borders */
+	border-radius: 10px;
+	background-color: lightsalmon;
+}
+
+.ChatFoundUserList {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	width: 100%;
+	background-color: rgb(255, 255, 255);
+	height: 150px;
+	border: #000 1px solid;
+	overflow-y: scroll;
+	scrollbar-width: 50px;
+	left: 0;
+}
+
+.ChatFoundUserList li {
+	width: 100%;
+	height: 30px;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	/* border: #000 1px solid; */
+	user-select: none;
+	cursor: pointer;
 }
