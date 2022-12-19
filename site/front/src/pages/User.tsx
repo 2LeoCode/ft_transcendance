@@ -26,6 +26,7 @@ function User() {
   const [win, setWin] = useState(0);
   const [tie, setTie] = useState(0);
   const [lose, setLose] = useState(0);
+  const [ratio, setRatio] = useState("0");
   let matches_won: number;
   let matches_lost: number;
   let matches_tie: number;
@@ -53,12 +54,19 @@ function User() {
         matches_lost++;
       else
         matches_tie++;
-    })
+    });
 
     setWin(matches_won);
     setLose(matches_lost);
     setTie(matches_tie);
-
+    if (matches_lost === 0)
+      setRatio('1');
+    else if (matches_won === 0)
+      setRatio('0');
+    else {
+      const ratio = matches_won / (matches_won + matches_lost);
+      setRatio(ratio.toFixed(2));
+    }
   }, [friends])
 
   return (
@@ -91,7 +99,8 @@ function User() {
         <div className="stats">
           <p key={"Win"} className="win">{win} Win</p>
           <p key={"Tie"} className="tie">{tie} Tie</p>
-          <p key={"Loseeeeee"} className="lose">{lose} Lose</p>
+          <p key={"Loseeeeee"} className="lose">{lose} Loss</p>
+          <p key={"Ratio"} className="ratio">{ratio} Ratio</p>
         </div>
         <div className="requested_friends">
           <h4>Friends Requests</h4>
