@@ -493,6 +493,7 @@ export class SocketEvents
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     );
+    console.log(user);
     const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     ).userId);

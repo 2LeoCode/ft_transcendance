@@ -31,6 +31,8 @@ function OtherUser() {
   const [lose, setLose] = useState(0);
   const [scores, setScores] = useState<Score[]>([]);
   const [uploaded, setUploaded] = useState(false);
+  const [friends] = useAtom(Database.user.friendsAtom);
+  const [alreadyFriend, setAlreadyFriend] = useState(false);
 
   function inviteFriend(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
@@ -80,6 +82,12 @@ function OtherUser() {
       setTie(matches_tie);
     });
 
+    friends.map((friend) => {
+      if (friend.user42 === username) {
+        setAlreadyFriend(true);
+      }
+    });
+
   }, []);
 
   return (
@@ -103,7 +111,7 @@ function OtherUser() {
             )
           })}
         </div>
-        <div className="friends">
+        {!alreadyFriend && <div className="friends">
           <button
             value={username}
             onClick={inviteFriend}
@@ -111,7 +119,7 @@ function OtherUser() {
             Send friend request
           </button>
           {/* <p>No match history yet</p> */}
-        </div>
+        </div>}
       </div>
     </div>
   );
