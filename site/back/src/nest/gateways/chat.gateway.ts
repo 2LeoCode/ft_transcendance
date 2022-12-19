@@ -1,11 +1,10 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { Socket } from "socket.io";
-import ChannelEntity, { ChannelAccessibility, ChannelVisibility } from "../entities/channel.entity";
+import { ChannelAccessibility, ChannelVisibility } from "../entities/channel.entity";
 import ChannelService from "../services/channel.service";
 import MessageService from "../services/message.service";
 import UserService from "../services/user.service";
 import EventsGateway from "./events.gateway";
-import { UpdateChannelDto } from "../dtos/channel.dto";
 
 @WebSocketGateway({
 	namespace: 'events',
@@ -340,34 +339,6 @@ export class ChatGateway {
 		try {
 			const res = await this.channelService.declineInvite(sender.userId, channelId);
 			this.eventsGateway.server.to(channelId).emit('userDeclinedChannelInvite', res);
-		} catch (e) {
-			client.emit('chatError', e.message);
-		}
-	}
-
-	@SubscribeMessage('updateChannel')
-	async handleUpdateChannel(
-		@ConnectedSocket() client: Socket,
-		@MessageBody() [
-			channelId,
-			dto
-		] : [
-			string,
-			UpdateChannelDto
-		]
-	) {
-		const sender = this.eventsGateway.connectedUsers.find(
-			usr => usr.socketId == client.id
-		);
-
-		try {
-			const old = await this.channelService.getOneFull(channelId);
-			const res = await this.channelService.update(sender.userId, channelId, dto);
-			this.eventsGateway.server.to(channelId).emit('updatedJoinedChannel', res);
-			if (res.visibility === 'visible')
-				this.eventsGateway.server.emit('updatedVisibleChannel', res);
-			else if (old.visibility === 'visible')
-				this.eventsGateway.server.emit('removedVisibleChannel', res);
 		} catch (e) {
 			client.emit('chatError', e.message);
 		}

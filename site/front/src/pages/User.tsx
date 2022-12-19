@@ -59,7 +59,7 @@ function User() {
     setLose(matches_lost);
     setTie(matches_tie);
 
-  }, [])
+  }, [friends])
 
   return (
     <div>

@@ -13,6 +13,7 @@ const SocketInit = () => {
   const [, setScores] = useAtom(db.user.scoresAtom);
   const [friends, setFriends] = useAtom(db.user.friendsAtom);
   const [friendsRequests, setFriendRequests] = useAtom(db.user.friendRequestsAtom);
+  const [blocked, setBlocked] = useAtom(db.user.blockedAtom);
 
 
 
@@ -37,25 +38,47 @@ const SocketInit = () => {
     })
 
     ClientSocket.on('acceptFriendRequest', (previous: string, entity: any) => {
+      console.log("couououououou");
       if (isInRequests === previous)
         return;
       else
         setIsInRequests(previous);
       const newFriend = EntityParser.publicUser(entity);
       setFriends((prev) => [...prev, newFriend]);
+      console.log(friends);
     })
 
-    ClientSocket.on('declineRequest', (previous: string, entity: any) => {
-      if (isInRequests === previous)
-        return;
-      else
-        setIsInRequests(previous);
-      const newFriend = EntityParser.publicUser(entity);
-      setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
+    // ClientSocket.on('declineRequest', (previous: string, entity: any) => {
+    //   if (isInRequests === previous)
+    //     return;
+    //   else
+    //     setIsInRequests(previous);
+    //   const newFriend = EntityParser.publicUser(entity);
+    //   setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity));
+    // })
+
+    ClientSocket.on('removeFriendUpdate', (entity: any) => {
+      console.log("couououououou");
+      setFriends((current) => current.filter((friend) => friend.user42 !== entity));
+      console.log(entity);
+      console.log(friends);
     })
 
     ClientSocket.on('removeRequest', (entity: any) => {
       setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
+    })
+
+    ClientSocket.on('blockUserUpdate', (entity: any) => {
+      blocked.map((block) => {
+        if (block.user42 === entity.user42)
+          return;
+      })
+      const newBlocked = EntityParser.publicUser(entity);
+      setBlocked((prev) => [...prev, newBlocked]);
+    })
+
+    ClientSocket.on('unblockUserUpdate', (entity: any) => {
+      setBlocked((prev) => prev.filter((block) => block.user42 !== entity.user42));
     })
 
     setFriendRequests(db.user.friendRequests);

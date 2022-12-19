@@ -24,23 +24,22 @@ const ChatCurrentConv = () => {
       {currentConv ? (
         <Fragment>
           <h2 style={{textAlign: 'center'}}>{nick}</h2>
-          <ul className="ChatMessages">
+          <ul>
             {currentConv.messages.map((msg) => (
               <li
                 key={msg.id}
                 style={
                   msg.sender.id == db.user.id ?
-                  { textAlign: 'left' } :
-                  { textAlign: 'right' }
+                  { color: 'white', backgroundColor: 'black' } :
+                  { color: 'black', backgroundColor: 'white' }
                 }
               >
-								<p>{msg.content}</p>
+                {msg.content}
               </li>
-            )).reverse()}
+            ))}
           </ul>
           <form onSubmit={(e) => {
             e.preventDefault();
-						if (!input.length) return;
             ClientSocket.emit('privMsg', currentConv.user.id, input);
             setInput('');
           }}>

@@ -50,6 +50,10 @@ h3 {
 	grid-area: center-bottom;
 }
 
+.otherUser_buttons {
+	grid-area: right;
+	justify-content: center;
+}
 
 .avatar_label {
 	cursor: pointer;
