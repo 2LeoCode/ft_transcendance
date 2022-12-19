@@ -1,7 +1,7 @@
 
 USER PROFILE
 -Fix l'avatar ( upload avatar )
-|-> When logged for the first time the user is prompted to add information to their account
+- When logged for the first time the user is prompted to add information to their account
         (nickname, avatar, etc...)
 
 AUTH
@@ -11,4 +11,5 @@ CHAT
 - Channels
         |-> the owner of a channel and can kick other users and the channel administrators
         |-> an administrator  can kick, but not the channel owners.
-- Block users -> the messages from the blocked person must be hidden
+- Messages
+        |-> Block users -> the messages from the blocked person must be hidden
