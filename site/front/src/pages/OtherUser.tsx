@@ -35,7 +35,7 @@ function OtherUser() {
   function inviteFriend(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
     console.log(friendName);
-    socket.emit("friendRequest", friendName);
+    socket.emit("sendfriendRequest", friendName);
   }
 
   const updateScores = (score: Score[]) => {
