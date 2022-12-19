@@ -74,6 +74,7 @@ export default class Room implements IRoom {
 
 	isGameEnd: boolean;
 	otherLeft: boolean;
+	lostConnection: boolean;
 
 	// settings customisation
 	maxGoal: number;
@@ -105,6 +106,7 @@ export default class Room implements IRoom {
 
 	this.isGameEnd = false;
 	this.otherLeft = false;
+	this.lostConnection = false;
 
 	this.timer = 0;
 	this.gameDuration = 60000 * 5; // 1min * num of minutes

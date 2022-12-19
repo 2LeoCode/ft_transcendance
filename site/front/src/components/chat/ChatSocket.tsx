@@ -13,6 +13,7 @@ import { CreateChannelAtom } from "./ChatChannelList";
 import { IRoom } from "../../gameObjects/GameObject";
 import { FoundUsersAtom, PongInviteAtom } from "./ChatUserList";
 import swal from "sweetalert";
+import { useNavigate } from "react-router";
 
 const ChatSocket = () => {
 	const db = useDatabase();
@@ -31,6 +32,7 @@ const ChatSocket = () => {
 	const [, setPongInvite] = useAtom(PongInviteAtom);
 	const [, setFoundUsers] = useAtom(FoundUsersAtom);
 	const [, setChannelInvites] = useAtom(db.user.channelInvitesAtom);
+	const navigate = useNavigate();
 
 	const updateChannels = (channel: any) => {
 		const res = EntityParser.channel(channel);
@@ -236,7 +238,15 @@ const ChatSocket = () => {
 						accept: 'AcceptPongInvite',
 						decline: 'DeclinePongInvite',
 					} as any)[value], senderUsername);
+					if (value === 'accept')
+						navigate('/pong');
+					if (value === 'decline'){
+						ClientSocket.emit('DeclinePongInvite', senderUsername);
+					}
 				});
+			})
+			.on('pongInviteDeclined', (senderUsername: string) => {
+				swal(`${senderUsername} declined your invite`);
 			})
 			.on("newRoom", (newRoomData: IRoom) => {
 				ClientSocket.emit("joinRoom", newRoomData.roomId);
