@@ -54,6 +54,9 @@ const SocketInit = () => {
 		.on('removeRequest', (entity: any) => {
       setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
     })
+    .on('swalError', (str: string) => {
+      swal(str);
+    })
 		.on('enabled-2fa', () => {
 			setTwoFactor(true);
 		})
