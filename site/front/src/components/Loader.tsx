@@ -1,7 +1,10 @@
 import { atom, useAtom } from "jotai";
-import { Fragment, useEffect, useState } from "react";
+import { CSSProperties, Fragment, useEffect, useState } from "react";
 import useDatabase from "../com/use-database";
 import Pong from "../pages/Pong";
+import '../styles/App.css';
+import { ClipLoader } from "react-spinners";
+
 export const SyncAtom = atom(false);
 
 const Loader = () => {
@@ -15,7 +18,11 @@ const Loader = () => {
     })();
   }, []);
 
-  return <Fragment>Loading...</Fragment>;
+  return <ClipLoader
+		color="red"
+		size='125px'
+		className="LoadingSpinner"
+	/>;
 };
 
 export default Loader;

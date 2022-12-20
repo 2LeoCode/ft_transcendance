@@ -3,6 +3,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, We
 import { Server, Socket } from "socket.io";
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
+import UserEntity from "../entities/user.entity";
 
 @WebSocketGateway({
 	namespace: "events",
@@ -25,10 +26,33 @@ export default class EventsGateway implements OnGatewayConnection {
 		userId: string,
 	}[] = [];
 
+	async connectClient(
+		client: Socket,
+		user: UserEntity,
+		payload: any,
+	) {
+		this.userService.updateByName(
+			payload.username,
+			{ online: true }
+		);
+		//console.log('Client good!');
+
+		const channels = await this.userService.getChannels(user.id);
+	
+		channels.forEach(channel => client.join(channel.id));
+
+		console.log(`hello ${payload.username}`);
+		//console.log('list:', this.connectedUsers.map(usr => usr.username).join(', '));
+		//console.log('broadcasting to all clients');
+		client.broadcast.emit('clientConnected', user);
+		client.emit('connected');
+	}
+
 	async handleConnection(
 		client: Socket
 	) {
 		const token = client.handshake.auth.token;
+		const token_2fa = client.handshake.auth.token_2fa;
 		// console.log('token=', token);
 		try {
 			await this.authService.verify(token);
@@ -45,22 +69,18 @@ export default class EventsGateway implements OnGatewayConnection {
 			});
 			//console.log(this.connectedUsers);
 			//client.emit('onConnection', payload);
-			this.userService.updateByName(
-				payload.username,
-				{ online: true }
-			);
-			//console.log('Client good!');
-			dbUser.online = true;
 
-			const channels = await this.userService.getChannels(dbUser.id);
-		
-			for (const channel of channels)
-				client.join(channel.id);
-
-			console.log(`hello ${payload.username}`);
-			//console.log('list:', this.connectedUsers.map(usr => usr.username).join(', '));
-			//console.log('broadcasting to all clients');
-			client.broadcast.emit('clientConnected', dbUser);
+			if (dbUser.twoFactorSecret) {
+				try {
+					const res = await this.authService.verify(token_2fa);
+				} catch {
+					client.emit('twoFactorRequired', await this.authService.generateQrCodeDataURL(dbUser));
+					client.disconnect(true);
+					return ;
+				}
+			}
+			this.connectClient(client, dbUser, payload);
+			
 		} catch (e) {
 			//console.log('bad token');
 			client.disconnect(true);
@@ -104,7 +124,35 @@ export default class EventsGateway implements OnGatewayConnection {
 			else
 				client.emit('foundUsers', users);
 		} catch (e) {
-			client.emit('chatError', e);
+			client.emit('authError', e);
+		}
+	}
+
+	@SubscribeMessage('2fa-on')
+	async twoFactorOn(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() token: string
+	) {
+		try {
+			const userId = this.connectedUsers.find(usr => usr.socketId == client.id).userId;
+			await this.userService.enable2fa(userId);
+			client.emit('enabled-2fa');
+		} catch (e) {
+			client.emit('authError', e);
+		}
+	}
+
+	@SubscribeMessage('2fa-off')
+	async twoFactorOff(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() token: string
+	) {
+		try {
+			const userId = this.connectedUsers.find(usr => usr.socketId == client.id).userId;
+			await this.userService.disable2fa(userId);
+			client.emit('disabled-2fa');
+		} catch (e) {
+			client.emit('authError', e);
 		}
 	}
 

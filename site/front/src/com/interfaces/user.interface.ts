@@ -17,6 +17,7 @@ export default interface User extends PublicUser {
 	messagesOut: Message[];
 	scores: Score[];
 	channelInvites: PublicChannel[];
+	twoFactorEnabled: boolean;
 
 	blockedByAtom: Atom<PublicUser[]>;
 	blockedAtom: Atom<PublicUser[]>;
@@ -28,4 +29,5 @@ export default interface User extends PublicUser {
 	messagesOutAtom: Atom<Message[]>;
 	scoresAtom: Atom<Score[]>;
 	channelInvitesAtom: Atom<PublicChannel[]>;
+	twoFactorEnabledAtom: Atom<boolean>;
 }

@@ -84,4 +84,7 @@ export default class UserEntity {
 	)
 	@JoinColumn()
 	receiver: ReceiverEntity;
+
+	@Column({ nullable: true, default: null })
+	twoFactorSecret: string;
 }

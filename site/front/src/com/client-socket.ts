@@ -8,6 +8,7 @@ const ClientSocket = io(`ws://localhost:2000/events`, {
 	autoConnect: false,
 	auth: {
 		token: Constants.jwtToken,
+		token_2fa: Constants.jwtToken2fa,
 	}
 });
 

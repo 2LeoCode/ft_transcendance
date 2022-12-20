@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Settings.css";
 import { Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { atom, useAtom } from "jotai";
 import useDatabase from "../com/use-database";
+import ClientSocket from "../com/client-socket";
 //import { Database } from "../com/database";
 
 export const SettingsAtom = atom(false);
@@ -13,6 +14,7 @@ function Settings(props: any) {
   const [, setNick] = useAtom(Database.user.nickAtom);
   const [newName, setNewName] = useState("");
   const [settings, setSettings] = useAtom(SettingsAtom);
+	const [twoFactor] = useAtom(Database.user.twoFactorEnabledAtom);
   // const [name, setName] = useAtom<string | undefined>(Database.user.nick);
   //const navigate = useNavigate();
   const changeUsername = async(e: any) => {
@@ -21,6 +23,10 @@ function Settings(props: any) {
     // setName(e.target.value);
     // console.log(name);
   };
+
+	useEffect(() => {
+		console.log('two factor', twoFactor);
+	}, [twoFactor])
   return (
     <div className="Settings">
       <form onSubmit={changeUsername}>
@@ -39,7 +45,14 @@ function Settings(props: any) {
       <button type="button">Change Avatar</button>
       <br />
       <p>Activate 2FA</p>
-      <Switch color="error" />
+			<Switch
+				color="error"
+				checked={twoFactor}
+				onChange={(e) => {
+					ClientSocket.emit(
+						e.target.checked ? '2fa-on' : '2fa-off'
+					)
+				}} />
       <br />
       <button type="button" onClick={() => setSettings(false)}>
         Close

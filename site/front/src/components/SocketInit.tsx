@@ -5,6 +5,7 @@ import ClientSocket from "../com/client-socket";
 import EntityParser from "../com/entity-parser";
 import useDatabase from "../com/use-database"
 import ChatSocket from "./chat/ChatSocket";
+import swal from "sweetalert";
 
 const SocketInit = () => {
   const db = useDatabase();
@@ -13,13 +14,14 @@ const SocketInit = () => {
   const [, setScores] = useAtom(db.user.scoresAtom);
   const [friends, setFriends] = useAtom(db.user.friendsAtom);
   const [friendsRequests, setFriendRequests] = useAtom(db.user.friendRequestsAtom);
-
+	const [, setTwoFactor] = useAtom(db.user.twoFactorEnabledAtom);
 
 
 
   useEffect(() => {
 
-    ClientSocket.on('friendRequest', async (previous: string, entity: any) => {
+    ClientSocket
+			.on('friendRequest', async (previous: string, entity: any) => {
       if (isInRequests === previous)
         return;
       else
@@ -35,8 +37,7 @@ const SocketInit = () => {
       const newFriendRequest = EntityParser.publicUser(entity);
       setFriendRequests((current) => [...current, newFriendRequest]);
     })
-
-    ClientSocket.on('acceptFriendRequest', (previous: string, entity: any) => {
+		.on('acceptFriendRequest', (previous: string, entity: any) => {
       if (isInRequests === previous)
         return;
       else
@@ -44,8 +45,7 @@ const SocketInit = () => {
       const newFriend = EntityParser.publicUser(entity);
       setFriends((prev) => [...prev, newFriend]);
     })
-
-    ClientSocket.on('declineRequest', (previous: string, entity: any) => {
+		.on('declineRequest', (previous: string, entity: any) => {
       if (isInRequests === previous)
         return;
       else
@@ -53,14 +53,19 @@ const SocketInit = () => {
       const newFriend = EntityParser.publicUser(entity);
       setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
     })
-
-    ClientSocket.on('removeRequest', (entity: any) => {
+		.on('removeRequest', (entity: any) => {
       setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
     })
+		.on('enabled-2fa', () => {
+			setTwoFactor(true);
+		})
+		.on('disabled-2fa', () => {
+			setTwoFactor(false);
+		})
 
-    setFriendRequests(db.user.friendRequests);
+    //setFriendRequests(db.user.friendRequests);
 
-    ClientSocket.on('newScore', (score: any) => {
+  	.on('newScore', (score: any) => {
       const newScore = EntityParser.score(score);
       setScores((prev) => [...prev, newScore]);
     })

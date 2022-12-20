@@ -82,7 +82,8 @@ const EntityParser = {
 			),
 			channelInvites: entity.channelInvites.map(
 				(channel: any) => EntityParser.publicChannel(channel)
-			)
+			),
+			twoFactorEnabled: !!entity.twoFactorSecret,
 		};
 
 		return {
@@ -96,7 +97,8 @@ const EntityParser = {
 			messagesInAtom: atom(userNoAtom.messagesIn as Message[]),
 			messagesOutAtom: atom(userNoAtom.messagesOut as Message[]),
 			scoresAtom: atom(userNoAtom.scores as Score[]),
-			channelInvitesAtom: atom(userNoAtom.channelInvites as PublicChannel[])
+			channelInvitesAtom: atom(userNoAtom.channelInvites as PublicChannel[]),
+			twoFactorEnabledAtom: atom(userNoAtom.twoFactorEnabled as boolean)
 		};
 	},
 

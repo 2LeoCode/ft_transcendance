@@ -8,13 +8,14 @@ import ChannelEntity from '../entities/channel.entity';
 import ReceiverService from './receiver.service';
 import MessageService from './message.service';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
+import { authenticator } from 'otplib';
 
 @Injectable()
 export default class UserService {
 	constructor(
 		@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
 		private readonly receiverService: ReceiverService,
-		private readonly messageService: MessageService,
+		private readonly messageService: MessageService
 	) {}
 
 	async getPublic(filter: {
@@ -307,4 +308,19 @@ export default class UserService {
 		await this.userRepository.save(user);
 	}
 
+	async enable2fa(id: string) {
+		const user = await this.userRepository.findOne({
+			where: { id: id }
+		});
+		user.twoFactorSecret = authenticator.generateSecret();
+		await this.userRepository.save(user);
+	}
+
+	async disable2fa(id: string): Promise<void> {
+		const user = await this.userRepository.findOne({
+			where: { id: id }
+		});
+		user.twoFactorSecret = null;
+		await this.userRepository.save(user);
+	}
 }
