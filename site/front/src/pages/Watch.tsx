@@ -19,7 +19,7 @@ const Watch: React.FC<{currentGamesProps: onGoingGame[], socketProps: Socket}> =
             key={room.roomId}
             value={room.roomId}
             type="button"
-            className="play_button"
+            className="room_name"
             onClick={spectate}            // create room on the onClick
           >
             {room.roomId}
