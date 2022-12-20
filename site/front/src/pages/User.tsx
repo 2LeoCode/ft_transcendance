@@ -27,9 +27,6 @@ function User() {
   const [tie, setTie] = useState(0);
   const [lose, setLose] = useState(0);
   const [ratio, setRatio] = useState("0");
-  const [matches_won, setMatch_won] = useState(0);
-  const [matches_lost, setMatch_lost] = useState(0);
-  const [matches_tie, setMatch_tie] = useState(0);
 
   function acceptFriendRequest(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
@@ -42,33 +39,33 @@ function User() {
   }
 
   useEffect(() => {
-
-    setMatch_lost(0);
-    setMatch_won(0);
-    setMatch_tie(0);
+    
+    let matchWon = 0;
+    let matchLost = 0;
+    let matchTie = 0;
 
     scores.map((score) => {
       if (score.playerScore > score.enemyScore)
-        setMatch_won(matches_won + 1);
+        matchWon++;
       else if (score.playerScore < score.enemyScore)
-        setMatch_lost(matches_lost + 1);
+        matchLost++;
       else
-        setMatch_tie(matches_tie + 1);
+        matchTie++;
       return null;
     });
 
-    setWin(matches_won);
-    setLose(matches_lost);
-    setTie(matches_tie);
-    if (matches_won === 0)
+    setWin(matchWon);
+    setLose(matchLost);
+    setTie(matchTie);
+    if (matchWon === 0)
       setRatio('0');
-    else if (matches_lost === 0)
+    else if (matchLost === 0)
       setRatio('1');
     else {
-      const ratio = matches_won / (matches_won + matches_lost);
+      const ratio = matchWon / (matchWon + matchLost);
       setRatio(ratio.toFixed(2));
     }
-  }, [friends, scores, requestedFriends, matches_won, matches_lost, matches_tie])
+  }, [friends, requestedFriends, scores])
 
   return (
     <div>

@@ -547,6 +547,9 @@ export class SocketEvents
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username === username,
     );
+    const accepter = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    );
     const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId === client.id,
     ).userId);
@@ -566,6 +569,10 @@ export class SocketEvents
       this.eventsGateway.server
         .to(client.id)
         .emit('removeRequest', tmp2);
+        this.eventsGateway.server
+          .to(user.socketId)
+          .emit('swalError', `${accepter.username} accepted your friend request.\n
+          Your are now friends.`);
     }
   }
 
@@ -577,6 +584,9 @@ export class SocketEvents
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     );
+    const decliner = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
+    );
     const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == user.socketId,
     ).userId);
@@ -585,6 +595,9 @@ export class SocketEvents
       this.eventsGateway.server
         .to(client.id)
         .emit('removeRequest', tmp);
+        this.eventsGateway.server
+          .to(user.socketId)
+          .emit('swalError', `${decliner.username} declined your friend request.`);
     }
   }
 
@@ -595,6 +608,9 @@ export class SocketEvents
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
+    );
+    const remover = this.eventsGateway.connectedUsers.find(
+      (usr) => usr.socketId == client.id,
     );
     const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
@@ -610,6 +626,9 @@ export class SocketEvents
       this.eventsGateway.server
         .to(user.socketId)
         .emit('removeFriendUpdate', tmp.user42);
+        this.eventsGateway.server
+          .to(user.socketId)
+          .emit('swalError', `${remover.username} removed you from his friends.`);
     }
   }
 
