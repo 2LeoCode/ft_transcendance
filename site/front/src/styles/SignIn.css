@@ -1,9 +1,0 @@
-.SignIn {
-	position: absolute;
-	margin-left: calc(50vw - 150px);
-	padding-top: 50px;
-	height: 300px;
-	width: 300px;
-	background-color: white;
-	border-radius: 10%;
-}

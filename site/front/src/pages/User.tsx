@@ -104,7 +104,7 @@ function User() {
           <h4>Friends Requests</h4>
           {requestedFriends.map((friend, i) => {
             return (
-              <p key={i}>
+              <p className="buttons small_buttons" key={i}>
                 {friend.user42}
                 <button
                   value={friend.user42}

@@ -50,6 +50,10 @@ h3 {
 	grid-area: center-bottom;
 }
 
+.match_history ul {
+	padding: 0;
+}
+
 .otherUser_buttons {
 	grid-area: right;
 	justify-content: center;
@@ -84,4 +88,12 @@ h3 {
 
 .ratio {
 	color: blue;
+}
+
+.friends a {
+	text-decoration: none;
+}
+
+.friends a ul {
+	padding: 0;
 }

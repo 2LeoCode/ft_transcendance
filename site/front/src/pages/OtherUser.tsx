@@ -7,6 +7,8 @@ import useDatabase from '../com/use-database';
 import ClientSocket from '../com/client-socket';
 import { Socket } from 'socket.io-client';
 import Score from '../com/interfaces/score.interface';
+import "../styles/Buttons.css";
+
 
 let socket: Socket;
 
@@ -173,7 +175,7 @@ function OtherUser() {
             </div>
           )}
         </div>
-        <div className="otherUser_buttons">
+        <div className="otherUser_buttons normal_buttons buttons">
           {!alreadyFriend && !alreadyBlocked && (
             <button value={username} onClick={inviteFriend}>
               Send friend request
