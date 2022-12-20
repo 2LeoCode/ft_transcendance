@@ -13,6 +13,8 @@ import ChatChannelSettings from "./ChatChannelSettings";
 
 export const ConvTypeAtom = atom<ReceiverType>('User');
 
+
+
 const ChatBody = () => {
 	const [convType] = useAtom(ConvTypeAtom);
 	const [convs, setConvs] = useAtom(ConvsAtom);
