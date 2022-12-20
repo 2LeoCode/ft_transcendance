@@ -1,6 +1,6 @@
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
-import { useLocation, Location, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ClientSocket from "../com/client-socket";
 import useDatabase from "../com/use-database";
 import Header from "../components/Header";
@@ -15,7 +15,7 @@ declare let Blob: {
 function User() {
 
   const Database = useDatabase();
-  const location = useLocation();
+  // const location = useLocation();
 
   const [image, setImage] = useState(new Blob());
   const [uploaded, setUploaded] = useState(false);
@@ -26,9 +26,10 @@ function User() {
   const [win, setWin] = useState(0);
   const [tie, setTie] = useState(0);
   const [lose, setLose] = useState(0);
-  let matches_won: number;
-  let matches_lost: number;
-  let matches_tie: number;
+  const [ratio, setRatio] = useState("0");
+  const [matches_won, setMatch_won] = useState(0);
+  const [matches_lost, setMatch_lost] = useState(0);
+  const [matches_tie, setMatch_tie] = useState(0);
 
   function acceptFriendRequest(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
@@ -42,24 +43,32 @@ function User() {
 
   useEffect(() => {
 
-    matches_lost = 0;
-    matches_won = 0;
-    matches_tie = 0;
+    setMatch_lost(0);
+    setMatch_won(0);
+    setMatch_tie(0);
 
     scores.map((score) => {
       if (score.playerScore > score.enemyScore)
-        matches_won++;
+        setMatch_won(matches_won + 1);
       else if (score.playerScore < score.enemyScore)
-        matches_lost++;
+        setMatch_lost(matches_lost + 1);
       else
-        matches_tie++;
-    })
+        setMatch_tie(matches_tie + 1);
+      return null;
+    });
 
     setWin(matches_won);
     setLose(matches_lost);
     setTie(matches_tie);
-
-  }, [])
+    if (matches_won === 0)
+      setRatio('0');
+    else if (matches_lost === 0)
+      setRatio('1');
+    else {
+      const ratio = matches_won / (matches_won + matches_lost);
+      setRatio(ratio.toFixed(2));
+    }
+  }, [friends, scores, requestedFriends, matches_won, matches_lost, matches_tie])
 
   return (
     <div>
@@ -91,7 +100,8 @@ function User() {
         <div className="stats">
           <p key={"Win"} className="win">{win} Win</p>
           <p key={"Tie"} className="tie">{tie} Tie</p>
-          <p key={"Loseeeeee"} className="lose">{lose} Lose</p>
+          <p key={"Loseeeeee"} className="lose">{lose} Loss</p>
+          <p key={"Ratio"} className="ratio">{ratio} Ratio</p>
         </div>
         <div className="requested_friends">
           <h4>Friends Requests</h4>

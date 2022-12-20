@@ -46,7 +46,7 @@ function Header() {
           Settings
         </p>
         <NavLink to="/pong">
-          <h1>FIGHT PONG</h1>
+          <h1 className="">FIGHT PONG</h1>
         </NavLink>
         <NavLink to="/chat">
           <h1>Chat</h1>

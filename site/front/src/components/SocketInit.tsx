@@ -1,3 +1,4 @@
+import { spawn } from "child_process";
 import { useAtom } from "jotai";
 import { Fragment, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
@@ -14,6 +15,7 @@ const SocketInit = () => {
   const [, setScores] = useAtom(db.user.scoresAtom);
   const [friends, setFriends] = useAtom(db.user.friendsAtom);
   const [friendsRequests, setFriendRequests] = useAtom(db.user.friendRequestsAtom);
+  const [blocked, setBlocked] = useAtom(db.user.blockedAtom);
 	const [, setTwoFactor] = useAtom(db.user.twoFactorEnabledAtom);
 
 
@@ -37,6 +39,7 @@ const SocketInit = () => {
       const newFriendRequest = EntityParser.publicUser(entity);
       setFriendRequests((current) => [...current, newFriendRequest]);
     })
+
 		.on('acceptFriendRequest', (previous: string, entity: any) => {
       if (isInRequests === previous)
         return;
@@ -45,16 +48,43 @@ const SocketInit = () => {
       const newFriend = EntityParser.publicUser(entity);
       setFriends((prev) => [...prev, newFriend]);
     })
-		.on('declineRequest', (previous: string, entity: any) => {
-      if (isInRequests === previous)
-        return;
-      else
-        setIsInRequests(previous);
-      const newFriend = EntityParser.publicUser(entity);
-      setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
+		.on('removeFriendUpdate', (entity: any) => {
+      setFriends((current) => current.filter((friend) => friend.user42 !== entity));
     })
 		.on('removeRequest', (entity: any) => {
       setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity.user42));
+    })
+		.on('enabled-2fa', () => {
+			setTwoFactor(true);
+		})
+		.on('disabled-2fa', () => {
+			setTwoFactor(false);
+		})
+
+    ClientSocket.on('blockUserUpdate', (entity: any) => {
+      blocked.map((block) => {
+        if (block.user42 === entity.user42)
+          return;
+      })
+      const newBlocked = EntityParser.publicUser(entity);
+      setBlocked((prev) => [...prev, newBlocked]);
+    })
+
+    ClientSocket.on('unblockUserUpdate', (entity: any) => {
+      setBlocked((prev) => prev.filter((block) => block.user42 !== entity.user42));
+    })
+
+    .on('blockUserUpdate', (entity: any) => {
+      blocked.map((block) => {
+        if (block.user42 === entity.user42)
+          return;
+      })
+      const newBlocked = EntityParser.publicUser(entity);
+      setBlocked((prev) => [...prev, newBlocked]);
+    })
+
+    .on('unblockUserUpdate', (entity: any) => {
+      setBlocked((prev) => prev.filter((block) => block.user42 !== entity.user42));
     })
 		.on('enabled-2fa', () => {
 			setTwoFactor(true);
@@ -74,17 +104,13 @@ const SocketInit = () => {
 
 
   useEffect(() => {
-    //console.log('SocketInit');
     ClientSocket
       .on('clientDisconnected', (username) => {
-        console.log(`client ${username} disconnected`);
+        // console.log(`client ${username} disconnected`);
         setOnlineUsers(prev => prev.filter((user) => user.user42 !== username));
-        // roomId = undefined;
-        // setPlay(false);
-        // setRoom(null);
       })
       .on('clientConnected', (entity: any) => {
-        console.log(`client ${entity.user42} connected`);
+        // console.log(`client ${entity.user42} connected`);
         setOnlineUsers(prev => [...prev, EntityParser.publicUser(entity)]);
       })
 

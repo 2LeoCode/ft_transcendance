@@ -160,7 +160,7 @@ function Pong() {
           <button
             value={'watch'}
             type="button"
-            className="play_button"
+            className="watch_button"
             onClick={handleWatch}            // create room on the onClick
           >
             Watch
