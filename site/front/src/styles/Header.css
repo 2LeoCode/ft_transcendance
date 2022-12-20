@@ -12,6 +12,11 @@
 	font-size: 48px;
 }
 
+.Header h1:hover {
+	color: rgb(255, 255, 255);
+	cursor: pointer;
+}
+
 .Header a, .Header p {
 	background: none;
 	color: inherit;
@@ -23,9 +28,24 @@
 	text-decoration: none;
 }
 
+.Header a:hover, .Header p:hover {
+	color: rgb(255, 255, 255);
+	cursor: pointer;
+}
+
   
 .chat, .watch, .settings, .logout {
 	font-size: 34px;
 } 
+
+.settings:hover {
+	color: rgb(255, 255, 255);
+	cursor: pointer;
+}
+
+.logout:hover {
+	color: rgb(255, 255, 255);
+	cursor: pointer;
+}
   
   

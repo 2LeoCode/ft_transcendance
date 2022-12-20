@@ -555,7 +555,6 @@ export class SocketEvents
     ).userId);
     this.userService.acceptFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
     if (user && tmp && tmp2) {
-      console.log("coucou");
       this.eventsGateway.server
         .to(user.socketId)
         .emit('acceptFriendRequest', user.username, tmp);
@@ -625,7 +624,6 @@ export class SocketEvents
     const blocker = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     );
-    console.log(user);
     const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == user.socketId,
     ).userId);

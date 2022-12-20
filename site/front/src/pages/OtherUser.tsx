@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import "../styles/User.css";
-import { atom, useAtom } from "jotai";
-import { Database } from "../com/database";
+import { useAtom } from "jotai";
 import useDatabase from "../com/use-database";
 import ClientSocket from "../com/client-socket";
 import { Socket } from "socket.io-client";
@@ -11,11 +10,11 @@ import Score from "../com/interfaces/score.interface";
 
 let socket: Socket;
 
-declare const Blob: {
-  prototype: Blob;
-  new(): Blob;
-  new(request: any, mime: string): Blob;
-};
+// declare const Blob: {
+//   prototype: Blob;
+//   new(): Blob;
+//   new(request: any, mime: string): Blob;
+// };
 
 function OtherUser() {
 
@@ -23,35 +22,31 @@ function OtherUser() {
   const params = useParams();
   const username = params.userName;
 
-  let matches_won: number;
-  let matches_lost: number;
-  let matches_tie: number;
+  const [matches_won, setMatch_won] = useState(0);
+  const [matches_lost, setMatch_lost] = useState(0);
+  const [matches_tie, setMatch_tie] = useState(0);
   const [win, setWin] = useState(0);
   const [tie, setTie] = useState(0);
   const [lose, setLose] = useState(0);
+  const [ratio, setRatio] = useState("0");
   const [scores, setScores] = useState<Score[]>([]);
-  const [uploaded, setUploaded] = useState(false);
   const [friends] = useAtom(Database.user.friendsAtom);
-  const [requestedFriends] = useAtom(Database.user.friendRequestsAtom);
   const [alreadyFriend, setAlreadyFriend] = useState(false);
-  const [blocked, setBlocked] = useAtom(Database.user.blockedAtom);
+  const [blocked] = useAtom(Database.user.blockedAtom);
   const [alreadyBlocked, setAlreadyBlocked] = useState(false);
 
   function inviteFriend(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
-    console.log(friendName);
     socket.emit("sendfriendRequest", friendName);
   }
 
   function removeFriend(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
-    console.log(friendName);
     socket.emit("removeFriend", friendName);
   }
 
   function blockUser(e: React.MouseEvent<HTMLButtonElement>) {
     const username = e.currentTarget.value;
-    console.log(username);
     socket.emit("blockUser", username);
     if (friends.find((usr) => usr.user42 === username))
       removeFriend(e);
@@ -60,7 +55,6 @@ function OtherUser() {
 
   function unblockUser(e: React.MouseEvent<HTMLButtonElement>) {
     const username = e.currentTarget.value;
-    console.log(username);
     socket.emit("unblockUser", username);
   }
 
@@ -88,36 +82,41 @@ function OtherUser() {
     socket.on("otherUserScores", (scores: Score[]) => {
       updateScores(scores);
 
-      matches_lost = 0;
-      matches_won = 0;
-      matches_tie = 0;
+      setMatch_lost(0);
+      setMatch_won(0);
+      setMatch_tie(0);
 
       scores.map((score) => {
         if (score.playerScore > score.enemyScore)
-          matches_won++;
+          setMatch_won(matches_won + 1);
         else if (score.playerScore < score.enemyScore)
-          matches_lost++;
+          setMatch_lost(matches_lost + 1);
         else
-          matches_tie++;
+          setMatch_tie(matches_tie + 1);
+        return null;
       })
 
       setWin(matches_won);
       setLose(matches_lost);
       setTie(matches_tie);
+      if (matches_won === 0)
+        setRatio('0');
+      else if (matches_lost === 0)
+        setRatio('1');
+      else {
+        const ratio = matches_won / (matches_won + matches_lost);
+        setRatio(ratio.toFixed(2));
+      }
     });
 
     let tmp: boolean = false;
-
-    console.log("tmp = " + tmp);
-    console.log(friends);
     friends.map((friend) => {
       if (friend.user42 === username) {
         setAlreadyFriend(true);
         tmp = true;
       }
+      return null;
     });
-
-    console.log("tmp = " + tmp);
 
     if (tmp === false) {
       setAlreadyFriend(false);
@@ -129,13 +128,14 @@ function OtherUser() {
         setAlreadyBlocked(true);
         tmp2 = true;
       }
+      return null;
     });
 
     if (tmp2 === false) {
       setAlreadyBlocked(false);
     }
 
-  }, [friends, blocked]);
+  }, [friends, blocked, username, matches_won, matches_lost, matches_tie]);
 
   return (
     <div>
@@ -151,6 +151,7 @@ function OtherUser() {
               <p key={"Winnnn"} className="win">{win} Win</p>
               <p key={"Tieeee"} className="tie">{tie} Tie</p>
               <p key={"Lose"} className="lose">{lose} Lose</p>
+              <p key={"Ratio"} className="ratio">{ratio} Ratio</p>
             </div>}
         </div>
         <div className="match_history">

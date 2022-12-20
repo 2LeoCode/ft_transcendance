@@ -9,12 +9,15 @@ import useDatabase from "../com/use-database";
 export const SettingsAtom = atom(false);
 
 function Settings(props: any) {
+
   const Database = useDatabase();
-  const [, setNick] = useAtom(Database.user.nickAtom);
+
+  const [nick, setNick] = useAtom(Database.user.nickAtom);
   const [newName, setNewName] = useState("");
   const [settings, setSettings] = useAtom(SettingsAtom);
   // const [name, setName] = useAtom<string | undefined>(Database.user.nick);
   //const navigate = useNavigate();
+  
   const changeUsername = async(e: any) => {
     e.preventDefault();
     setNick(newName);

@@ -44,30 +44,16 @@ const SocketInit = () => {
     })
 
     ClientSocket.on('acceptFriendRequest', (previous: string, entity: any) => {
-      console.log("couououououou");
       if (isInRequests === previous)
         return;
       else
         setIsInRequests(previous);
       const newFriend = EntityParser.publicUser(entity);
       setFriends((prev) => [...prev, newFriend]);
-      console.log(friends);
     })
 
-    // ClientSocket.on('declineRequest', (previous: string, entity: any) => {
-    //   if (isInRequests === previous)
-    //     return;
-    //   else
-    //     setIsInRequests(previous);
-    //   const newFriend = EntityParser.publicUser(entity);
-    //   setFriendRequests((current) => current.filter((friend) => friend.user42 !== entity));
-    // })
-
     ClientSocket.on('removeFriendUpdate', (entity: any) => {
-      console.log("couououououou");
       setFriends((current) => current.filter((friend) => friend.user42 !== entity));
-      console.log(entity);
-      console.log(friends);
     })
 
     ClientSocket.on('removeRequest', (entity: any) => {
@@ -98,17 +84,13 @@ const SocketInit = () => {
 
 
   useEffect(() => {
-    //console.log('SocketInit');
     ClientSocket
       .on('clientDisconnected', (username) => {
-        console.log(`client ${username} disconnected`);
+        // console.log(`client ${username} disconnected`);
         setOnlineUsers(prev => prev.filter((user) => user.user42 !== username));
-        // roomId = undefined;
-        // setPlay(false);
-        // setRoom(null);
       })
       .on('clientConnected', (entity: any) => {
-        console.log(`client ${entity.user42} connected`);
+        // console.log(`client ${entity.user42} connected`);
         setOnlineUsers(prev => [...prev, EntityParser.publicUser(entity)]);
       })
 
