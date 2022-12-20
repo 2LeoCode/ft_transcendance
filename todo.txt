@@ -4,9 +4,3 @@ USER PROFILE
 - change nickname
 - When logged for the first time the user is prompted to add information to their account
         (nickname, avatar, etc...)
-
-AUTH
-- 2FA -> email ou message peu importe...
-
-
-fix les warning a la compile
