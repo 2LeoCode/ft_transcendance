@@ -61,16 +61,7 @@ const SocketInit = () => {
 			setTwoFactor(false);
 		})
 
-    ClientSocket.on('blockUserUpdate', (entity: any) => {
-      blocked.map((block) => {
-        if (block.user42 === entity.user42)
-          return;
-      })
-      const newBlocked = EntityParser.publicUser(entity);
-      setBlocked((prev) => [...prev, newBlocked]);
-    })
-
-    ClientSocket.on('unblockUserUpdate', (entity: any) => {
+    .on('unblockUserUpdate', (entity: any) => {
       setBlocked((prev) => prev.filter((block) => block.user42 !== entity.user42));
     })
 
@@ -83,9 +74,6 @@ const SocketInit = () => {
       setBlocked((prev) => [...prev, newBlocked]);
     })
 
-    .on('unblockUserUpdate', (entity: any) => {
-      setBlocked((prev) => prev.filter((block) => block.user42 !== entity.user42));
-    })
 		.on('enabled-2fa', () => {
 			setTwoFactor(true);
 		})
@@ -99,20 +87,15 @@ const SocketInit = () => {
       const newScore = EntityParser.score(score);
       setScores((prev) => [...prev, newScore]);
     })
-
-  }, [])
-
-
-  useEffect(() => {
-    ClientSocket
-      .on('clientDisconnected', (username) => {
-        // console.log(`client ${username} disconnected`);
-        setOnlineUsers(prev => prev.filter((user) => user.user42 !== username));
-      })
-      .on('clientConnected', (entity: any) => {
-        // console.log(`client ${entity.user42} connected`);
-        setOnlineUsers(prev => [...prev, EntityParser.publicUser(entity)]);
-      })
+	
+		.on('clientDisconnected', (username) => {
+      // console.log(`client ${username} disconnected`);
+      setOnlineUsers(prev => prev.filter((user) => user.user42 !== username));
+    })
+    .on('clientConnected', (entity: any) => {
+      // console.log(`client ${entity.user42} connected`);
+      setOnlineUsers(prev => [...prev, EntityParser.publicUser(entity)]);
+    })
 
   }, []);
 
