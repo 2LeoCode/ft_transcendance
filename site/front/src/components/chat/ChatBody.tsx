@@ -9,6 +9,8 @@ import ChatCreateChannel from "./ChatCreateChannel";
 
 export const ConvTypeAtom = atom<ReceiverType>('User');
 
+
+
 const ChatBody = () => {
 	const [convType] = useAtom(ConvTypeAtom);
 	const [createChannel] = useAtom(CreateChannelAtom);
