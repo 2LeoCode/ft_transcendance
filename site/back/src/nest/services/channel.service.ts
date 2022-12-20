@@ -140,16 +140,42 @@ export default class ChannelService {
 		return res;
 	}
 
-	async update(userId: string, channelName: string, dto: UpdateChannelDto): Promise<void> {
+	async update(userId: string, channelId: string, dto: UpdateChannelDto) {
 		const channel: ChannelEntity = await this.channelRepository.findOne({
-			relations: ['users', 'owner'],
-			where: { name: channelName }
+			relations: [
+				'owner',
+				'users',
+				'invites',
+				'receiver',
+				'receiver.messages',
+				'receiver.messages.sender',
+				'receiver.messages.receiver',
+				'receiver.messages.receiver.parentChannel',
+				'receiver.parentChannel',
+			],
+			where: { id: channelId }
 		});
+		if (dto.password)
+			dto.password = Bcrypt.hashSync(dto.password, 10);
 		if (!channel)
-			throw new Error(`Channel ${channelName} does not exist`);
-		if (channel.owner.id !== userId && !channel.adminsIds.find((id: string) => id === userId))
-			throw new Error(`User ${userId} is not admin of channel ${channelName}`);
+			throw new Error(`Channel ${channelId} does not exist`);
+		if (channel.owner.id !== userId)
+			throw new Error(`User ${userId} is not owner of channel ${channel.name}`);
 		await this.channelRepository.update(channel.id, dto);
+		return this.channelRepository.findOne({
+			relations: [
+				'owner',
+				'users',
+				'invites',
+				'receiver',
+				'receiver.messages',
+				'receiver.messages.sender',
+				'receiver.messages.receiver',
+				'receiver.messages.receiver.parentChannel',
+				'receiver.parentChannel',
+			],
+			where: { id: channelId }
+		})
 	}
 
 	async join(userId: string, name: string, password: string) {

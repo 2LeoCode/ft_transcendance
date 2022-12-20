@@ -7,6 +7,7 @@ import { Conv } from "./ChatConv";
 import ClientSocket from "../../com/client-socket";
 import ChatPublicChannel, { SelectedChannelAtom } from "./ChatPublicChannel";
 import { NullAtom } from "./ChatCurrentConv";
+import swal from "sweetalert";
 
 export const ConvsAtom = atom([] as Conv[]);
 
@@ -97,6 +98,10 @@ const ChatConvList = () => {
 			<h2>Join Channel</h2>
 			<form onSubmit={(e) => {
 				e.preventDefault();
+				if (inputChannelName === '') {
+					swal('Channel name cannot be empty');
+					return ;
+				}
 				ClientSocket.emit('joinChannel', inputChannelName, inputChannelPassword);
 				setInputChannelName('');
 				setInputChannelPassword('');
