@@ -50,8 +50,19 @@ h3 {
 	grid-area: center-bottom;
 }
 
-.match_history ul {
+.User ul {
 	padding: 0;
+	height: 100px;
+	overflow-y: scroll;
+}
+
+.User li {
+	margin-bottom: 5px;
+	list-style-type: none;
+}
+
+.User ul::-webkit-scrollbar {
+	display: none;
 }
 
 .otherUser_buttons {
@@ -96,4 +107,12 @@ h3 {
 
 .friends a ul {
 	padding: 0;
+}
+
+.online {
+	color: green;
+}
+
+.offline {
+	color: red;
 }

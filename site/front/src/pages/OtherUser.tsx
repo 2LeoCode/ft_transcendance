@@ -165,13 +165,15 @@ function OtherUser() {
           {!alreadyBlocked && (
             <div>
               <h4>History</h4>
+              <ul>
               {scores.map((score, i) => {
                 return (
-                  <ul key={i}>
+                  <li key={i}>
                     {score.playerScore} - {score.enemyScore}
-                  </ul>
+                  </li>
                 );
               })}
+              </ul>
             </div>
           )}
         </div>

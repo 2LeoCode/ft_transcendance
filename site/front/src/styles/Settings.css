@@ -1,11 +1,13 @@
 .Settings {
 	position: absolute;
 	margin-top: 20vh;
-	margin-left: calc(15vw);
+	margin-left: calc(50vw - 200px);
 	padding-top: 50px;
 	height: 50vh;
-	width: 70vw;
-	background-color: white;
+	max-height: 200px;
+	width: 400px;
+	background-color: rgb(199, 199, 199);
 	border-radius: 10%;
 	overflow-y: auto;
+	border: solid 5px rgb(163, 0, 0);
 }

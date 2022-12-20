@@ -37,15 +37,3 @@
 .chat, .watch, .settings, .logout {
 	font-size: 34px;
 } 
-
-.settings:hover {
-	color: rgb(255, 255, 255);
-	cursor: pointer;
-}
-
-.logout:hover {
-	color: rgb(255, 255, 255);
-	cursor: pointer;
-}
-  
-  

@@ -27,6 +27,7 @@ function User() {
   const [tie, setTie] = useState(0);
   const [lose, setLose] = useState(0);
   const [ratio, setRatio] = useState("0");
+  const [hasFriendRequest, setHasFriendRequest] = useState(false);
 
   function acceptFriendRequest(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
@@ -65,6 +66,11 @@ function User() {
       const ratio = matchWon / (matchWon + matchLost);
       setRatio(ratio.toFixed(2));
     }
+
+    if (requestedFriends.length === 0)
+      setHasFriendRequest(false);
+    else
+      setHasFriendRequest(true);
   }, [friends, requestedFriends, scores])
 
   return (
@@ -101,7 +107,7 @@ function User() {
           <p key={"Ratio"} className="ratio">{ratio} Ratio</p>
         </div>
         <div className="requested_friends">
-          <h4>Friends Requests</h4>
+          {hasFriendRequest && <h4>Friends Requests</h4>}
           {requestedFriends.map((friend, i) => {
             return (
               <p className="buttons small_buttons" key={i}>
@@ -128,18 +134,20 @@ function User() {
               status = "online";
             return (
               <Link key={i} to={`/other_user/${friend.user42}`}>
-                <ul>{friend.user42}-{status}</ul>
+                <ul className={status}>{friend.user42}</ul>
               </Link>
             )
           })}
         </div>
         <div className="match_history">
           <h4>History</h4>
+          <ul>
           {scores.map((score, i) => {
             return (
-              <ul key={i}>{score.playerScore} - {score.enemyScore}</ul>
+              <li key={i}>{score.playerScore} - {score.enemyScore}</li>
             )
           })}
+          </ul>
         </div>
       </div>
     </div>
