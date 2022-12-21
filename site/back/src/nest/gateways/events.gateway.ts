@@ -133,8 +133,7 @@ export default class EventsGateway implements OnGatewayConnection {
 
 	@SubscribeMessage('2fa-on')
 	async twoFactorOn(
-		@ConnectedSocket() client: Socket,
-		@MessageBody() token: string
+		@ConnectedSocket() client: Socket
 	) {
 		try {
 			const userId = this.connectedUsers.find(usr => usr.socketId == client.id).userId;
@@ -147,8 +146,7 @@ export default class EventsGateway implements OnGatewayConnection {
 
 	@SubscribeMessage('2fa-off')
 	async twoFactorOff(
-		@ConnectedSocket() client: Socket,
-		@MessageBody() token: string
+		@ConnectedSocket() client: Socket
 	) {
 		try {
 			const userId = this.connectedUsers.find(usr => usr.socketId == client.id).userId;
