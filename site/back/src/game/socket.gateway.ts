@@ -681,11 +681,6 @@ export class SocketEvents
       this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
         .userId,
     );
-    const tmp2 = await this.userService.getOne(
-      this.eventsGateway.connectedUsers.find(
-        (usr) => usr.socketId == user.socketId,
-      ).userId,
-    );
     this.userService.removeFriend(
       this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
         .userId,

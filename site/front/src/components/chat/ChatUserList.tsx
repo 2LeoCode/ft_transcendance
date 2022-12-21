@@ -56,14 +56,19 @@ const ChatUserList = ({ startConv }: { startConv: Function }) => {
                 </button>
               </Link>
             }
-            <Link to={`/other_user/${selectedUser.user42}`}>
-              <button>
-                See Profile
-              </button>
-            </Link>
-            {selectedUser.id != db.user.id && <button
-              onClick={() => startConv(selectedUser)}
-            >Start Conversation</button>}
+            
+            {selectedUser.id != db.user.id && (
+              <Fragment>
+                <button
+                  onClick={() => startConv(selectedUser)}
+                >Start Conversation</button>
+                <Link to={`/other_user/${selectedUser.user42}`}>
+                <button>
+                  See Profile
+                </button>
+                </Link>
+              </Fragment>
+            )}
           </Fragment>
         )}
 				<h2>Find user</h2>

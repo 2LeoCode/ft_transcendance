@@ -10,6 +10,7 @@
 	border-radius: 10%;
 	overflow-y: auto;
 	border: solid 5px rgb(163, 0, 0);
+	z-index: 1000;
 }
 
 .Settings::-webkit-scrollbar {
