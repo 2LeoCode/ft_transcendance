@@ -4,6 +4,7 @@ import Channel from './channel.interface';
 import Score from './score.interface';
 import { Atom } from '../types/atom.type';
 import PublicChannel from './public-channel.interface';
+import Image from './image.interface';
 
 // This class represents the current client.
 export default interface User extends PublicUser {

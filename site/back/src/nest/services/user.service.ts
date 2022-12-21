@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import UserEntity from '../entities/user.entity';
@@ -9,11 +9,14 @@ import ReceiverService from './receiver.service';
 import MessageService from './message.service';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { authenticator } from 'otplib';
+import ImageEntity from '../entities/image.entity';
+import { ImageDto } from '../dtos/image.dto';
 
 @Injectable()
 export default class UserService {
 	constructor(
 		@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
+		@InjectRepository(ImageEntity) private readonly imageRepository: Repository<ImageEntity>,
 		private readonly receiverService: ReceiverService,
 		private readonly messageService: MessageService
 	) {}
@@ -40,7 +43,6 @@ export default class UserService {
 	}) {
 		if (Object.values(filter).every((value) => value === undefined))
 			throw new Error('No filter provided');
-		console.log('f', filter);
 		return this.userRepository.findOne({
 			where: {
 				id: filter.id,
@@ -322,5 +324,15 @@ export default class UserService {
 		});
 		user.twoFactorSecret = null;
 		await this.userRepository.save(user);
+	}
+
+	async changeAvatar(id: string, avatar: ImageDto) {
+		const user = await this.userRepository.findOne({
+			where: { id: id }
+		});
+		if (user.avatar)
+			this.imageRepository.delete(user.avatar.id);
+		user.avatar = await this.imageRepository.save(avatar);
+		return await this.userRepository.save(user);
 	}
 }

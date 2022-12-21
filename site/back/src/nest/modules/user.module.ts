@@ -7,10 +7,11 @@ import ChannelModule from './channel.module';
 import UserEntity from '../entities/user.entity';
 import UserController from '../controllers/user.controller';
 import UserService from '../services/user.service';
+import ImageEntity from '../entities/image.entity';
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([UserEntity]),
+		TypeOrmModule.forFeature([UserEntity, ImageEntity]),
 		ReceiverModule,
 		MessageModule,
 		ScoreModule,

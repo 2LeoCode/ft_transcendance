@@ -14,28 +14,20 @@ function Header() {
   //const [chat, setChat] = useAtom(ChatAtom);
   //console.log(Database.user.nickAtom);
   const [nick] = useAtom(Database.user.nickAtom);
+  const [avatar] = useAtom(Database.user.avatarAtom);
   //const [logged, setLogged] = useAtom(LoggedAtom);
 
   const navigate = useNavigate();
   function handleLogout() {
-//    //await UserCom.get({ nick: user_infos.nick }).then((res) => {
-//    //  id = res[0].id;
-//    //  console.log(res);
-//    //});
-//    //await UserCom.update(id, { online: false }).then((res) => {
-//    //  console.log(res);
-//    //});
-//    //localStorage.clear();//
-//    //navigate("/auth/login");
-
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 		document.cookie = "token_2fa=; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
 	 	window.location.reload();
   }
+
   return (
       <div className="Header">
         <Link to='/user' className="infos_user">
-          <img height="50%" src="./default-avatar.webp" alt="" />
+          <img height="50%" src={avatar ? URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)])) : "./default-avatar.webp"} alt="" />
           {nick}
         </Link>
         <p

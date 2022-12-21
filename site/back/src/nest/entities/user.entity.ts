@@ -3,6 +3,7 @@ import ReceiverEntity from './receiver.entity';
 import MessageEntity from './message.entity';
 import ChannelEntity from './channel.entity';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import ImageEntity from './image.entity';
 
 @Entity()
 export default class UserEntity {
@@ -15,8 +16,8 @@ export default class UserEntity {
 	@Column()
 	user42: string;
 
-	@Column('text', { nullable: true })
-	avatar: Express.Multer.File;
+	@Column({ nullable: true, default: null, type: 'json' })
+	avatar: ImageEntity;
 
 	@ManyToMany(
 		() => UserEntity,

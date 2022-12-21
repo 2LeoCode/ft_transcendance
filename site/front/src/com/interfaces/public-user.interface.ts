@@ -1,13 +1,14 @@
 import { Atom } from '../types/atom.type';
+import Image from './image.interface';
 
 export default interface PublicUser {
 	id: string;
 	user42: string;
 	nick: string;
-	avatarPath: string;
 	online: boolean;
+	avatar: Image;
 
 	nickAtom: Atom<string>;
-	avatarPathAtom: Atom<string>;
+	avatarAtom: Atom<Image>;
 	onlineAtom: Atom<boolean>;
 }

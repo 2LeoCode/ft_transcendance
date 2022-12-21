@@ -26,7 +26,7 @@ const ChatChannelSettings = () => {
             return;
           }
           ClientSocket.emit('updateChannel', channelSettings?.id, {
-            name: channelNameInput.length,
+            name: channelNameInput,
             password: channelPasswordInput,
             visibility: channelVisibilityInput,
           });

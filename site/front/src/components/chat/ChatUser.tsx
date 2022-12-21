@@ -9,8 +9,14 @@ const ChatUser = ({ usr }: { usr: PublicUser }) => {
   const db = useDatabase();
 
   const [nick] = useAtom(usr.nickAtom);
-  const [avatar] = useAtom(usr.avatarPathAtom);
+  const [avatar] = useAtom(usr.avatarAtom);
   const [selectedUser, setSelectedUser] = useAtom(SelectedUserAtom);
+
+  useEffect(() => {
+    if (selectedUser?.id == usr.id) {
+      setSelectedUser(null);
+    }
+  }, [avatar]);
 
   return (
     <Fragment>
@@ -22,7 +28,7 @@ const ChatUser = ({ usr }: { usr: PublicUser }) => {
           // border: '1px solid black',
           float: 'left'
         }}
-        src={avatar || "./default-avatar.webp"}
+        src={avatar ? URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)])) : "./default-avatar.webp"}
         alt="avatar"
       />
       <p

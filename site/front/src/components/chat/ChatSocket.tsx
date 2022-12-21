@@ -32,6 +32,7 @@ const ChatSocket = () => {
 	const [, setPongInvite] = useAtom(PongInviteAtom);
 	const [, setFoundUsers] = useAtom(FoundUsersAtom);
 	const [, setChannelInvites] = useAtom(db.user.channelInvitesAtom);
+	const [, setOnlineUsers] = useAtom(db.onlineUsersAtom);
 	const navigate = useNavigate();
 
 	const updateChannels = (channel: any) => {
@@ -262,6 +263,13 @@ const ChatSocket = () => {
 			})
 			.on("newRoom", (newRoomData: IRoom) => {
 				ClientSocket.emit("joinRoom", newRoomData.roomId);
+			})
+			.on('userChangedNickname', (user: any) => {
+				const res = EntityParser.publicUser(user);
+				setOnlineUsers((prev) => [...prev.filter((usr) => usr.id !== res.id), res]);
+			})
+			.on('channelUserChangedNickname', (channel: any) => {
+				updateChannels(channel);
 			})
 	}, []);
 	return null;
