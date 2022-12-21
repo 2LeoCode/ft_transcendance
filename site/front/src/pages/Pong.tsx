@@ -46,6 +46,10 @@ function Pong() {
     setWatch(true);
   }
 
+  const quitWatch = () => {
+    setWatch(false);
+  }
+
   const updateCurrentGames = (currentGamesData: IRoom[]) => {
     const games: onGoingGame[] = [];
 
@@ -108,10 +112,20 @@ function Pong() {
   return (
     <Fragment>
       {!play && !inQueue && <Header />}
-      {play && <button
+      {play && 
+      <button
         className="quit_button"
         value={'quit'}
         onClick={quitGame}
+        type="button">
+        QUIT
+            </button>
+      }
+      {watch && !play && 
+      <button
+        className="quit_button"
+        value={'quit'}
+        onClick={quitWatch}
         type="button">
         QUIT
             </button>

@@ -106,10 +106,7 @@ export class SocketEvents
         if (room.isAPlayer(user)) {
           room.removeUser(user);
 
-          if (
-            room.players.length === 0 &&
-            room.gameState !== GameState.WAITING
-          ) {
+          if ( room.players.length === 0 ) {
             this.rooms.delete(room.roomId);
 
             const roomIndex: number = this.currentGames.findIndex(
@@ -119,7 +116,7 @@ export class SocketEvents
               this.currentGames.splice(roomIndex, 1);
             }
             this.eventsGateway.server.emit(
-              'updateCurrentGames',
+              'updateCurrentGames', 
               this.currentGames,
             );
           }
@@ -239,7 +236,7 @@ export class SocketEvents
       if (user) {
         if (user.status === UserStatus.INHUB) {
           this.connectedUsers.changeUserStatus(client.id, UserStatus.SPECTATING);
-        } else if (room.isAPlayer(user)) {
+        } else if (room.isAPlayer(user) && !room.players.find((usr) => usr.username === user.username)) {
           room.addUser(user);
         }
       }
