@@ -38,14 +38,14 @@ function getCurrentTime() {
 @WebSocketGateway({
   namespace: 'events',
 })
-
 export class SocketEvents
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   constructor(
     private readonly userService: UserService,
     private readonly eventsGateway: EventsGateway,
     private readonly scoreService: ScoreService,
-  ) { }
+  ) {}
 
   private readonly queue: Queue = new Queue();
   private readonly rooms: Map<string, Room> = new Map();
@@ -83,7 +83,6 @@ export class SocketEvents
 
   @SubscribeMessage('handleUserConnect')
   handleConnectionToGame(@ConnectedSocket() client: Socket) {
-
     let newUser: User = null;
     newUser = new User(
       client.id,
@@ -96,9 +95,7 @@ export class SocketEvents
   }
 
   @SubscribeMessage('forceDisconnection')
-  handleForceDisconnection(
-    @ConnectedSocket() client: Socket,
-  ) {
+  handleForceDisconnection(@ConnectedSocket() client: Socket) {
     let user: User = this.connectedUsers.getUser(client.id);
 
     if (user) {
@@ -106,7 +103,7 @@ export class SocketEvents
         if (room.isAPlayer(user)) {
           room.removeUser(user);
 
-          if ( room.players.length === 0 ) {
+          if (room.players.length === 0) {
             this.rooms.delete(room.roomId);
 
             const roomIndex: number = this.currentGames.findIndex(
@@ -116,7 +113,7 @@ export class SocketEvents
               this.currentGames.splice(roomIndex, 1);
             }
             this.eventsGateway.server.emit(
-              'updateCurrentGames', 
+              'updateCurrentGames',
               this.currentGames,
             );
           }
@@ -128,10 +125,9 @@ export class SocketEvents
 
       /* remove from queue */
       this.queue.remove(user);
+      this.eventsGateway.server.emit('changeFriendStatus', user.username, false);
     }
-
   }
-
 
   //disconnection
   handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -161,7 +157,7 @@ export class SocketEvents
             );
           }
           client.leave(room.roomId);
-          this.eventsGateway.server.to(room.roomId).emit("lost connection");
+          this.eventsGateway.server.to(room.roomId).emit('lost connection');
           room.lostConnection = true;
           return;
         }
@@ -170,6 +166,7 @@ export class SocketEvents
       /* remove from queue and connected users */
       this.queue.remove(user);
       this.connectedUsers.removeUser(user);
+      this.eventsGateway.server.emit('changeFriendStatus', user.username, false);
     }
   }
 
@@ -235,8 +232,14 @@ export class SocketEvents
       client.join(roomId);
       if (user) {
         if (user.status === UserStatus.INHUB) {
-          this.connectedUsers.changeUserStatus(client.id, UserStatus.SPECTATING);
-        } else if (room.isAPlayer(user) && !room.players.find((usr) => usr.username === user.username)) {
+          this.connectedUsers.changeUserStatus(
+            client.id,
+            UserStatus.SPECTATING,
+          );
+        } else if (
+          room.isAPlayer(user) &&
+          !room.players.find((usr) => usr.username === user.username)
+        ) {
           room.addUser(user);
         }
       }
@@ -245,6 +248,7 @@ export class SocketEvents
       this.eventsGateway.server
         .to(client.id)
         .emit('updateRoom', JSON.stringify(room.serialize()));
+      this.eventsGateway.server.emit('changeFriendStatus', user.username, true);
     }
   }
 
@@ -295,9 +299,12 @@ export class SocketEvents
 
     let user: User = this.connectedUsers.getUser(client.id);
     if (!user) {
-      let newUser: User = new User(client.id, this.eventsGateway.connectedUsers.find(
-        (usr) => usr.socketId == client.id,
-      ).username);
+      let newUser: User = new User(
+        client.id,
+        this.eventsGateway.connectedUsers.find(
+          (usr) => usr.socketId == client.id,
+        ).username,
+      );
       user = newUser;
       this.connectedUsers.addUser(user);
     }
@@ -344,8 +351,7 @@ export class SocketEvents
     let players: User[] = Array();
     players[0] = firstuser;
     players[1] = backuser;
-    if (other.isWaiting)
-      this.createNewRoom(players);
+    if (other.isWaiting) this.createNewRoom(players);
   }
 
   @SubscribeMessage('DeclinePongInvite')
@@ -364,10 +370,10 @@ export class SocketEvents
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     );
-    this.eventsGateway.server.to(senderSocketId).emit('pongInviteDeclined', user.username);
-
+    this.eventsGateway.server
+      .to(senderSocketId)
+      .emit('pongInviteDeclined', user.username);
   }
-
 
   secondToTimestamp(second: number): number {
     return second * 1000;
@@ -390,15 +396,19 @@ export class SocketEvents
         }
       }
       if (room.gameState === GameState.STARTING) {
-
         room.start();
       } else if (room.gameState === GameState.PLAYING) {
-
         room.update(currentTimestamp);
 
-        this.eventsGateway.server.to(room.roomId).emit('updateRoom', JSON.stringify(room.serialize()));
+        this.eventsGateway.server
+          .to(room.roomId)
+          .emit('updateRoom', JSON.stringify(room.serialize()));
 
-        if ((room.otherLeft && !room.lostConnection) || room.playerOne.score >= 7 || room.playerTwo.score >= 7) {
+        if (
+          (room.otherLeft && !room.lostConnection) ||
+          room.playerOne.score >= 7 ||
+          room.playerTwo.score >= 7
+        ) {
           if (!room.isGameEnd) {
             room.isGameEnd = true;
 
@@ -411,40 +421,69 @@ export class SocketEvents
               enemyScore: room.playerOne.score,
             };
 
-            const user = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == room.playerOne.user.socketId).username });
+            const user = await this.userService.getOnePublic({
+              user42: this.eventsGateway.connectedUsers.find(
+                (usr) => usr.socketId == room.playerOne.user.socketId,
+              ).username,
+            });
             const userId = user.id;
-            const user2 = await this.userService.getOnePublic({ user42: this.eventsGateway.connectedUsers.find((usr) => usr.socketId == room.playerTwo.user.socketId).username });
+            const user2 = await this.userService.getOnePublic({
+              user42: this.eventsGateway.connectedUsers.find(
+                (usr) => usr.socketId == room.playerTwo.user.socketId,
+              ).username,
+            });
             const userId2 = user2.id;
 
             if (room.otherLeft) {
               if (room.playerOne.user.socketId === client.id) {
-                this.eventsGateway.server.to(client.id).emit("winner", room.playerOne.user.username);
-                this.eventsGateway.server.to(room.playerOne.user.socketId).emit('swalError', 'Your opponent left the game');
+                this.eventsGateway.server
+                  .to(client.id)
+                  .emit('winner', room.playerOne.user.username);
+                this.eventsGateway.server
+                  .to(room.playerOne.user.socketId)
+                  .emit('swalError', 'Your opponent left the game');
               } else if (room.playerTwo.user.socketId === client.id) {
-                this.eventsGateway.server.to(client.id).emit("winner", room.playerTwo.user.username);
-                this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('swalError', 'Your opponent left the game');
+                this.eventsGateway.server
+                  .to(client.id)
+                  .emit('winner', room.playerTwo.user.username);
+                this.eventsGateway.server
+                  .to(room.playerTwo.user.socketId)
+                  .emit('swalError', 'Your opponent left the game');
               }
-
             } else if (room.playerOne.score > room.playerTwo.score) {
-              this.eventsGateway.server.emit("winner", room.playerOne.user.username);
-
+              this.eventsGateway.server.emit(
+                'winner',
+                room.playerOne.user.username,
+              );
             } else {
-              this.eventsGateway.server.emit("winner", room.playerTwo.user.username);
-
+              this.eventsGateway.server.emit(
+                'winner',
+                room.playerTwo.user.username,
+              );
             }
 
             const res = await this.scoreService.add(userId, scoreDtoPlayerOne);
-            const res2 = await this.scoreService.add(userId2, scoreDtoPlayerTwo);
+            const res2 = await this.scoreService.add(
+              userId2,
+              scoreDtoPlayerTwo,
+            );
 
-            this.eventsGateway.server.to(room.playerOne.user.socketId).emit('newScore', res);
-            this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('newScore', res2);
-
+            this.eventsGateway.server
+              .to(room.playerOne.user.socketId)
+              .emit('newScore', res);
+            this.eventsGateway.server
+              .to(room.playerTwo.user.socketId)
+              .emit('newScore', res2);
           }
         } else if (room.lostConnection) {
           if (room.playerOne.user.socketId === client.id) {
-            this.eventsGateway.server.to(room.playerOne.user.socketId).emit('swalError', 'Lost connection from your opponent');
+            this.eventsGateway.server
+              .to(room.playerOne.user.socketId)
+              .emit('swalError', 'Lost connection from your opponent');
           } else if (room.playerTwo.user.socketId === client.id) {
-            this.eventsGateway.server.to(room.playerTwo.user.socketId).emit('swalError', 'Lost connection from your opponent');
+            this.eventsGateway.server
+              .to(room.playerTwo.user.socketId)
+              .emit('swalError', 'Lost connection from your opponent');
           }
         }
       }
@@ -494,17 +533,20 @@ export class SocketEvents
   @SubscribeMessage('sendfriendRequest')
   async handleFriendRequest(
     @ConnectedSocket() client: Socket,
-    @MessageBody() username: string
+    @MessageBody() username: string,
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     );
-    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == client.id,
-    ).userId);
-    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == user.socketId,
-    ).userId);
+    const tmp = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
+        .userId,
+    );
+    const tmp2 = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId == user.socketId,
+      ).userId,
+    );
     const friends = await this.userService.getFriends(tmp2.id);
     const friendRequests = await this.userService.getFriendRequests(tmp2.id);
     let nope: boolean = true;
@@ -519,15 +561,27 @@ export class SocketEvents
       }
     });
     if (tmp2.blocked.find((usr) => usr.user42 === tmp.user42)) {
-      this.eventsGateway.server.to(client.id).emit('swalError', `You are blocked by ${username}`);
+      this.eventsGateway.server
+        .to(client.id)
+        .emit('swalError', `You are blocked by ${username}`);
       nope = false;
     }
     if (tmp.friendRequests.find((usr) => usr.user42 === tmp2.user42)) {
-      this.eventsGateway.server.to(client.id).emit('swalError', `You've already got a friend request from ${username}`);
+      this.eventsGateway.server
+        .to(client.id)
+        .emit(
+          'swalError',
+          `You've already got a friend request from ${username}`,
+        );
       nope = false;
     }
     if (nope) {
-      this.userService.sendFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+      this.userService.sendFriendRequest(
+        this.eventsGateway.connectedUsers.find(
+          (usr) => usr.socketId == client.id,
+        ).userId,
+        user.userId,
+      );
       if (user && tmp) {
         this.eventsGateway.server
           .to(user.socketId)
@@ -539,7 +593,7 @@ export class SocketEvents
   @SubscribeMessage('acceptFriendRequest')
   async handleAcceptFriendRequest(
     @ConnectedSocket() client: Socket,
-    @MessageBody() username: string
+    @MessageBody() username: string,
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username === username,
@@ -547,13 +601,21 @@ export class SocketEvents
     const accepter = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     );
-    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId === client.id,
-    ).userId);
-    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId === user.socketId,
-    ).userId);
-    this.userService.acceptFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    const tmp = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId === client.id,
+      ).userId,
+    );
+    const tmp2 = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId === user.socketId,
+      ).userId,
+    );
+    this.userService.acceptFriendRequest(
+      this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
+        .userId,
+      user.userId,
+    );
     if (user && tmp && tmp2) {
       this.eventsGateway.server
         .to(user.socketId)
@@ -563,20 +625,19 @@ export class SocketEvents
         .to(client.id)
         .emit('acceptFriendRequest', user.username, tmp2);
 
-      this.eventsGateway.server
-        .to(client.id)
-        .emit('removeRequest', tmp2);
-        this.eventsGateway.server
-          .to(user.socketId)
-          .emit('swalError', `${accepter.username} accepted your friend request.\n
-          Your are now friends.`);
+      this.eventsGateway.server.to(client.id).emit('removeRequest', tmp2);
+      this.eventsGateway.server.to(user.socketId).emit(
+        'swalError',
+        `${accepter.username} accepted your friend request.\n
+          Your are now friends.`,
+      );
     }
   }
 
   @SubscribeMessage('declineFriendRequest')
   async handleDeclineFriendRequest(
     @ConnectedSocket() client: Socket,
-    @MessageBody() username: string
+    @MessageBody() username: string,
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
@@ -584,24 +645,31 @@ export class SocketEvents
     const decliner = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     );
-    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == user.socketId,
-    ).userId);
-    this.userService.rejectFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    const tmp = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId == user.socketId,
+      ).userId,
+    );
+    this.userService.rejectFriendRequest(
+      this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
+        .userId,
+      user.userId,
+    );
     if (user && tmp) {
+      this.eventsGateway.server.to(client.id).emit('removeRequest', tmp);
       this.eventsGateway.server
-        .to(client.id)
-        .emit('removeRequest', tmp);
-        this.eventsGateway.server
-          .to(user.socketId)
-          .emit('swalError', `${decliner.username} declined your friend request.`);
+        .to(user.socketId)
+        .emit(
+          'swalError',
+          `${decliner.username} declined your friend request.`,
+        );
     }
   }
 
   @SubscribeMessage('removeFriend')
   async handleRemoveFriend(
     @ConnectedSocket() client: Socket,
-    @MessageBody() username: string
+    @MessageBody() username: string,
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
@@ -609,13 +677,20 @@ export class SocketEvents
     const remover = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     );
-    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == client.id,
-    ).userId);
-    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == user.socketId,
-    ).userId);
-    this.userService.removeFriend(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    const tmp = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
+        .userId,
+    );
+    const tmp2 = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId == user.socketId,
+      ).userId,
+    );
+    this.userService.removeFriend(
+      this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
+        .userId,
+      user.userId,
+    );
     if (user && tmp) {
       this.eventsGateway.server
         .to(client.id)
@@ -623,16 +698,16 @@ export class SocketEvents
       this.eventsGateway.server
         .to(user.socketId)
         .emit('removeFriendUpdate', tmp.user42);
-        this.eventsGateway.server
-          .to(user.socketId)
-          .emit('swalError', `${remover.username} removed you from his friends.`);
+      this.eventsGateway.server
+        .to(user.socketId)
+        .emit('swalError', `${remover.username} removed you from his friends.`);
     }
   }
 
   @SubscribeMessage('blockUser')
   async handleBlockUser(
     @ConnectedSocket() client: Socket,
-    @MessageBody() username: string
+    @MessageBody() username: string,
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
@@ -640,14 +715,18 @@ export class SocketEvents
     const blocker = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     );
-    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == user.socketId,
-    ).userId);
-    this.userService.block(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    const tmp2 = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId == user.socketId,
+      ).userId,
+    );
+    this.userService.block(
+      this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
+        .userId,
+      user.userId,
+    );
     if (user && tmp2) {
-      this.eventsGateway.server
-        .to(client.id)
-        .emit('blockUserUpdate', tmp2);
+      this.eventsGateway.server.to(client.id).emit('blockUserUpdate', tmp2);
       this.eventsGateway.server
         .to(user.socketId)
         .emit('swalError', `You have been blocked by ${blocker.username}`);
@@ -657,35 +736,52 @@ export class SocketEvents
   @SubscribeMessage('removeFriendRequest')
   async handleRemoveFriendRequest(
     @ConnectedSocket() client: Socket,
-    @MessageBody() username: string
+    @MessageBody() username: string,
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
     );
-    const tmp = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == client.id,
-    ).userId);
-    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == user.socketId,
-    ).userId);
-    if (user && tmp && tmp2.friendRequests.find((usr) => usr.user42 === tmp.user42)) {
-      this.userService.rejectFriendRequest(user.userId, this.eventsGateway.connectedUsers.find((usr) => usr.socketId === client.id).userId);
-      this.eventsGateway.server
-        .to(user.socketId)
-        .emit('removeRequest', tmp);
+    const tmp = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
+        .userId,
+    );
+    const tmp2 = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId == user.socketId,
+      ).userId,
+    );
+    if (
+      user &&
+      tmp &&
+      tmp2.friendRequests.find((usr) => usr.user42 === tmp.user42)
+    ) {
+      this.userService.rejectFriendRequest(
+        user.userId,
+        this.eventsGateway.connectedUsers.find(
+          (usr) => usr.socketId === client.id,
+        ).userId,
+      );
+      this.eventsGateway.server.to(user.socketId).emit('removeRequest', tmp);
     }
-    if (user && tmp2 && tmp.friendRequests.find((usr) => usr.user42 === username)) {
-      this.userService.rejectFriendRequest(this.eventsGateway.connectedUsers.find((usr) => usr.socketId === client.id).userId, user.userId);
-      this.eventsGateway.server
-        .to(client.id)
-        .emit('removeRequest', tmp2);
+    if (
+      user &&
+      tmp2 &&
+      tmp.friendRequests.find((usr) => usr.user42 === username)
+    ) {
+      this.userService.rejectFriendRequest(
+        this.eventsGateway.connectedUsers.find(
+          (usr) => usr.socketId === client.id,
+        ).userId,
+        user.userId,
+      );
+      this.eventsGateway.server.to(client.id).emit('removeRequest', tmp2);
     }
   }
 
   @SubscribeMessage('unblockUser')
   async handleUnblockUser(
     @ConnectedSocket() client: Socket,
-    @MessageBody() username: string
+    @MessageBody() username: string,
   ) {
     const user = this.eventsGateway.connectedUsers.find(
       (usr) => usr.username == username,
@@ -693,14 +789,18 @@ export class SocketEvents
     const blocker = this.eventsGateway.connectedUsers.find(
       (usr) => usr.socketId == client.id,
     );
-    const tmp2 = await this.userService.getOne(this.eventsGateway.connectedUsers.find(
-      (usr) => usr.socketId == user.socketId,
-    ).userId);
-    this.userService.unblock(this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id).userId, user.userId);
+    const tmp2 = await this.userService.getOne(
+      this.eventsGateway.connectedUsers.find(
+        (usr) => usr.socketId == user.socketId,
+      ).userId,
+    );
+    this.userService.unblock(
+      this.eventsGateway.connectedUsers.find((usr) => usr.socketId == client.id)
+        .userId,
+      user.userId,
+    );
     if (user && tmp2) {
-      this.eventsGateway.server
-        .to(client.id)
-        .emit('unblockUserUpdate', tmp2);
+      this.eventsGateway.server.to(client.id).emit('unblockUserUpdate', tmp2);
       this.eventsGateway.server
         .to(user.socketId)
         .emit('swalError', `You have been unblocked by ${blocker.username}`);
@@ -710,11 +810,10 @@ export class SocketEvents
   @SubscribeMessage('getOtherUserScores')
   async handleGetOtherUserScores(
     @ConnectedSocket() client: Socket,
-    @MessageBody() username: string
+    @MessageBody() username: string,
   ) {
     const user = await this.userService.getOnePublic({ user42: username });
     const res = await this.scoreService.get({ userId: user.id });
     this.eventsGateway.server.to(client.id).emit('otherUserScores', res);
   }
-
 }

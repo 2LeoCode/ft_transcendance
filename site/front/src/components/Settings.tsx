@@ -24,6 +24,10 @@ function Settings(props: any) {
   
     if (fileInput.current?.files) {
       const file = fileInput.current.files[0];
+      if (!file) {
+        swal("No file selected");
+        return;
+      }
       if (file.size > 1000000) {
         swal("File too large");
         return;

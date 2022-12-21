@@ -14,7 +14,8 @@ const EntityParser = {
 			nick: entity.nick,
 			user42: entity.user42,
 			online: entity.online,
-			avatar: entity.avatar
+			avatar: entity.avatar,
+			inGame: false
 		};
 	
 		console.log('avatar after', publicUserNoAtom.avatar);
@@ -23,7 +24,8 @@ const EntityParser = {
 			...publicUserNoAtom,
 			nickAtom: atom(publicUserNoAtom.nick as string),
 			avatarAtom: atom(publicUserNoAtom.avatar as Image),
-			onlineAtom: atom(publicUserNoAtom.online as boolean)
+			onlineAtom: atom(publicUserNoAtom.online as boolean),
+			inGameAtom: atom(publicUserNoAtom.inGame as boolean)
 		};
 	},
 

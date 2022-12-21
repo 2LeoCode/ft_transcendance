@@ -82,7 +82,6 @@ export default class EventsGateway implements OnGatewayConnection {
 				}
 			}
 			this.connectClient(client, dbUser, payload);
-			
 		} catch (e) {
 			console.log(e);
 			//console.log('bad token');
@@ -104,6 +103,7 @@ export default class EventsGateway implements OnGatewayConnection {
 		const index = this.connectedUsers.findIndex(usr => usr.socketId == client.id);
 		this.server.emit('clientDisconnected', this.connectedUsers[index].username);
 		this.connectedUsers.splice(index, 1);
+		//this.server.emit('changeFriendOnline', user.username, false);
 	}
 
 	@SubscribeMessage('ping')
