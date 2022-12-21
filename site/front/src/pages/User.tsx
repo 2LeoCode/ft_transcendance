@@ -151,6 +151,7 @@ function User() {
         </div>
         <div className="friends">
           <h4>Friends</h4>
+          <ul>
           {friends.map((friend, i) => {
             let status = "offline";
             if (friend.inGame)
@@ -159,10 +160,11 @@ function User() {
               status = "online";
             return (
               <Link key={i} to={`/other_user/${friend.user42}`}>
-                <ul className={status}>{friend.nick}</ul>
+                <li className={status}>{friend.nick}</li>
               </Link>
             )
           })}
+          </ul>
         </div>
         <div className="match_history">
           <h4>History</h4>
