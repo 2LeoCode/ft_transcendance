@@ -21,6 +21,7 @@ const ChatCurrentChannel = () => {
 	const [input, setInput] = useState('');
 	const [messages, setMessages] = useAtom(currentChannel.messagesAtom);
 	const [, setChannelSettings] = useAtom(ChannelSettingsAtom);
+	const [blockedUsers] = useAtom(db.user.blockedAtom);
 
 	useEffect(() => {
 		setMessages((prev) => prev.sort((a, b) => a.createDate < b.createDate ? -1 : 1))
@@ -52,9 +53,12 @@ const ChatCurrentChannel = () => {
 				</div>
 			</div>
 			<ul className="ChatMessages">
-				{messages.map((msg) => (
-					<ChatChannelMessage key={msg.id} msg={msg} />
-				)).reverse()}
+				{messages
+					.filter((msg) => !blockedUsers.find((user) => user.id === msg.sender.id))
+					.map((msg) => (
+						<ChatChannelMessage key={msg.id} msg={msg} />
+					))
+					.reverse()}
 			</ul>
 			<div className='ChatFooter'>
 				<form onSubmit={(e) => {

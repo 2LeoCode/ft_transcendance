@@ -17,6 +17,7 @@ const ChatCurrentConv = () => {
   const [currentConv] = useAtom(CurrentConvAtom);
   const [nick] = useAtom(currentConv?.user.nickAtom || NullAtom);
   const [input, setInput] = useState('');
+  const [blockedUsers] = useAtom(db.user.blockedAtom);
   const [_] = useAtom(ConvsAtom);
 
   return (
@@ -25,7 +26,9 @@ const ChatCurrentConv = () => {
         <Fragment>
           <h2 style={{textAlign: 'center'}}>{nick}</h2>
           <ul className="ChatMessages">
-            {currentConv.messages.map((msg) => (
+            {currentConv.messages
+              .filter((msg) => !blockedUsers.find((user) => user.id === msg.sender.id))
+              .map((msg) => (
               <li
                 key={msg.id}
                 style={
