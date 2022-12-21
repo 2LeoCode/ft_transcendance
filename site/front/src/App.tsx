@@ -9,10 +9,11 @@ import OtherUser from './pages/OtherUser';
 import Pong from './pages/Pong';
 import Loader, { SyncAtom } from './components/Loader';
 import ClientSocket from './com/client-socket';
-import Constants from './com/constants';
+import Constants, { getCookie } from './com/constants';
 import SocketInit from './components/SocketInit';
 import swal from 'sweetalert';
 import Swal from 'sweetalert2';
+import { SettingsAtom } from './components/Settings';
 
 export const StatusAtom = atom<'connected' | 'disconnected' | 'connecting'>('connecting');
 export const LoggedAtom = atom(false);
@@ -21,13 +22,20 @@ function App() {
   const [sync] = useAtom(SyncAtom);
   const [status, setStatus] = useAtom(StatusAtom);
   const [logged, setLogged] = useAtom(LoggedAtom);
+	const [settings, setSettings] = useAtom(SettingsAtom);
 
   useEffect(() => {
     ClientSocket
       .connect()
       .on('connect', () => setStatus('connected'))
       .on('disconnect', () => setStatus('disconnected'))
-      .on('connected', () => setLogged(true))
+      .on('connected', () => {
+				setLogged(true);
+				const firstLogin = getCookie('firstLogin');
+				if (firstLogin && firstLogin === 'true')
+					setSettings(true);
+				document.cookie = 'firstLogin=false';
+			})
 
 			.on('twoFactorRequired', (qrcode: string) => {
 				console.log('twoFactorRequired');

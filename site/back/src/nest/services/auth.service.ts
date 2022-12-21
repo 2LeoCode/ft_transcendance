@@ -12,10 +12,14 @@ export default class AuthService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	async validateUser(user42: string): Promise<UserEntity> {
-		return this.userService.add({
-			user42: user42
-		});
+	async validateUser(user42: string) {
+		const exists = !!await this.userService.getOnePublic({ user42 });
+		return {
+			user: await this.userService.add({
+				user42: user42
+			}),
+			exists: exists
+		}
 	}
 
 	async login(user: UserEntity) {

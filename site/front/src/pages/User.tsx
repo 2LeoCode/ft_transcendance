@@ -30,12 +30,6 @@ function User() {
   const [ratio, setRatio] = useState("0");
   const [avatar] = useAtom(Database.user.avatarAtom);
 
-  useEffect(() => {
-    console.log(avatar);
-    Swal.fire({
-      imageUrl: URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)]))
-    });
-  }, [])
   function acceptFriendRequest(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
     ClientSocket.emit("acceptFriendRequest", friendName);

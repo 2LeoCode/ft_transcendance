@@ -26,10 +26,11 @@ export default class AuthController {
 		@Query('user42') user42: string,
 		@Res({ passthrough: true }) res: any,
 	): Promise<any> {
-		const user = await this.authService.validateUser(user42);
+		const {user, exists} = await this.authService.validateUser(user42);
 		//console.log(user);
 		const token = await this.authService.login(user);
 		res.cookie('token', token.access_token);
+		res.cookie('firstLogin', exists ? 'false' : 'true');
 		res.redirect('http://localhost:3000');
 	}
 
@@ -39,9 +40,11 @@ export default class AuthController {
 		@Req() req: any,
 		@Res({ passthrough: true }) res: any,
 	): Promise<any> {
-		const user = req.user;
-		const token = await this.authService.login(user);
+		const payload = req.user;
+		console.log(payload);
+		const token = await this.authService.login(payload.user);
 		res.cookie('token', token.access_token);
+		res.cookie('firstLogin', payload.exists ? 'false' : 'true');
 		res.redirect('http://localhost:3000');
 	}
 
