@@ -97,10 +97,20 @@ const SocketInit = () => {
 		.on('clientDisconnected', (username) => {
       // console.log(`client ${username} disconnected`);
       setOnlineUsers(prev => prev.filter((user) => user.user42 !== username));
+      setFriends(prev => prev.map((user) => {
+        if (user.user42 === username)
+          return {...user, online: false};
+        return user;
+      }));
     })
     .on('clientConnected', (entity: any) => {
       // console.log(`client ${entity.user42} connected`);
       setOnlineUsers(prev => [...prev, EntityParser.publicUser(entity)]);
+      setFriends(prev => prev.map((user) => {
+        if (user.user42 === entity.user42)
+          return {...user, online: true};
+        return user;
+      }));
     })
     .on('changedNickname', (newNick: any) => setNick(newNick))
     .on('uploadedAvatar', (avatar: any) => {

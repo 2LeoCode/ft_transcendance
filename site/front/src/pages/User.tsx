@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -22,7 +22,7 @@ function User() {
   //const [uploaded, setUploaded] = useState(false);
   const [nick] = useAtom(Database.user.nickAtom);
   const [scores] = useAtom(Database.user.scoresAtom);
-  const [friends] = useAtom(Database.user.friendsAtom);
+  const [friends, setFriends] = useAtom(Database.user.friendsAtom);
   const [requestedFriends] = useAtom(Database.user.friendRequestsAtom);
   const [win, setWin] = useState(0);
   const [tie, setTie] = useState(0);
@@ -42,6 +42,32 @@ function User() {
   }
 
   useEffect(() => {
+
+    ClientSocket.on("changeFriendStatus", (userName, isInGame: boolean) => {
+      setFriends((friends) => {
+        const newFriends = friends.map((friend) => {
+          if (friend.user42 === userName) {
+            friend.inGame = isInGame;
+            friend.inGameAtom = atom(isInGame);
+          }
+          return friend;
+        });
+        return newFriends;
+      });
+    });
+
+    ClientSocket.on("changeFriendOnline", (friendName, IsOnline) => {
+      setFriends((friends) => {
+        const newFriends = friends.map((friend) => {
+          if (friend.user42 === friendName) {
+            friend.online = IsOnline;
+            friend.onlineAtom = atom(IsOnline);
+          }
+          return friend;
+        });
+        return newFriends;
+      });
+    });
     
     let matchWon = 0;
     let matchLost = 0;
@@ -127,11 +153,13 @@ function User() {
           <h4>Friends</h4>
           {friends.map((friend, i) => {
             let status = "offline";
-            if (friend.online)
+            if (friend.inGame)
+              status = "inGame";
+            else if (friend.online)
               status = "online";
             return (
               <Link key={i} to={`/other_user/${friend.user42}`}>
-                <ul className={status}>{friend.user42}</ul>
+                <ul className={status}>{friend.nick}</ul>
               </Link>
             )
           })}

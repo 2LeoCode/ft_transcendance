@@ -7,8 +7,10 @@ export default interface PublicUser {
 	nick: string;
 	online: boolean;
 	avatar: Image;
+	inGame: boolean;
 
 	nickAtom: Atom<string>;
 	avatarAtom: Atom<Image>;
 	onlineAtom: Atom<boolean>;
+	inGameAtom: Atom<boolean>;
 }

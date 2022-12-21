@@ -22,9 +22,6 @@ function OtherUser() {
   const params = useParams();
   const username = params.userName;
 
-  const [matches_won, setMatch_won] = useState(0);
-  const [matches_lost, setMatch_lost] = useState(0);
-  const [matches_tie, setMatch_tie] = useState(0);
   const [win, setWin] = useState(0);
   const [tie, setTie] = useState(0);
   const [lose, setLose] = useState(0);
@@ -34,7 +31,7 @@ function OtherUser() {
   const [alreadyFriend, setAlreadyFriend] = useState(false);
   const [blocked] = useAtom(Database.user.blockedAtom);
   const [alreadyBlocked, setAlreadyBlocked] = useState(false);
-  const [avatar, setAvatar] = useState(null as Image | null);
+  const [avatar, setAvatar] = useState("../default-avatar.webp");
 
   function inviteFriend(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
@@ -72,12 +69,13 @@ function OtherUser() {
     }
     setScores(scores);
   };
-
   useEffect(() => {
     ClientSocket.emit('getOtherUserScores', username)
       .emit('getOtherUserAvatar', username)
-      .on('otherUserAvatar', (avatar: Image) => {
-        setAvatar(avatar);
+      .on('otherUserAvatar', (av: Image | null) => {
+        if (av)
+          setAvatar(URL.createObjectURL(new Blob([Buffer.from(av.buffer.data)])));
+        console.log(avatar);
       })
       .on('otherUserScores', (scores: Score[]) => {
       updateScores(scores);
@@ -134,7 +132,7 @@ function OtherUser() {
     if (tmp2 === false) {
       setAlreadyBlocked(false);
     }
-  }, [friends, blocked, username, matches_won, matches_lost, matches_tie]);
+  }, [friends, blocked, username]);
 
   return (
     <div>
@@ -142,7 +140,7 @@ function OtherUser() {
       <div className="User">
         <h3>{username}</h3>
         <div className="avatar">
-          <img src={avatar ? URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)])) : "./default-avatar.webp"} alt="Avatar" width="80%" />
+          <img src={avatar} width="80%" />
         </div>
         <div className="stats">
           {!alreadyBlocked && (

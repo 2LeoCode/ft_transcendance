@@ -1,11 +1,6 @@
 
-USER PROFILE
-- Fix l'avatar ( upload avatar )
-- When logged for the first time the user is prompted to add information to their account
-        (nickname, avatar, etc...)
-
 - ajouter le .env dans le gitignore
-- quand un user block un autre dans les channels
-        on voit encore les messages de ce user
+- status en temps reel
 - retirer eslint
 - retirer le bypass42
+- modifier message d'erreur chat
