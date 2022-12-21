@@ -34,12 +34,10 @@ function App() {
 				const firstLogin = getCookie('firstLogin');
 				if (firstLogin && firstLogin === 'true')
 					setSettings(true);
-				document.cookie = 'firstLogin=false';
+				document.cookie = 'firstLogin=false; SameSite=Lax;';
 			})
 
 			.on('twoFactorRequired', (qrcode: string) => {
-				console.log('twoFactorRequired');
-				console.log(qrcode);
 				// ClientSocket.disconnect();
 
 				// make a swal alert with the qrcode and a input field
@@ -69,11 +67,9 @@ function App() {
 								}
 							});
 							if (res.ok) {
-								console.log('res is ok');
-								document.cookie = `token_2fa=${await res.json().then(res => res.token_2fa)}`;
+								document.cookie = `token_2fa=${await res.json().then(res => res.token_2fa)}; SameSite=Lax;`;
 								window.location.reload();
 							} else {
-								console.log('res is not ok');
 								show2faAlert('red', 'Invalid code, try again');
 							}
 						}

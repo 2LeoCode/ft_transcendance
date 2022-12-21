@@ -18,7 +18,6 @@ const EntityParser = {
 			inGame: false
 		};
 	
-		console.log('avatar after', publicUserNoAtom.avatar);
 
 		return {
 			...publicUserNoAtom,
@@ -54,8 +53,6 @@ const EntityParser = {
 	}),
 
 	user: (entity: any): User => {
-		//console.log('Got', entity);
-		//console.log(entity.messages);
 		const userNoAtom = {
 			...EntityParser.publicUser(entity),
 			blockedBy: entity.blockedBy.map(
@@ -109,7 +106,6 @@ const EntityParser = {
 
 	
 	channel: (entity: any): Channel => {
-		//console.log('Channel', entity)
 		const channelNoAtom = {
 			...EntityParser.publicChannel(entity),
 			owner: EntityParser.publicUser(entity.owner),
@@ -139,7 +135,6 @@ const EntityParser = {
 	},
 
 	message: (entity: any): Message => {
-		//console.log('Got message', entity);
 		const messageNoAtom = {
 			id: entity.id,
 			content: entity.content as string,

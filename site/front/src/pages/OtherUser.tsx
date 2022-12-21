@@ -75,7 +75,6 @@ function OtherUser() {
       .on('otherUserAvatar', (av: Image | null) => {
         if (av)
           setAvatar(URL.createObjectURL(new Blob([Buffer.from(av.buffer.data)])));
-        console.log(avatar);
       })
       .on('otherUserScores', (scores: Score[]) => {
       updateScores(scores);

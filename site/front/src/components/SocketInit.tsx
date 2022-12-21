@@ -95,7 +95,6 @@ const SocketInit = () => {
     })
 	
 		.on('clientDisconnected', (username) => {
-      // console.log(`client ${username} disconnected`);
       setOnlineUsers(prev => prev.filter((user) => user.user42 !== username));
       setFriends(prev => prev.map((user) => {
         if (user.user42 === username)
@@ -104,7 +103,6 @@ const SocketInit = () => {
       }));
     })
     .on('clientConnected', (entity: any) => {
-      // console.log(`client ${entity.user42} connected`);
       setOnlineUsers(prev => [...prev, EntityParser.publicUser(entity)]);
       setFriends(prev => prev.map((user) => {
         if (user.user42 === entity.user42)
@@ -114,7 +112,6 @@ const SocketInit = () => {
     })
     .on('changedNickname', (newNick: any) => setNick(newNick))
     .on('uploadedAvatar', (avatar: any) => {
-      console.log('avatar before', avatar);
       setAvatar(avatar);
     })
     .on('userUploadedAvatar', (user: any) => {

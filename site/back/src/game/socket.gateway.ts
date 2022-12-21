@@ -78,7 +78,6 @@ export class SocketEvents
 
   //connection
   async handleConnection(client: Socket) {
-    //console.log(`Client connected: ${client.id}`);
   }
 
   @SubscribeMessage('handleUserConnect')
@@ -131,7 +130,6 @@ export class SocketEvents
 
   //disconnection
   handleDisconnect(@ConnectedSocket() client: Socket) {
-    //console.log(`Client disconnected: ${client.id}`);
     let user: User = this.connectedUsers.getUser(client.id);
 
     if (user) {

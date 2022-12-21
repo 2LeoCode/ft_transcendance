@@ -27,7 +27,6 @@ export default class AuthController {
 		@Res({ passthrough: true }) res: any,
 	): Promise<any> {
 		const {user, exists} = await this.authService.validateUser(user42);
-		//console.log(user);
 		const token = await this.authService.login(user);
 		res.cookie('token', token.access_token);
 		res.cookie('firstLogin', exists ? 'false' : 'true');
@@ -41,7 +40,6 @@ export default class AuthController {
 		@Res({ passthrough: true }) res: any,
 	): Promise<any> {
 		const payload = req.user;
-		console.log(payload);
 		const token = await this.authService.login(payload.user);
 		res.cookie('token', token.access_token);
 		res.cookie('firstLogin', payload.exists ? 'false' : 'true');
@@ -59,7 +57,6 @@ export default class AuthController {
 		const isCodeValid = await this.authService.verifyTwoFactorCode(user, code);
 		if (!isCodeValid)
 			throw new UnauthorizedException('Invalid two factor authentication code');
-		console.log('Token is Valid !');
 		const { access_token } = await this.authService.loginWith2fa(user);
 		return { token_2fa: access_token };
 	}

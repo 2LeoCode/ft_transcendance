@@ -28,13 +28,11 @@ const OnlineUser: React.FC<{ name: string; }> = (props) => {
 
   // send a pong invite to e.currentTarget.value (username)
   function invitePong(e: React.MouseEvent<HTMLButtonElement>) {
-    console.log('play button: ' + e.currentTarget.value + ' actual socketId: ' + ClientSocket.id);
     ClientSocket.emit('invitePong', e.currentTarget.value);
   }
 
   // accept pong invite -> create room.
   function acceptInvitePong(e: React.MouseEvent<HTMLButtonElement>) {
-    console.log('accept pong invite: ' + e.currentTarget.value);
     ClientSocket.emit('AcceptPongInvite', e.currentTarget.value);
   }
 
@@ -43,14 +41,12 @@ const OnlineUser: React.FC<{ name: string; }> = (props) => {
 
     // invite pong notification
     socket.on('receiverInvitePong', (senderUsername: string) => {
-      console.log('receiverInvite : ' + senderUsername);
       if (senderUsername === props.name) setPongInvite(true);
     });
   }, []);
   //function goDm(e: React.MouseEvent<HTMLButtonElement>) {
   //  //ClientSocket.emit('DmRoom');
   //	// load dm room with e.currentTarget.value and socketprops.user.socketId
-  //  console.log('goDm to ' + props.name);
   //  //setName(name);
   //}
 

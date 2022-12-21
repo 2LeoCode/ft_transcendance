@@ -5,8 +5,6 @@ function CreateChannel(props: any) {
   const createChannel = (e: any) => {
     e.preventDefault();
     props.socket.emit('ChannelRoom', e.target[0].value); // load dm room with e.currentTarget.value and socketProps.socketId
-    //console.log('Channel created ' + e.target[0].value);
-    //console.log(e.target[0].value);
     props.isOn(false);
   };
   return (

@@ -48,7 +48,6 @@ const ChatSocket = () => {
 	useEffect(() => {
 		ClientSocket
 			.on('recvPrivMsg', (msg) => {
-				console.log('recvPrivMsg');
 				const res = EntityParser.message(msg);
 
 				//setMessagesIn(prev => [...prev, res]);
@@ -66,7 +65,6 @@ const ChatSocket = () => {
 				});
 			})
 			.on('sendPrivMsg', (msg) => {
-				console.log('sendPrivMsg');
 				const res = EntityParser.message(msg);
 
 				//setMessagesOut(prev => [...prev, res]);
@@ -84,7 +82,6 @@ const ChatSocket = () => {
 				});
 			})
 			.on('createdChannel', (channel) => {
-				console.log('createdChannel');
 				const res = EntityParser.channel(channel);
 			
 				if (res.visibility == 'visible')
@@ -97,13 +94,11 @@ const ChatSocket = () => {
 				setCreateChannel(false);
 			})
 			.on('newPublicChannel', (channel) => {
-				console.log('newVisibleChannel');
 				const res = EntityParser.publicChannel(channel);
 
 				setVisibleChannels(prev => [...prev, res]);
 			})
 			.on('joinedChannel', (channel) => {
-				console.log('joinedChannel');
 				const res = EntityParser.channel(channel);
 				setSelectedChannel(null);
 				setJoinedChannels(prev => [...prev, res]);
@@ -112,20 +107,15 @@ const ChatSocket = () => {
 				setConvType('Channel');
 			})
 			.on('newUserOnChannel', (channel) => {
-				console.log('newUserOnChannel');
-				console.log(channel);
 				updateChannels(channel);
 			})
 			.on('sentChannelMsg', (channel) => {
-				console.log('sentChannelMsg');
 				updateChannels(channel);
 			})
 			.on('recvChannelMsg', (channel) => {
-				console.log('recvChannelMsg');
 				updateChannels(channel);
 			})
 			.on('leftChannel', (chan) => {
-				console.log('leftChannel');
 				//if (chan.owner.id === db.user.id) {
 				//	setMyChannels(prev => [...prev.filter(ch => ch.id !== chan.id)]);
 				//	setVisibleChannels(prev => [...prev.filter(ch => ch.id !== chan.id)]);
@@ -136,7 +126,6 @@ const ChatSocket = () => {
 				setConvType('User');
 			})
 			.on('userLeftChannel', (chan) => {
-				console.log('userLeftChannel');
 				const res = EntityParser.channel(chan);
 	
 				setJoinedChannels(prev => [...prev.filter(ch => ch.id !== res.id), res]);
@@ -145,7 +134,6 @@ const ChatSocket = () => {
 				setCurrentChannel((prev) => (prev?.id === res.id) ? res : prev);
 			})
 			.on('deletedChannel', (chanId: string) => {
-				console.log('deletedChannel');
 				setJoinedChannels(prev => [...prev.filter(ch => ch.id !== chanId)]);
 				setMyChannels(prev => [...prev.filter(ch => ch.id !== chanId)]);
 				setCurrentChannel(prev => {
@@ -159,11 +147,9 @@ const ChatSocket = () => {
 				setSelectedChannel(null);
 			})
 			.on('muted', (channel) => {
-				console.log('muted');
 				updateChannels(channel);
 			})
 			.on('banned', (channel) => {
-				console.log('banned');
 				updateChannels(channel);
 			})
 			.on('gotMuted', (channel) => {
@@ -201,7 +187,6 @@ const ChatSocket = () => {
 			.on('foundUsers', (users) => {
 				const res = users.map((usr: any) => EntityParser.publicUser(usr));
 
-				console.log('foundUsers', res);
 				setFoundUsers(res);
 			})
 			.on('usersNotFound', () => {
@@ -211,30 +196,24 @@ const ChatSocket = () => {
         });
 			})
 			.on('invitedUserToChannel', (channel) => {
-				console.log('invitedUserToChannel');
 				updateChannels(channel);
 			})
 			.on('invitedToChannel', (channel) => {
-				console.log('invitedToChannel');
 				const res = EntityParser.publicChannel(channel);
 				setChannelInvites(prev => [...prev, res]);
 			})
 			.on('userDeclinedChannelInvite', (channel) => {
-				console.log('userDeclinedInvite');
 				updateChannels(channel);
 			})
 			.on('updatedJoinedChannel', (channel) => {
-				console.log('updatedJoinedChannel');
 				updateChannels(channel);
 			})
 			.on('updatedVisibleChannel', (channel) => {
-				console.log('updatedVisibleChannel');
 				const res = EntityParser.publicChannel(channel);
 			
 				setVisibleChannels(prev => [...prev.filter(ch => ch.id !== res.id), res]);
 			})
 			.on('removedVisibleChannel', (channel) => {
-				console.log('removedVisibleChannel');
 				
 				setVisibleChannels(prev => [...prev.filter(ch => ch.id !== channel.id)]);
 			})

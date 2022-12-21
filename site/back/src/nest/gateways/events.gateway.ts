@@ -37,15 +37,11 @@ export default class EventsGateway implements OnGatewayConnection {
 			payload.username,
 			{ online: true }
 		);
-		//console.log('Client good!');
 
 		const channels = await this.userService.getChannels(user.id);
 	
 		channels.forEach(channel => client.join(channel.id));
 
-		console.log(`hello ${payload.username}`);
-		//console.log('list:', this.connectedUsers.map(usr => usr.username).join(', '));
-		//console.log('broadcasting to all clients');
 		client.broadcast.emit('clientConnected', user);
 		client.emit('connected');
 	}
@@ -55,7 +51,6 @@ export default class EventsGateway implements OnGatewayConnection {
 	) {
 		const token = client.handshake.auth.token;
 		const token_2fa = client.handshake.auth.token_2fa;
-		// console.log('token=', token);
 		try {
 			await this.authService.verify(token);
 			const payload: any = await this.authService.decode(token);
@@ -69,7 +64,6 @@ export default class EventsGateway implements OnGatewayConnection {
 				username: payload.username,
 				userId: dbUser.id
 			});
-			//console.log(this.connectedUsers);
 			//client.emit('onConnection', payload);
 
 			if (dbUser.twoFactorSecret) {
@@ -83,8 +77,6 @@ export default class EventsGateway implements OnGatewayConnection {
 			}
 			this.connectClient(client, dbUser, payload);
 		} catch (e) {
-			console.log(e);
-			//console.log('bad token');
 			client.disconnect(true);
 		}
 	}
@@ -92,9 +84,7 @@ export default class EventsGateway implements OnGatewayConnection {
 	async handleDisconnect(
 		client: Socket
 	) {
-	//	console.log('goodbye');
 		const user = this.connectedUsers.find(usr => usr.socketId == client.id);
-		console.log(`goodbye ${user?.username} (${client.id})`);
 		if (!user) return;
 		this.userService.updateByName(
 			user.username,
@@ -120,7 +110,6 @@ export default class EventsGateway implements OnGatewayConnection {
 		}
 	) {
 		try {
-			console.log(filter);
 			const users = await this.userService.getPublic(filter);
 			if (!users.length)
 				client.emit('usersNotFound');
@@ -188,7 +177,6 @@ export default class EventsGateway implements OnGatewayConnection {
 			buffer: Buffer
 		}
 	) {
-		console.log(buffer);
     const image = new ImageDto();
     image.filename = name;
     image.mimetype = type;
@@ -200,7 +188,6 @@ export default class EventsGateway implements OnGatewayConnection {
 
 		const publicUser = await this.userService.getOnePublic({ id: userId });
 
-		//console.log('after:', publicUser.avatar)
     // Send the uploaded image back to the client
     client.emit('uploadedAvatar', publicUser.avatar);
 		client.broadcast.emit('userUploadedAvatar', publicUser);

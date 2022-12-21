@@ -20,11 +20,9 @@ const ChatUser = ({ conv }: { conv: Conversation }) => {
     else if (css?.display === 'none') css.display = 'block';
   }
 	//const goDm = (e: React.MouseEvent<HTMLButtonElement>) => {
-	//	console.log('goDm to ' + conv.user);
 	//}
 
 	//useEffect(() => {
-	//	console.log(user.messages);
 	//}, [user.messages]);
 	return (
 		<Fragment>
@@ -39,7 +37,6 @@ const ChatUser = ({ conv }: { conv: Conversation }) => {
 					<button
 						onClick={
 							async (e) => {
-								console.log('changing receipt');
 								setDmReceipt(conv.user);
 								setIsDm(true);
 							}

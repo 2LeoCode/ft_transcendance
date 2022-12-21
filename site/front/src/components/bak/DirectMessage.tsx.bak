@@ -23,7 +23,6 @@ function DirectMessage(props: any) {
   // const messagesFromUser = messagesIn.filter(msg => msg.receiver.id == props.name);
 
 // useEffect( () => {
-//     console.log('created dm ' + message);
 //     // setClientId(client.id);
 //     if (own === true) {
 //         setMessages(current => [...current, {

@@ -64,7 +64,6 @@ function Settings(props: any) {
     e.preventDefault();
     ClientSocket.emit("changeNickname", newName);
     // setName(e.target.value);
-    // console.log(name);
   };
 
   return (

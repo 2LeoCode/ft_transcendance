@@ -1,4 +1,4 @@
 - ajouter le .env dans le gitignore
 - retirer eslint
 - retirer le bypass42
-- retirer les console.log
+- retirer les .bak

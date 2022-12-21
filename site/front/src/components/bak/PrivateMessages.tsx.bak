@@ -23,7 +23,6 @@ const PrivateMessages = ({ DmContent, DmReceipt }: { DmContent: string, DmReceip
 	const [conversations] = useAtom(ConversationsAtom);
 
 	useEffect(() => {
-		console.log(`conversations: ${conversations}`);
 	}, [conversations]);
 
 	return (

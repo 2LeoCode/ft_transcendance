@@ -24,7 +24,6 @@ const ChannelsList: React.FC<{
 
   const goChannel = (e: React.MouseEvent<HTMLButtonElement>) => {
     socket.emit('ChannelRoom', e.currentTarget.value); // load dm room with e.currentTarget.value and socketProps.socketId
-   // console.log('goChannel to ' + e.currentTarget.value + " to ");
 
     setter(true);
 	setIsDm(false);

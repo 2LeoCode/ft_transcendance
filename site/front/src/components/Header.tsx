@@ -12,7 +12,6 @@ function Header() {
 
   const [settings, setSettings] = useAtom(SettingsAtom);
   //const [chat, setChat] = useAtom(ChatAtom);
-  //console.log(Database.user.nickAtom);
   const [nick] = useAtom(Database.user.nickAtom);
   const [avatar] = useAtom(Database.user.avatarAtom);
   //const [logged, setLogged] = useAtom(LoggedAtom);

@@ -14,7 +14,6 @@ const DatabaseLoader = (async () => {
 		}).then(async res => {
 			if (!res.ok)
 				throw new Error(res.statusText);
-			//console.log('okChannels')
 			return (await res.json()).map((channel: any) =>
 				EntityParser.publicChannel(channel)
 			);
@@ -28,7 +27,6 @@ const DatabaseLoader = (async () => {
 		}).then(async res => {
 			if (!res.ok)
 				throw new Error(res.statusText);
-			//console.log('okUsers')
 			return (await res.json()).map((user: any) =>
 				EntityParser.publicUser(user)
 			);
@@ -61,5 +59,4 @@ export type DatabaseType = typeof Database;
 
 export const syncDatabase = async () => {
 	Database = await DatabaseLoader;
-	console.log("Database synced")
 };

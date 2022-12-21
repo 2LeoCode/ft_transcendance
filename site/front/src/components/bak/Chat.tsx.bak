@@ -32,10 +32,8 @@ async function addFriend(e: any, id: string, friends_name_tab: string[]) {
   //  friends_tab = res[0].friendIds;
   //});
   //await UserCom.get({ nick: e.target[0].value }).then((res) => {
-  //  // console.log(res);
   //  friends_tab.push(res[0].id);
   //  // friends_name_tab.push(res[0].nick);
-  //}).catch(() => {console.log("user doesn't exist")});
   //await UserCom.update(id, { friendIds: friends_tab });
   window.location.reload();
 }
@@ -90,7 +88,6 @@ function Chat() {
     //});
   };
 
-  //console.log('got here');
   let createdChannels: Map<string, IRoom> = new Map();
 
   // const updateCurrentUsers = (currentGamesUsers: User[]) => {
@@ -109,10 +106,8 @@ function Chat() {
   //const submitMessage = (e: any) => {
   //  e.preventDefault();
   //  //socket.emit('tmpMessageStock', name);
-  //  console.log('submitMessage');
   //  const dmContent = DmData;
   //  setDmContent('Hello');
-  //  console.log(DmContent);
   //  if (isChannel === true)
   //    socket.emit("submitMessageChannel", emitMessageTo);
   //  else if (isDm === true)
@@ -126,26 +121,19 @@ function Chat() {
   useEffect((): any => {
   
     socket = ClientSocket;
-    //console.log('useEffect');
     //ClientSocket.on('clientConnected', (user: any) => {
-    //  console.log(user.user42 + ' connected');
     //  setOnlineUsers((prev) => [...prev, EntityParser.publicUser(user)]);
-    //  console.log('current users: ' + currentUsers);
     //});
     //
     //ClientSocket.on('clientDisconnected', (user: any) => {
     //  setOnlineUsers((prev) => prev.filter((u) => u.user42 !== user));
-    //  console.log(user + ' disconnected');
     //});
 
     socket.on('NewReceivedDm', (message: any) => {
       setMessagesIn([...messagesIn, EntityParser.message(message)]);
-      //console.log(messagesIn);
-      //console.log('Received', message);
     })
     socket.on('NewSentDm', (message: any) => {
       setMessagesOut([...messagesOut, EntityParser.message(message)]);
-      //console.log('Sent', message);
     });
     socket.emit('updateChatUser');
 
@@ -164,7 +152,6 @@ function Chat() {
 
     socket.on('ChannelCreated', (currentChannels: IRoom, channelName: string) => {
       if (currentChannels) {
-        console.log('coucou ' + currentChannels.roomId);
         setCurrentChannels((current) => [...current, channelName]);
         createdChannels.set(channelName, currentChannels);
       } else {
@@ -182,11 +169,9 @@ function Chat() {
       // if (clientId !== previousId) {
       //   if (friends_id_tab[0] === "nobody") {
       //     setFriends_id_tab([clientId]);
-      //     console.log("this is " + friends_id_tab);
       //   }
       //   else {
       //     setFriends_id_tab(current => [...current, clientId]);
-      //     console.log("this is " + friends_id_tab);
       //   }
       //     setPreviousId(clientId);
       // }
@@ -208,7 +193,6 @@ function Chat() {
   //   setMounted(true);
   // }, []);
 
-  //console.log('ALLUSERS:', onlineUsers);
   return (
     <div>
       <Header />
@@ -304,7 +288,6 @@ function Chat() {
           <form onSubmit={async (e) => {
             e.preventDefault();
             //socket.emit('tmpMessageStock', name);
-            console.log('submitMessage');
             setDmContent(DmData);
           }}>
             <input

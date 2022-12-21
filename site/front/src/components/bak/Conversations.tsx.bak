@@ -20,7 +20,6 @@
 
 // 	const getConvs = () => {
 // 		const convs: { username: string, messages: Message[] }[] = [];
-// 		//console.log(messagesIn, messagesOut)
 // 		messagesIn.forEach(message => {
 // 			const sender = onlineUsers.find(user => user.id === message.senderId);
 // 			if (sender) {
@@ -52,10 +51,8 @@
 // 	}
 
 // 	useEffect(() => {
-// 		//console.log('useEffect')
 
 // 		ClientSocket.on('FailedToCreateDm', (err) => {
-// 			//console.log(err);
 // 		})
 // 		const newConvs = getConvs()
 // 			.map(

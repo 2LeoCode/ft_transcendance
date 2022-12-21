@@ -12,7 +12,6 @@ export default class JwtGuard extends AuthGuard('jwt') {
 	canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
 		//const request = context.switchToHttp().getRequest();
 		//const token = request.handshake.headers.cookie.split('token=')[1].split(';')[0].trim();
-		//console.log('Hey!');
 		return super.canActivate(context);
 	}
 

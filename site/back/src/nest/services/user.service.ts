@@ -109,8 +109,6 @@ export default class UserService {
 			const sameNick = await this.userRepository.findOne({
 				where: { nick: dto.nick }
 			});
-			//console.log(id);
-			//console.log(sameNick);
 			if (sameNick && sameNick.id !== id)
 				throw new Error(`Nickname ${dto.nick} already taken`);
 		}
