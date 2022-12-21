@@ -5,34 +5,55 @@ import { useNavigate } from "react-router-dom";
 import { atom, useAtom } from "jotai";
 import useDatabase from "../com/use-database";
 import ClientSocket from "../com/client-socket";
+import swal from "sweetalert";
+import Swal from "sweetalert2";
 //import { Database } from "../com/database";
 
 export const SettingsAtom = atom(false);
 
 function Settings(props: any) {
-
   const Database = useDatabase();
 
-  const [nick, setNick] = useAtom(Database.user.nickAtom);
   const [newName, setNewName] = useState("");
   const [settings, setSettings] = useAtom(SettingsAtom);
 	const [twoFactor] = useAtom(Database.user.twoFactorEnabledAtom);
+  const fileInput = React.createRef<HTMLInputElement>();
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+  
+    if (fileInput.current?.files) {
+      const file = fileInput.current.files[0];
+      if (file.size > 1000000) {
+        swal("File too large");
+        return;
+      }
+      if (file.type !== "image/png" && file.type !== "image/jpeg") {
+        swal("File must be png or jpeg");
+        return;
+      }
+      ClientSocket.emit("uploadAvatar", {
+        name: file.name,
+        type: file.type,
+        buffer: Buffer.from(await new Blob([file], {type: file.type}).arrayBuffer())
+      });
+    } else {
+      swal('No file selected');
+    }
+  }
   // const [name, setName] = useAtom<string | undefined>(Database.user.nick);
   //const navigate = useNavigate();
   
-  const changeUsername = async(e: any) => {
+  const changeNickname = async (e: any) => {
     e.preventDefault();
-    setNick(newName);
+    ClientSocket.emit("changeNickname", newName);
     // setName(e.target.value);
     // console.log(name);
   };
 
-	useEffect(() => {
-		console.log('two factor', twoFactor);
-	}, [twoFactor])
   return (
     <div className="Settings">
-      <form onSubmit={changeUsername}>
+      <form onSubmit={changeNickname}>
         <label htmlFor="newName">Change Username</label>
         <input
           type="text"
@@ -45,7 +66,11 @@ function Settings(props: any) {
         <input type="submit" value="Send" id="submit" />
       </form>
       <br />
-      <button type="button">Change Avatar</button>
+      <span>Change Avatar</span>
+      <form onSubmit={handleSubmit}>
+        <input type="file" ref={fileInput} />
+        <button type="submit">Upload</button>
+      </form>
       <br />
       <p>Activate 2FA</p>
 			<Switch

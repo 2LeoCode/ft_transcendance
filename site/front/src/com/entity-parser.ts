@@ -5,6 +5,7 @@ import PublicUser from './interfaces/public-user.interface';
 import Score from './interfaces/score.interface';
 import User from './interfaces/user.interface';
 import { atom } from 'jotai';
+import Image from './interfaces/image.interface';
 
 const EntityParser = {
 	publicUser: (entity: any): PublicUser => {
@@ -12,14 +13,16 @@ const EntityParser = {
 			id: entity.id,
 			nick: entity.nick,
 			user42: entity.user42,
-			avatarPath: entity.avatarPath,
-			online: entity.online
+			online: entity.online,
+			avatar: entity.avatar
 		};
+	
+		console.log('avatar after', publicUserNoAtom.avatar);
 
 		return {
 			...publicUserNoAtom,
 			nickAtom: atom(publicUserNoAtom.nick as string),
-			avatarPathAtom: atom(publicUserNoAtom.avatarPath as string),
+			avatarAtom: atom(publicUserNoAtom.avatar as Image),
 			onlineAtom: atom(publicUserNoAtom.online as boolean)
 		};
 	},

@@ -1,24 +1,25 @@
 import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import ClientSocket from "../com/client-socket";
 import useDatabase from "../com/use-database";
 import Header from "../components/Header";
 import "../styles/User.css";
 
-declare let Blob: {
-  prototype: Blob;
-  new(): Blob;
-  new(request: any, mime: string): Blob;
-};
+//declare let Blob: {
+//  prototype: Blob;
+//  new(): Blob;
+//  new(request: any, mime: string): Blob;
+//};
 
 function User() {
 
   const Database = useDatabase();
   // const location = useLocation();
 
-  const [image, setImage] = useState(new Blob());
-  const [uploaded, setUploaded] = useState(false);
+  //const [image, setImage] = useState(new Blob());
+  //const [uploaded, setUploaded] = useState(false);
   const [nick] = useAtom(Database.user.nickAtom);
   const [scores] = useAtom(Database.user.scoresAtom);
   const [friends] = useAtom(Database.user.friendsAtom);
@@ -27,8 +28,15 @@ function User() {
   const [tie, setTie] = useState(0);
   const [lose, setLose] = useState(0);
   const [ratio, setRatio] = useState("0");
+  const [avatar] = useAtom(Database.user.avatarAtom);
   const [hasFriendRequest, setHasFriendRequest] = useState(false);
 
+  useEffect(() => {
+    console.log(avatar);
+    Swal.fire({
+      imageUrl: URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)]))
+    });
+  }, [])
   function acceptFriendRequest(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
     ClientSocket.emit("acceptFriendRequest", friendName);
@@ -79,13 +87,8 @@ function User() {
       <div className="User">
         <h3>{nick}</h3>
         <div className="avatar">
-          {!uploaded && (
-            <img src="./default-avatar.webp" alt="Avatar" width="80%" />
-          )}
-          {uploaded && (
-            <img src={URL.createObjectURL(image)} alt="Avatar" width="80%" />
-          )}
-          <br />
+          <img src={avatar ? URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)])) : "./default-avatar.webp"} />
+          {/* <br />
           <label htmlFor="avatar" className="avatar_label">
             Change avatar
           </label>
@@ -98,7 +101,7 @@ function User() {
               if (e.target.files) setImage(e.target.files[0]);
               setUploaded(true);
             }}
-          />
+          /> */}
         </div>
         <div className="stats">
           <p key={"Win"} className="win">{win} Win</p>

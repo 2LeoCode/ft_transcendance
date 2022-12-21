@@ -9,8 +9,7 @@ import { Socket } from 'socket.io-client';
 import Score from '../com/interfaces/score.interface';
 import "../styles/Buttons.css";
 
-
-let socket: Socket;
+import Image from '../com/interfaces/image.interface';
 
 // declare const Blob: {
 //   prototype: Blob;
@@ -35,27 +34,28 @@ function OtherUser() {
   const [alreadyFriend, setAlreadyFriend] = useState(false);
   const [blocked] = useAtom(Database.user.blockedAtom);
   const [alreadyBlocked, setAlreadyBlocked] = useState(false);
+  const [avatar, setAvatar] = useState(null as Image | null);
 
   function inviteFriend(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
-    socket.emit('sendfriendRequest', friendName);
+    ClientSocket.emit('sendfriendRequest', friendName);
   }
 
   function removeFriend(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
-    socket.emit('removeFriend', friendName);
+    ClientSocket.emit('removeFriend', friendName);
   }
 
   function blockUser(e: React.MouseEvent<HTMLButtonElement>) {
     const username = e.currentTarget.value;
-    socket.emit('blockUser', username);
+    ClientSocket.emit('blockUser', username);
     if (friends.find((usr) => usr.user42 === username)) removeFriend(e);
-    socket.emit('removeFriendRequest', username);
+    ClientSocket.emit('removeFriendRequest', username);
   }
 
   function unblockUser(e: React.MouseEvent<HTMLButtonElement>) {
     const username = e.currentTarget.value;
-    socket.emit('unblockUser', username);
+    ClientSocket.emit('unblockUser', username);
   }
 
   const updateScores = (score: Score[]) => {
@@ -74,11 +74,12 @@ function OtherUser() {
   };
 
   useEffect(() => {
-    socket = ClientSocket;
-
-    socket.emit('getOtherUserScores', username);
-
-    socket.on('otherUserScores', (scores: Score[]) => {
+    ClientSocket.emit('getOtherUserScores', username)
+      .emit('getOtherUserAvatar', username)
+      .on('otherUserAvatar', (avatar: Image) => {
+        setAvatar(avatar);
+      })
+      .on('otherUserScores', (scores: Score[]) => {
       updateScores(scores);
 
       let matchWon = 0;
@@ -141,7 +142,7 @@ function OtherUser() {
       <div className="User">
         <h3>{username}</h3>
         <div className="avatar">
-          <img src="../default-avatar.webp" alt="Avatar" width="80%" />
+          <img src={avatar ? URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)])) : "./default-avatar.webp"} alt="Avatar" width="80%" />
         </div>
         <div className="stats">
           {!alreadyBlocked && (

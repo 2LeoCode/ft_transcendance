@@ -41,6 +41,7 @@ const ChatCreateChannel = () => {
 				<input
 					type='text'
 					value={inputName}
+					placeholder='name'
 					onChange={(e) => {
 						e.preventDefault();
 						setInputName(e.target.value);
@@ -49,6 +50,7 @@ const ChatCreateChannel = () => {
 				<input
 					type='password'
 					value={inputPassword}
+					placeholder='password'
 					onChange={(e) => {
 						e.preventDefault();
 						setInputPassword(e.target.value);

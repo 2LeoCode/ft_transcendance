@@ -23,6 +23,14 @@
 	margin-top: 10vh;
 }
 
+.room_name {
+	width: auto;
+	height: 10vw;
+	font-size: 3vw;
+	font-family: 'ufc italic';
+	margin-top: 10vh;
+}
+
 .quit_button {
 	width: 20vw;
     height: 7vw;

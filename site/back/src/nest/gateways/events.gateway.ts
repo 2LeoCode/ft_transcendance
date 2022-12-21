@@ -4,6 +4,8 @@ import { Server, Socket } from "socket.io";
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 import UserEntity from "../entities/user.entity";
+import ImageEntity from "../entities/image.entity";
+import { ImageDto } from "../dtos/image.dto";
 
 @WebSocketGateway({
 	namespace: "events",
@@ -82,6 +84,7 @@ export default class EventsGateway implements OnGatewayConnection {
 			this.connectClient(client, dbUser, payload);
 			
 		} catch (e) {
+			console.log(e);
 			//console.log('bad token');
 			client.disconnect(true);
 		}
@@ -156,4 +159,61 @@ export default class EventsGateway implements OnGatewayConnection {
 		}
 	}
 
+	@SubscribeMessage('changeNickname')
+	async changeNickname(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() nickname: string
+	) {
+		try {
+			const userId = this.connectedUsers.find(usr => usr.socketId == client.id).userId;
+			await this.userService.update(userId, { nick: nickname });
+			client.emit('changedNickname', nickname);
+			const userPublic = await this.userService.getOnePublic({ id: userId });
+			client.broadcast.emit('userChangedNickname', userPublic);
+			const user = await this.userService.getOne(userId);
+			user.channels.forEach(channel => this.server.to(channel.id).emit('channelUserChangedNickname', channel));
+		} catch (e) {
+			client.emit('authError', e);
+		}
+	}
+
+	@SubscribeMessage('uploadAvatar')
+	async handleUploadAvatar(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() {
+			name,
+			type,
+			buffer
+		} : {
+			name: string,
+			type: string,
+			buffer: Buffer
+		}
+	) {
+		console.log(buffer);
+    const image = new ImageDto();
+    image.filename = name;
+    image.mimetype = type;
+    image.buffer = buffer;
+		const userId = this.connectedUsers.find(usr => usr.socketId == client.id).userId;
+    //const publicUserA = await this.userService.getOnePublic({ id: userId });
+
+		await this.userService.changeAvatar(userId, image);
+
+		const publicUser = await this.userService.getOnePublic({ id: userId });
+
+		//console.log('after:', publicUser.avatar)
+    // Send the uploaded image back to the client
+    client.emit('uploadedAvatar', publicUser.avatar);
+		client.broadcast.emit('userUploadedAvatar', publicUser);
+	}
+
+	@SubscribeMessage('getOtherUserAvatar')
+	async getOtherUserAvatar(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() user42: string
+	) {
+		const user = await this.userService.getOnePublic({ user42: user42 });
+		client.emit('otherUserAvatar', user.avatar);
+	}
 }

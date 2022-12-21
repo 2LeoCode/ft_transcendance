@@ -7,6 +7,7 @@ import EntityParser from "../com/entity-parser";
 import useDatabase from "../com/use-database"
 import ChatSocket from "./chat/ChatSocket";
 import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const SocketInit = () => {
   const db = useDatabase();
@@ -17,6 +18,8 @@ const SocketInit = () => {
   const [friendsRequests, setFriendRequests] = useAtom(db.user.friendRequestsAtom);
   const [blocked, setBlocked] = useAtom(db.user.blockedAtom);
 	const [, setTwoFactor] = useAtom(db.user.twoFactorEnabledAtom);
+  const [, setNick] = useAtom(db.user.nickAtom);
+  const [, setAvatar] = useAtom(db.user.avatarAtom);
 
 
 
@@ -98,6 +101,15 @@ const SocketInit = () => {
     .on('clientConnected', (entity: any) => {
       // console.log(`client ${entity.user42} connected`);
       setOnlineUsers(prev => [...prev, EntityParser.publicUser(entity)]);
+    })
+    .on('changedNickname', (newNick: any) => setNick(newNick))
+    .on('uploadedAvatar', (avatar: any) => {
+      console.log('avatar before', avatar);
+      setAvatar(avatar);
+    })
+    .on('userUploadedAvatar', (user: any) => {
+      const res = EntityParser.publicUser(user);
+      setOnlineUsers((prev) => [...prev.filter((user) => user.user42 !== res.user42), res]);
     })
 
   }, []);

@@ -13,7 +13,7 @@ import { CreateChannelAtom } from "./ChatChannelList";
 import { IRoom } from "../../gameObjects/GameObject";
 import { FoundUsersAtom, PongInviteAtom } from "./ChatUserList";
 import swal from "sweetalert";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const ChatSocket = () => {
 	const db = useDatabase();
@@ -32,6 +32,7 @@ const ChatSocket = () => {
 	const [, setPongInvite] = useAtom(PongInviteAtom);
 	const [, setFoundUsers] = useAtom(FoundUsersAtom);
 	const [, setChannelInvites] = useAtom(db.user.channelInvitesAtom);
+	const [, setOnlineUsers] = useAtom(db.onlineUsersAtom);
 	const navigate = useNavigate();
 
 	const updateChannels = (channel: any) => {
@@ -82,7 +83,7 @@ const ChatSocket = () => {
 				});
 			})
 			.on('privMsgError', (err) => {
-				alert(err);
+				swal(err);
 			})
 			.on('createdChannel', (channel) => {
 				console.log('createdChannel');
@@ -218,6 +219,21 @@ const ChatSocket = () => {
 				console.log('userDeclinedInvite');
 				updateChannels(channel);
 			})
+			.on('updatedJoinedChannel', (channel) => {
+				console.log('updatedJoinedChannel');
+				updateChannels(channel);
+			})
+			.on('updatedVisibleChannel', (channel) => {
+				console.log('updatedVisibleChannel');
+				const res = EntityParser.publicChannel(channel);
+			
+				setVisibleChannels(prev => [...prev.filter(ch => ch.id !== res.id), res]);
+			})
+			.on('removedVisibleChannel', (channel) => {
+				console.log('removedVisibleChannel');
+				
+				setVisibleChannels(prev => [...prev.filter(ch => ch.id !== channel.id)]);
+			})
 
 			.on('receiverInvitePong', (senderUsername: string) => {
 				swal(
@@ -240,9 +256,6 @@ const ChatSocket = () => {
 					} as any)[value], senderUsername);
 					if (value === 'accept')
 						navigate('/pong');
-					if (value === 'decline'){
-						ClientSocket.emit('DeclinePongInvite', senderUsername);
-					}
 				});
 			})
 			.on('pongInviteDeclined', (senderUsername: string) => {
@@ -250,6 +263,13 @@ const ChatSocket = () => {
 			})
 			.on("newRoom", (newRoomData: IRoom) => {
 				ClientSocket.emit("joinRoom", newRoomData.roomId);
+			})
+			.on('userChangedNickname', (user: any) => {
+				const res = EntityParser.publicUser(user);
+				setOnlineUsers((prev) => [...prev.filter((usr) => usr.id !== res.id), res]);
+			})
+			.on('channelUserChangedNickname', (channel: any) => {
+				updateChannels(channel);
 			})
 	}, []);
 	return null;

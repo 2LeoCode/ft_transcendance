@@ -11,7 +11,7 @@ const ChatFoundUser = ({ usr, startConv }: { usr: PublicUser, startConv: Functio
 	const [selectedFoundUser, setSelectedFoundUser] = useState(null as PublicUser | null);
 	const [nick] = useAtom(usr.nickAtom);
 	const [currentChannel] = useAtom(CurrentChannelAtom);
-	const [avatar] = useAtom(usr.avatarPathAtom);
+	const [avatar] = useAtom(usr.avatarAtom);
 
 	return (
 		<Fragment>
@@ -23,7 +23,7 @@ const ChatFoundUser = ({ usr, startConv }: { usr: PublicUser, startConv: Functio
 					// border: '1px solid black',
 					float: 'left'
 				}}
-				src={avatar || "./default-avatar.webp"}
+				src={URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)])) || "./default-avatar.webp"}
 				alt="avatar"
 			/>
 			<p
