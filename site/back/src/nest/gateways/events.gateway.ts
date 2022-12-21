@@ -171,7 +171,7 @@ export default class EventsGateway implements OnGatewayConnection {
 			const user = await this.userService.getOne(userId);
 			user.channels.forEach(channel => this.server.to(channel.id).emit('channelUserChangedNickname', channel));
 		} catch (e) {
-			client.emit('authError', e);
+			client.emit('swalError', e);
 		}
 	}
 

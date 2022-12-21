@@ -88,7 +88,7 @@ export default class ChannelService {
 			where: { users: { id: userId } }
 		});
 		if (!channel)
-			throw new Error(`User ${userId} is not in any channel`);
+			throw new Error(`You are not in any channel`);
 		return channel;
 	}
 
@@ -133,7 +133,7 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (channel.owner.id !== userId)
-			throw new Error(`User ${userId} is not the owner of channel ${channel.name}`);
+			throw new Error(`You are not the owner of channel ${channel.name}`);
 		const res = {...channel};
 		await this.channelRepository.remove(channel);
 		await this.receiverService.remove(channel.receiver.id);
@@ -160,7 +160,7 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (channel.owner.id !== userId)
-			throw new Error(`User ${userId} is not owner of channel ${channel.name}`);
+			throw new Error(`You are not owner of channel ${channel.name}`);
 		await this.channelRepository.update(channel.id, dto);
 		return this.channelRepository.findOne({
 			relations: [
@@ -196,12 +196,12 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${name} does not exist`);
 		if (channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} already in channel ${name}`);
+			throw new Error(`You are already in channel ${name}`);
 		if (channel.bannedIds.includes(userId))
-			throw new Error(`User ${userId} is banned from channel ${name}`);
+			throw new Error(`You are banned from channel ${name}`);
 		if (channel.accessibility === 'private') {
 			if (!channel.invites.find((user: UserEntity) => user.id === userId))
-				throw new Error(`User ${userId} is not invited to channel ${name}`);
+				throw new Error(`You are not invited to channel ${name}`);
 			channel.invites = channel.invites.filter((user: UserEntity) => user.id !== userId);
 		}
 		if (!Bcrypt.compareSync(password, channel.password))
@@ -244,7 +244,7 @@ export default class ChannelService {
 		if (channel.owner.id === userId)
 			return this.remove(userId, channel.id);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		channel.adminsIds = channel.adminsIds.filter((id: string) => id !== userId);
 		channel.users = channel.users.filter((user: UserEntity) => user.id !== userId);
 		await this.channelRepository.save(channel);
@@ -269,9 +269,9 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channel.name} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channel.name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		if (channel.mutedIds.includes(userId))
-			throw new Error(`User ${userId} is muted in channel ${channel.name}`);
+			throw new Error(`You are muted in channel ${channel.name}`);
 		
 		await this.messageService.add(userId, {
 			receiverId: channel.receiver.id,
@@ -303,9 +303,9 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelName} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channelName}`);
+			throw new Error(`You are not in channel ${channelName}`);
 		if (userId != senderId && channel.owner.id !== userId && !channel.adminsIds.includes(userId))
-			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+			throw new Error(`You are not admin in channel ${channelName}`);
 		await this.messageService.remove(messageId);
 	}
 
@@ -331,15 +331,15 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channel.name} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channel.name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		if (!channel.users.find((user: UserEntity) => user.id === otherId))
-			throw new Error(`User ${otherId} not in channel ${channel.name}`);
+			throw new Error(`This user is not in channel ${channel.name}`);
 		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
-			throw new Error(`User ${userId} is not admin in channel ${channel.name}`);
+			throw new Error(`You are not admin in channel ${channel.name}`);
 		if (channel.mutedIds.includes(otherId))
-			throw new Error(`User ${otherId} is already muted in channel ${channel.name}`);
+			throw new Error(`This user is already muted in channel ${channel.name}`);
 		if (channel.adminsIds.includes(otherId))
-			throw new Error(`User ${otherId} is admin in channel ${channel.name}`);
+			throw new Error(`This user is admin in channel ${channel.name}`);
 		channel.mutedIds.push(otherId);
 		// Automatically unmute after time (in seconds)
 		await this.channelRepository.save(channel);
@@ -364,15 +364,15 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channel.name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		if (!channel.users.find((user: UserEntity) => user.id === otherId))
-			throw new Error(`User ${otherId} not in channel ${channel.name}`);
+			throw new Error(`This user is not in channel ${channel.name}`);
 		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
-			throw new Error(`User ${userId} is not admin in channel ${channel.name}`);
+			throw new Error(`You are not admin in channel ${channel.name}`);
 		if (!channel.mutedIds.includes(otherId))
-			throw new Error(`User ${otherId} is not muted in channel ${channel.name}`);
+			throw new Error(`This user is not muted in channel ${channel.name}`);
 		if (channel.adminsIds.includes(otherId))
-			throw new Error(`User ${otherId} is admin in channel ${channel.name}`);
+			throw new Error(`This user is admin in channel ${channel.name}`);
 		channel.mutedIds = channel.mutedIds.filter((id: string) => id !== otherId);
 		await this.channelRepository.save(channel);
 		return channel;
@@ -400,15 +400,15 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (channel.owner.id !== userId)
-			throw new Error(`User ${userId} is not owner of channel ${channel.name}`);
+			throw new Error(`You are not owner of channel ${channel.name}`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channel.name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		if (!channel.users.find((user: UserEntity) => user.id === otherId))
-			throw new Error(`User ${otherId} not in channel ${channel.name}`);
+			throw new Error(`This user is not in channel ${channel.name}`);
 		if (channel.adminsIds.includes(otherId))
-			throw new Error(`User ${otherId} is already admin in channel ${channel.name}`);
+			throw new Error(`This user is already admin in channel ${channel.name}`);
 		if (channel.owner.id === otherId)
-			throw new Error(`User ${otherId} is owner in channel ${channel.name}`);
+			throw new Error(`This user is owner in channel ${channel.name}`);
 		channel.adminsIds.push(otherId);
 		await this.channelRepository.save(channel);
 		return channel;
@@ -436,15 +436,15 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (channel.owner.id !== userId)
-			throw new Error(`User ${userId} is not owner of channel ${channel.name}`);
+			throw new Error(`You are not owner of channel ${channel.name}`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channel.name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		if (!channel.users.find((user: UserEntity) => user.id === otherId))
-			throw new Error(`User ${otherId} not in channel ${channel.name}`);
+			throw new Error(`This user is not in channel ${channel.name}`);
 		if (!channel.adminsIds.includes(otherId))
-			throw new Error(`User ${otherId} is not admin in channel ${channel.name}`);
+			throw new Error(`This user is not admin in channel ${channel.name}`);
 		if (channel.owner.id === otherId)
-			throw new Error(`User ${otherId} is owner in channel ${channel.name}`);
+			throw new Error(`This user is owner in channel ${channel.name}`);
 		channel.adminsIds = channel.adminsIds.filter((id: string) => id !== otherId);
 		await this.channelRepository.save(channel);
 		return channel;
@@ -462,13 +462,13 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelName} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channelName}`);
+			throw new Error(`You are not in channel ${channelName}`);
 		if (!channel.users.find((user: UserEntity) => user.id === otherId))
-			throw new Error(`User ${otherId} not in channel ${channelName}`);
+			throw new Error(`This user is not in channel ${channelName}`);
 		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
-			throw new Error(`User ${userId} is not admin in channel ${channelName}`);
+			throw new Error(`You are not admin in channel ${channelName}`);
 		if (channel.owner.id === otherId || channel.adminsIds.includes(otherId))
-			throw new Error(`User ${otherId} is admin in channel ${channelName}`);
+			throw new Error(`This user is admin in channel ${channelName}`);
 		channel.users = channel.users.filter((user: UserEntity) => user.id !== otherId);
 		await this.channelRepository.save(channel);
 	}
@@ -495,11 +495,11 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channel.name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		if (channel.users.find((user: UserEntity) => user.id === otherId))
-			throw new Error(`User ${otherId} already in channel ${channel.name}`);
+			throw new Error(`This user is already in channel ${channel.name}`);
 		if (channel.bannedIds.includes(otherId))
-			throw new Error(`User ${otherId} is banned in channel ${channel.name}`);
+			throw new Error(`This user is banned in channel ${channel.name}`);
 		channel.invites.push({ id: otherId } as UserEntity);
 		return await this.channelRepository.save(channel);
 	}
@@ -526,15 +526,15 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channel.name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		if (!channel.users.find((user: UserEntity) => user.id === otherId))
-			throw new Error(`User ${otherId} not in channel ${channel.name}`);
+			throw new Error(`This user is not in channel ${channel.name}`);
 		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
-			throw new Error(`User ${userId} is not admin in channel ${channel.name}`);
+			throw new Error(`You are not admin in channel ${channel.name}`);
 		if (channel.owner.id === otherId || channel.adminsIds.includes(otherId))
-			throw new Error(`User ${otherId} is admin in channel ${channel.name}`);
+			throw new Error(`This user is admin in channel ${channel.name}`);
 		if (channel.bannedIds.includes(otherId))
-			throw new Error(`User ${otherId} is already banned in channel ${channel.name}`);
+			throw new Error(`This user is already banned in channel ${channel.name}`);
 		channel.bannedIds.push(otherId);
 		channel.users = channel.users.filter((user: UserEntity) => user.id !== otherId);
 		await this.channelRepository.save(channel);
@@ -563,11 +563,11 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (!channel.users.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not in channel ${channel.name}`);
+			throw new Error(`You are not in channel ${channel.name}`);
 		if (!channel.bannedIds.includes(otherId))
-			throw new Error(`User ${otherId} is not banned in channel ${channel.name}`);
+			throw new Error(`This user is not banned in channel ${channel.name}`);
 		if (channel.owner.id !== userId && !channel.adminsIds.includes(userId))
-			throw new Error(`User ${userId} is not admin in channel ${channel.name}`);
+			throw new Error(`You are not admin in channel ${channel.name}`);
 		channel.bannedIds = channel.bannedIds.filter((id: string) => id !== otherId);
 		await this.channelRepository.save(channel);
 		return channel;
@@ -594,7 +594,7 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (!channel.invites.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not invited to channel ${channel.name}`);
+			throw new Error(`You are not invited to channel ${channel.name}`);
 		channel.users.push({ id: userId } as UserEntity);
 		channel.invites = channel.invites.filter((user: UserEntity) => user.id !== userId);
 		await this.channelRepository.save(channel);
@@ -635,7 +635,7 @@ export default class ChannelService {
 		if (!channel)
 			throw new Error(`Channel ${channelId} does not exist`);
 		if (!channel.invites.find((user: UserEntity) => user.id === userId))
-			throw new Error(`User ${userId} not invited to channel ${channel.name}`);
+			throw new Error(`You are not invited to channel ${channel.name}`);
 		channel.invites = channel.invites.filter((user: UserEntity) => user.id !== userId);
 		return await this.channelRepository.save(channel);
 	}

@@ -105,13 +105,15 @@ export default class UserService {
 	}
 
 	async update(id: string, dto: UpdateUserDto): Promise<void> {
-		const sameNick = await this.userRepository.findOne({
-			where: { nick: dto.nick }
-		});
-		//console.log(id);
-		//console.log(sameNick);
-		if (sameNick && sameNick.id !== id)
-			throw new Error('Nickname already taken');
+		if (dto.nick) {
+			const sameNick = await this.userRepository.findOne({
+				where: { nick: dto.nick }
+			});
+			//console.log(id);
+			//console.log(sameNick);
+			if (sameNick && sameNick.id !== id)
+				throw new Error(`Nickname ${dto.nick} already taken`);
+		}
 		await this.userRepository.update(id, dto);
 	}
 
@@ -125,7 +127,7 @@ export default class UserService {
 			where: { id: otherId }
 		});
 		if (other.blocked.find((user: UserEntity) => user.id === userId))
-			throw new Error(`${otherId} blocked ${userId}`);
+			throw new Error(`${other.user42} blocked you`);
 		return await this.messageService.add(userId, {
 			receiverId: other.receiver.id,
 			content: content
@@ -143,7 +145,7 @@ export default class UserService {
 		const senderId = await this.messageService.getSenderId(msgId);
 		const receiverId = await this.messageService.getReceiverId(msgId);
 		if (senderId !== userId || receiverId !== user.receiver.id)
-			throw new Error(`${userId} is not the sender/receiver of this message`);
+			throw new Error(`You are not the sender/receiver of this message`);
 		await this.messageService.remove(msgId);
 	}
 	// For testing purpose
@@ -224,7 +226,7 @@ export default class UserService {
 			where: { id: dstId }
 		});
 		if (dstUser.blocked.find((user: UserEntity) => user.id === id))
-			throw new Error(`${dstId} blocked ${id}`);
+			throw new Error(`${dstUser.user42} blocked you`);
 		dstUser.friendRequests.push({id: id} as UserEntity);
 		await this.userRepository.save(dstUser);
 	}
@@ -236,7 +238,7 @@ export default class UserService {
 		});
 		const index = user.friendRequests.findIndex((user: UserEntity) => user.id === srcId);
 		if (index === -1)
-			throw new Error(`${id} has no friend request from ${srcId}`);
+			throw new Error(`You have no friend request from this user`);
 		const srcUser = await this.userRepository.findOne({
 			relations: ['friends'],
 			where: { id: srcId }
@@ -255,7 +257,7 @@ export default class UserService {
 		});
 		const index = user.friendRequests.findIndex((user: UserEntity) => user.id === srcId);
 		if (index === -1)
-			throw new Error(`${id} has no friend request from ${srcId}`);
+			throw new Error(`You has no friend request from ${srcId}`);
 		user.friendRequests.splice(index, 1);
 		await this.userRepository.save(user);
 	}
@@ -266,12 +268,12 @@ export default class UserService {
 			where: { id: id }
 		});
 		const index = user.friends.findIndex((user: UserEntity) => user.id === dstId);
-		if (index === -1)
-			throw new Error(`${id} is not friend with ${dstId}`);
 		const dstUser = await this.userRepository.findOne({
 			relations: ['friends'],
 			where: { id: dstId }
 		});
+		if (index === -1)
+			throw new Error(`${dstUser.user42} is not your friend`);
 		user.friends.splice(index, 1);
 		dstUser.friends.splice(dstUser.friends.indexOf(user), 1);
 		await this.userRepository.save(user);
@@ -293,7 +295,7 @@ export default class UserService {
 		});
 
 		if (user.blocked.find((user: UserEntity) => user.id === dstId))
-			throw new Error(`${id} already blocked ${dstId}`);
+			throw new Error(`${dstUser.user42} is already blocked`);
 		user.blocked.push(dstUser);
 		await this.userRepository.save(user);
 	}
@@ -303,9 +305,15 @@ export default class UserService {
 			relations: ['blocked'],
 			where: { id: id }
 		});
+		
 		const index = user.blocked.findIndex((user: UserEntity) => user.id === dstId);
-		if (index === -1)
-			throw new Error(`${dstId} is not blocked by ${id}`);
+		if (index === -1) {
+			const dstUser = await this.userRepository.findOne({
+				relations: ['blocked'],
+				where: { id: id }
+			});
+			throw new Error(`${dstUser.user42} is not blocked`);
+		}
 		user.blocked.splice(index, 1);
 		await this.userRepository.save(user);
 	}
