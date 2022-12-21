@@ -1,6 +1,5 @@
-
 - ajouter le .env dans le gitignore
-- status en temps reel
 - retirer eslint
 - retirer le bypass42
-- modifier message d'erreur chat
+- modifier message d'erreur settings
+- messages from blocked users
