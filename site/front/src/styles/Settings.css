@@ -2,12 +2,16 @@
 	position: absolute;
 	margin-top: 20vh;
 	margin-left: calc(50vw - 200px);
-	padding-top: 50px;
+	padding-top: 30px;
 	height: 50vh;
-	max-height: 200px;
+	max-height: 250px;
 	width: 400px;
 	background-color: rgb(199, 199, 199);
 	border-radius: 10%;
 	overflow-y: auto;
 	border: solid 5px rgb(163, 0, 0);
+}
+
+.Settings::-webkit-scrollbar {
+	display: none;
 }

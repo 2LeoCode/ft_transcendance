@@ -17,7 +17,7 @@
 	cursor: pointer;
 }
 
-.Header a, .Header p {
+.Header a, .Header p:not(.Settings p) {
 	background: none;
 	color: inherit;
 	border: none;
@@ -28,7 +28,7 @@
 	text-decoration: none;
 }
 
-.Header a:hover, .Header p:hover {
+.Header a:hover, .Header p:not(.Settings p):hover {
 	color: rgb(255, 255, 255);
 	cursor: pointer;
 }

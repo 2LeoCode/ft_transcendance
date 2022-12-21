@@ -31,12 +31,12 @@ function User() {
   const [avatar] = useAtom(Database.user.avatarAtom);
   const [hasFriendRequest, setHasFriendRequest] = useState(false);
 
-  useEffect(() => {
-    console.log(avatar);
-    Swal.fire({
-      imageUrl: URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)]))
-    });
-  }, [])
+  // useEffect(() => {
+  //   console.log(avatar);
+  //   Swal.fire({
+  //     imageUrl: URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)]))
+  //   });
+  // }, [])
   function acceptFriendRequest(e: React.MouseEvent<HTMLButtonElement>) {
     const friendName = e.currentTarget.value;
     ClientSocket.emit("acceptFriendRequest", friendName);
@@ -87,7 +87,7 @@ function User() {
       <div className="User">
         <h3>{nick}</h3>
         <div className="avatar">
-          <img src={avatar ? URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)])) : "./default-avatar.webp"} />
+          <img src={avatar ? URL.createObjectURL(new Blob([Buffer.from(avatar.buffer.data)])) : "./default-avatar.webp"} alt="Avatar" width="80%" />
           {/* <br />
           <label htmlFor="avatar" className="avatar_label">
             Change avatar
