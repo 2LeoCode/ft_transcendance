@@ -1,10 +1,8 @@
-import { atom, useAtom } from "jotai";
-import React, { Fragment, useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { Link, NavLink } from "react-router-dom";
 //import { Database } from "../com/database";
 import useDatabase from "../com/use-database";
 import "../styles/Header.css";
-import Chat from "../pages/Chat";
 import Settings, { SettingsAtom } from "./Settings";
 
 function Header() {
@@ -16,7 +14,6 @@ function Header() {
   const [avatar] = useAtom(Database.user.avatarAtom);
   //const [logged, setLogged] = useAtom(LoggedAtom);
 
-  const navigate = useNavigate();
   function handleLogout() {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 		document.cookie = "token_2fa=; expires=Thu, 01 Jan 1970 00:00:00 UTC;"

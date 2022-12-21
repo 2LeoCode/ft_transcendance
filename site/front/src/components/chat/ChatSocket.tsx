@@ -7,11 +7,11 @@ import useDatabase from "../../com/use-database";
 import { ConvTypeAtom } from "./ChatBody";
 import { CurrentChannelAtom } from "./ChatChannel";
 import { ConvsAtom } from "./ChatConvList";
-import { CurrentConvAtom, NullAtom } from "./ChatCurrentConv";
+import { CurrentConvAtom } from "./ChatCurrentConv";
 import { SelectedChannelAtom } from "./ChatPublicChannel";
 import { CreateChannelAtom } from "./ChatChannelList";
 import { IRoom } from "../../gameObjects/GameObject";
-import { FoundUsersAtom, PongInviteAtom } from "./ChatUserList";
+import { FoundUsersAtom } from "./ChatUserList";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -19,8 +19,6 @@ import Swal from "sweetalert2";
 const ChatSocket = () => {
 	const db = useDatabase();
 
-	const [, setMessagesIn] = useAtom(db.user.messagesInAtom);
-	const [, setMessagesOut] = useAtom(db.user.messagesOutAtom);
 	const [, setConvs] = useAtom(ConvsAtom);
 	const [, setVisibleChannels] = useAtom(db.visibleChannelsAtom);
 	const [, setMyChannels] = useAtom(db.user.ownedChannelsAtom);
@@ -30,7 +28,6 @@ const ChatSocket = () => {
 	const [, setConvType] = useAtom(ConvTypeAtom);
 	const [, setSelectedChannel] = useAtom(SelectedChannelAtom);
 	const [, setCreateChannel] = useAtom(CreateChannelAtom);
-	const [, setPongInvite] = useAtom(PongInviteAtom);
 	const [, setFoundUsers] = useAtom(FoundUsersAtom);
 	const [, setChannelInvites] = useAtom(db.user.channelInvitesAtom);
 	const [, setOnlineUsers] = useAtom(db.onlineUsersAtom);
@@ -84,7 +81,7 @@ const ChatSocket = () => {
 			.on('createdChannel', (channel) => {
 				const res = EntityParser.channel(channel);
 			
-				if (res.visibility == 'visible')
+				if (res.visibility === 'visible')
 					setVisibleChannels(prev => [...prev, res]);
 				setMyChannels(prev => [...prev, res]);
 				setJoinedChannels(prev => [...prev, res]);

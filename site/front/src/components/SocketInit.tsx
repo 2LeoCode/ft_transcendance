@@ -1,7 +1,5 @@
-import { spawn } from "child_process";
 import { useAtom } from "jotai";
 import { Fragment, useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
 import ClientSocket from "../com/client-socket";
 import EntityParser from "../com/entity-parser";
 import useDatabase from "../com/use-database"
@@ -31,11 +29,11 @@ const SocketInit = () => {
         return;
       else
         setIsInRequests(previous);
-      friendsRequests.map((friend) => {
+      friendsRequests.forEach((friend) => {
         if (friend.user42 === entity.username)
           return;
       })
-      friends.map((friend) => {
+      friends.forEach((friend) => {
         if (friend.user42 === entity.username)
           return;
       })
@@ -72,7 +70,7 @@ const SocketInit = () => {
     })
 
     .on('blockUserUpdate', (entity: any) => {
-      blocked.map((block) => {
+      blocked.forEach((block) => {
         if (block.user42 === entity.user42)
           return;
       })

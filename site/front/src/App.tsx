@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/App.css';
 import Log from './pages/Log';
@@ -11,7 +11,6 @@ import Loader, { SyncAtom } from './components/Loader';
 import ClientSocket from './com/client-socket';
 import Constants, { getCookie } from './com/constants';
 import SocketInit from './components/SocketInit';
-import swal from 'sweetalert';
 import Swal from 'sweetalert2';
 import { SettingsAtom } from './components/Settings';
 
@@ -22,7 +21,7 @@ function App() {
   const [sync] = useAtom(SyncAtom);
   const [status, setStatus] = useAtom(StatusAtom);
   const [logged, setLogged] = useAtom(LoggedAtom);
-	const [settings, setSettings] = useAtom(SettingsAtom);
+	const [, setSettings] = useAtom(SettingsAtom);
 
   useEffect(() => {
     ClientSocket

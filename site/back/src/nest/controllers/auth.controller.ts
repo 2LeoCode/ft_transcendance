@@ -21,17 +21,17 @@ export default class AuthController {
 
 	// DO NOT LET IN PRODUCTION
 	// !!!!!!!!!!!!!!!!!!!!!!!!
-	@Get('bypass42')
-	async bypass42(
-		@Query('user42') user42: string,
-		@Res({ passthrough: true }) res: any,
-	): Promise<any> {
-		const {user, exists} = await this.authService.validateUser(user42);
-		const token = await this.authService.login(user);
-		res.cookie('token', token.access_token);
-		res.cookie('firstLogin', exists ? 'false' : 'true');
-		res.redirect('http://localhost:3000');
-	}
+	//@Get('bypass42')
+	//async bypass42(
+	//	@Query('user42') user42: string,
+	//	@Res({ passthrough: true }) res: any,
+	//): Promise<any> {
+	//	const {user, exists} = await this.authService.validateUser(user42);
+	//	const token = await this.authService.login(user);
+	//	res.cookie('token', token.access_token);
+	//	res.cookie('firstLogin', exists ? 'false' : 'true');
+	//	res.redirect('http://localhost:3000');
+	//}
 
 	@Get('callback')
 	@UseGuards(AuthGuard('42'))

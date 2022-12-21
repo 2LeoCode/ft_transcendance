@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../styles/Settings.css";
 import { Switch } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { atom, useAtom } from "jotai";
 import useDatabase from "../com/use-database";
 import ClientSocket from "../com/client-socket";
-import swal from "sweetalert";
 import Swal from "sweetalert2";
 //import { Database } from "../com/database";
 
@@ -15,7 +13,7 @@ function Settings(props: any) {
   const Database = useDatabase();
 
   const [newName, setNewName] = useState("");
-  const [settings, setSettings] = useAtom(SettingsAtom);
+  const [, setSettings] = useAtom(SettingsAtom);
 	const [twoFactor] = useAtom(Database.user.twoFactorEnabledAtom);
   const fileInput = React.createRef<HTMLInputElement>();
 

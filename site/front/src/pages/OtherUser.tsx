@@ -5,7 +5,6 @@ import '../styles/User.css';
 import { useAtom } from 'jotai';
 import useDatabase from '../com/use-database';
 import ClientSocket from '../com/client-socket';
-import { Socket } from 'socket.io-client';
 import Score from '../com/interfaces/score.interface';
 import "../styles/Buttons.css";
 
@@ -139,7 +138,7 @@ function OtherUser() {
       <div className="User">
         <h3>{username}</h3>
         <div className="avatar">
-          <img src={avatar} width="80%" />
+          <img src={avatar} alt='error' width="80%" />
         </div>
         <div className="stats">
           {!alreadyBlocked && (

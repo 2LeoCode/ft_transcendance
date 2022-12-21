@@ -1,10 +1,9 @@
-import { ConsoleLogger, Inject, Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 import UserEntity from "../entities/user.entity";
-import ImageEntity from "../entities/image.entity";
 import { ImageDto } from "../dtos/image.dto";
 
 @WebSocketGateway({

@@ -32,4 +32,4 @@ PGADMIN_PORT=5050
 
 # NODE
 
-NODE_ENV=development
+NODE_ENV=production
