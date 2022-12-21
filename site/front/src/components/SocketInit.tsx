@@ -121,6 +121,12 @@ const SocketInit = () => {
       const res = EntityParser.publicUser(user);
       setOnlineUsers((prev) => [...prev.filter((user) => user.user42 !== res.user42), res]);
     })
+    .on('error', (err: any) => {
+      Swal.fire({
+        icon: 'error',
+        text: err,
+      })
+    })
 
   }, []);
 

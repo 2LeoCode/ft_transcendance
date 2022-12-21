@@ -6,6 +6,7 @@ import useDatabase from "../../com/use-database";
 import { CurrentChannelAtom } from "./ChatChannel";
 import { CreateChannelAtom } from "./ChatChannelList";
 import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const ChatCreateChannel = () => {
 	const db = useDatabase();
@@ -25,7 +26,10 @@ const ChatCreateChannel = () => {
 				onSubmit={(e) => {
 					e.preventDefault();
 					if (!inputName.length) {
-						swal('Please enter a name');
+						Swal.fire({
+							icon: 'error',
+							text: 'Please enter a name',
+						});
 						return;
 					}
 					//if (inputVisibility == 'visible' && inputAccessibility == 'private') {

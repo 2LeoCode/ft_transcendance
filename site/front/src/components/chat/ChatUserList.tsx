@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import PublicUser from "../../com/interfaces/public-user.interface";
 import ChatFoundUser from "./ChatFoundUser";
 import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 export const PongInviteAtom = atom(null as PublicUser | null);
 export const FoundUsersAtom = atom([] as PublicUser[]);
@@ -71,7 +72,10 @@ const ChatUserList = ({ startConv }: { startConv: Function }) => {
 					onSubmit={(e) => {
 						e.preventDefault();
 						if (!nickFilterInput.length && !user42FilterInput.length) {
-							swal('You must enter at least one filter');
+              Swal.fire({
+                icon: 'error',
+                text: 'You must enter at least one filter'
+              });
 							return ;
 						}
 						ClientSocket.emit('findUsers', {

@@ -25,15 +25,24 @@ function Settings(props: any) {
     if (fileInput.current?.files) {
       const file = fileInput.current.files[0];
       if (!file) {
-        swal("No file selected");
+        Swal.fire({
+          icon: 'error',
+          text: "No file selected",
+        });
         return;
       }
       if (file.size > 1000000) {
-        swal("File too large");
+        Swal.fire({
+          icon: 'error',
+          text: "File too large",
+        });
         return;
       }
       if (file.type !== "image/png" && file.type !== "image/jpeg") {
-        swal("File must be png or jpeg");
+        Swal.fire({
+          icon: 'error',
+          text: "File must be a png or jpeg",
+        });
         return;
       }
       ClientSocket.emit("uploadAvatar", {
@@ -42,7 +51,10 @@ function Settings(props: any) {
         buffer: Buffer.from(await new Blob([file], {type: file.type}).arrayBuffer())
       });
     } else {
-      swal('No file selected');
+      Swal.fire({
+        icon: 'error',
+        text: "No file selected",
+      });
     }
   }
   // const [name, setName] = useAtom<string | undefined>(Database.user.nick);

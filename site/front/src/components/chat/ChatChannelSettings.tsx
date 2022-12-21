@@ -6,7 +6,7 @@ import ClientSocket from "../../com/client-socket";
 import Channel from "../../com/interfaces/channel.interface";
 import { Atom } from "../../com/types/atom.type";
 import { NullAtom } from "./ChatCurrentConv";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const ChatChannelSettings = () => {
   const [channelSettings, setChannelSettings] = useAtom(ChannelSettingsAtom);
@@ -22,7 +22,10 @@ const ChatChannelSettings = () => {
         onSubmit={(e) => {
           e.preventDefault();
           if (!channelNameInput.length) {
-            swal('Channel name cannot be empty');
+            Swal.fire({
+              icon: 'error',
+              text: "ChannelName cannot be empty",
+            });
             return;
           }
           ClientSocket.emit('updateChannel', channelSettings?.id, {

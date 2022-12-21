@@ -82,9 +82,6 @@ function App() {
 				show2faAlert('blue', 'Enter the code');
 			})
 
-			.on('authError', (error: any) => {
-				swal(error);
-			});
   }, []);
 
   return (

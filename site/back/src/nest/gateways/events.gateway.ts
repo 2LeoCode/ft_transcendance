@@ -127,7 +127,7 @@ export default class EventsGateway implements OnGatewayConnection {
 			else
 				client.emit('foundUsers', users);
 		} catch (e) {
-			client.emit('authError', e);
+			client.emit('error', e);
 		}
 	}
 
@@ -140,7 +140,7 @@ export default class EventsGateway implements OnGatewayConnection {
 			await this.userService.enable2fa(userId);
 			client.emit('enabled-2fa');
 		} catch (e) {
-			client.emit('authError', e);
+			client.emit('error', e);
 		}
 	}
 
@@ -153,7 +153,7 @@ export default class EventsGateway implements OnGatewayConnection {
 			await this.userService.disable2fa(userId);
 			client.emit('disabled-2fa');
 		} catch (e) {
-			client.emit('authError', e);
+			client.emit('error', e);
 		}
 	}
 
@@ -171,7 +171,7 @@ export default class EventsGateway implements OnGatewayConnection {
 			const user = await this.userService.getOne(userId);
 			user.channels.forEach(channel => this.server.to(channel.id).emit('channelUserChangedNickname', channel));
 		} catch (e) {
-			client.emit('swalError', e);
+			client.emit('error', e.message);
 		}
 	}
 

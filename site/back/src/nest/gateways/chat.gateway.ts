@@ -39,7 +39,7 @@ export class ChatGateway {
 				this.eventsGateway.server.to(receiver.socketId).emit('recvPrivMsg', res);
 			client.emit('sendPrivMsg', res);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -76,7 +76,7 @@ export class ChatGateway {
 			if (res.visibility === 'visible')
 				client.broadcast.emit('newPublicChannel', res);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -106,7 +106,7 @@ export class ChatGateway {
 			client.broadcast.to(res.id).emit('newUserOnChannel', res);
 			client.join(res.id);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -131,7 +131,7 @@ export class ChatGateway {
 			client.emit('sentChannelMsg', res);
 			client.broadcast.to(channelId).emit('recvChannelMsg', res);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -157,7 +157,7 @@ export class ChatGateway {
 				client.leave(channelId);
 			}
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -193,7 +193,7 @@ export class ChatGateway {
 				} catch {}
 			}, seconds * 1000);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -231,7 +231,7 @@ export class ChatGateway {
 				} catch {}
 			}, seconds * 1000);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -254,7 +254,7 @@ export class ChatGateway {
 			const res = await this.channelService.promote(sender.userId, channelId, userId);
 			this.eventsGateway.server.to(channelId).emit('promoted', res);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -277,7 +277,7 @@ export class ChatGateway {
 			const res = await this.channelService.demote(sender.userId, channelId, userId);
 			this.eventsGateway.server.to(channelId).emit('demoted', res);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -305,7 +305,7 @@ export class ChatGateway {
 			if (receiver)
 				this.eventsGateway.server.to(receiver.socketId).emit('invitedToChannel', res);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -324,7 +324,7 @@ export class ChatGateway {
 			client.emit('joinedChannel', res);
 			client.join(channelId);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -341,7 +341,7 @@ export class ChatGateway {
 			const res = await this.channelService.declineInvite(sender.userId, channelId);
 			this.eventsGateway.server.to(channelId).emit('userDeclinedChannelInvite', res);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 
@@ -369,7 +369,7 @@ export class ChatGateway {
 			else if (old.visibility === 'visible')
 				this.eventsGateway.server.emit('removedVisibleChannel', res);
 		} catch (e) {
-			client.emit('chatError', e.message);
+			client.emit('error', e.message);
 		}
 	}
 }

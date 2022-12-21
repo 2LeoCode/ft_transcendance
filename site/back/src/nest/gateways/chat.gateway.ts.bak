@@ -259,7 +259,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
   // 			 this.eventsGateway.server.to(`dm_${message.dm.id}`).emit('newDm', { message });
   // 			 this.logger.log(`New message in DM [${message.dm.id}]`);
   // 		 } catch (e) {
-  // 			 this.eventsGateway.server.to(client.id).emit('chatError', e.message);
+  // 			 this.eventsGateway.server.to(client.id).emit('error', e.message);
   // 		 }
   // 	 }
   //  }

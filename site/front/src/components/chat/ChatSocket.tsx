@@ -14,6 +14,7 @@ import { IRoom } from "../../gameObjects/GameObject";
 import { FoundUsersAtom, PongInviteAtom } from "./ChatUserList";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ChatSocket = () => {
 	const db = useDatabase();
@@ -82,9 +83,6 @@ const ChatSocket = () => {
 					}];
 				});
 			})
-			.on('privMsgError', (err) => {
-				swal(err);
-			})
 			.on('createdChannel', (channel) => {
 				console.log('createdChannel');
 				const res = EntityParser.channel(channel);
@@ -125,9 +123,6 @@ const ChatSocket = () => {
 			.on('recvChannelMsg', (channel) => {
 				console.log('recvChannelMsg');
 				updateChannels(channel);
-			})
-			.on('chatError', (err) => {
-				swal(err);
 			})
 			.on('leftChannel', (chan) => {
 				console.log('leftChannel');
@@ -172,7 +167,10 @@ const ChatSocket = () => {
 				updateChannels(channel);
 			})
 			.on('gotMuted', (channel) => {
-				swal(`You have been muted in channel ${channel.name}`);
+				Swal.fire({
+          icon: 'error',
+          text: `You have been muted in channel ${channel.name}`,
+        });
 			})
 			.on('gotBanned', (channel) => {
 				setJoinedChannels(prev => [...prev.filter(ch => ch.id !== channel.id)]);
@@ -183,7 +181,10 @@ const ChatSocket = () => {
 					}
 					return prev;
 				});
-				swal(`You have been banned from channel ${channel.name}`);
+				Swal.fire({
+          icon: 'error',
+          text: `You have been banned from channel ${channel.name}`,
+        });
 			})
 			.on('unmuted', (channel) => {
 				updateChannels(channel);
@@ -204,7 +205,10 @@ const ChatSocket = () => {
 				setFoundUsers(res);
 			})
 			.on('usersNotFound', () => {
-				swal('User not found');
+				Swal.fire({
+          icon: 'error',
+          text: 'User not found',
+        });
 			})
 			.on('invitedUserToChannel', (channel) => {
 				console.log('invitedUserToChannel');
